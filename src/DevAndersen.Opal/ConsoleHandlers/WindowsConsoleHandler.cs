@@ -106,5 +106,6 @@ public class WindowsConsoleHandler : IConsoleHandler
     public void Dispose()
     {
         Stop();
+        GC.SuppressFinalize(this);
     }
 }

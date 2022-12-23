@@ -169,5 +169,6 @@ public class OpalController : IDisposable
         }
 
         handler.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

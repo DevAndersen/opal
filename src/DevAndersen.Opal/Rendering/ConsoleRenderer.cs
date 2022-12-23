@@ -121,8 +121,6 @@ public class ConsoleRenderer
                 sb.Append(item.Character);
             }
         }
-
-        //sb.Append(SequenceProvider.Wrap(SequenceProvider.Reset()));
     }
 
     private static void AppendStyling(StringBuilder sb, string str, ref bool firstEdit)
@@ -137,74 +135,6 @@ public class ConsoleRenderer
             sb.Append(';').Append(str);
         }
     }
-
-    //[Obsolete]
-    //private static void Append(StringBuilder stringBuilder, ConsoleChar conChar, ConsoleChar? previousConChar)
-    //{
-    //    bool firstEdit = true;
-
-    //    // Foreground
-    //    if (conChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet))
-    //    {
-    //        if (conChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundRgb))
-    //        {
-    //            if (previousConChar?.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == false || conChar.ForegroundRgb != previousConChar?.ForegroundRgb)
-    //            {
-    //                AppendStyling(stringBuilder, SequenceProvider.ForegroundRgb(conChar.ForegroundRed, conChar.ForegroundGreen, conChar.ForegroundBlue), ref firstEdit);
-    //            }
-    //        }
-    //        else if (conChar.ForegroundSimple != previousConChar?.ForegroundSimple)
-    //        {
-    //            AppendStyling(stringBuilder, SequenceProvider.ForegroundSimple(conChar.ForegroundSimple), ref firstEdit);
-    //        }
-    //    }
-    //    else if (previousConChar?.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == true)
-    //    {
-    //        AppendStyling(stringBuilder, SequenceProvider.ResetForeground(), ref firstEdit);
-    //    }
-
-    //    // Background
-    //    if (conChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet))
-    //    {
-    //        if (conChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundRgb))
-    //        {
-    //            if (previousConChar?.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == false || conChar.BackgroundRgb != previousConChar?.BackgroundRgb)
-    //            {
-    //                AppendStyling(stringBuilder, SequenceProvider.BackgroundRgb(conChar.BackgroundRed, conChar.BackgroundGreen, conChar.BackgroundBlue), ref firstEdit);
-    //            }
-    //        }
-    //        else if (conChar.BackgroundSimple != previousConChar?.BackgroundSimple)
-    //        {
-    //            AppendStyling(stringBuilder, SequenceProvider.BackgroundSimple(conChar.BackgroundSimple), ref firstEdit);
-    //        }
-    //    }
-    //    else if (previousConChar?.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == true)
-    //    {
-    //        AppendStyling(stringBuilder, SequenceProvider.ResetBackground(), ref firstEdit);
-    //    }
-
-    //    // Modes
-    //    foreach (ConsoleCharModes mode in modes)
-    //    {
-    //        bool? state = GetModeStylingState(conChar, previousConChar, mode);
-    //        if (state != null)
-    //        {
-    //            AppendModeStyling(stringBuilder, mode, state.Value, ref firstEdit);
-    //            firstEdit = false;
-    //        }
-    //    }
-
-    //    char character = conChar.Character == 0
-    //        ? ' '
-    //        : conChar.Character;
-
-    //    if (!firstEdit)
-    //    {
-    //        stringBuilder.Append('m');
-    //    }
-
-    //    stringBuilder.Append(character);
-    //}
 
     private static bool? GetModeStylingState(ConsoleChar consoleChar, ConsoleChar? previousConsoleChar, ConsoleCharModes mode)
     {

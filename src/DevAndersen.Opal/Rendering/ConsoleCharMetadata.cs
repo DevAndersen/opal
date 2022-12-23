@@ -1,5 +1,8 @@
 ﻿namespace DevAndersen.Opal.Rendering;
 
+/// <summary>
+/// Metadata about the state of the owning <c><see cref="ConsoleChar"/></c>.
+/// </summary>
 [Flags]
 internal enum ConsoleCharMetadata : byte
 {
