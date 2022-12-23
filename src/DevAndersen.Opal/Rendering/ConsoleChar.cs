@@ -1,5 +1,8 @@
 ﻿namespace DevAndersen.Opal.Rendering;
 
+/// <summary>
+/// Represents a complex console character, including color, styles, and effects.
+/// </summary>
 public readonly struct ConsoleChar
 {
     #region Properties and fields

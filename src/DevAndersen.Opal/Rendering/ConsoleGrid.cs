@@ -2,6 +2,9 @@
 
 namespace DevAndersen.Opal.Rendering;
 
+/// <summary>
+/// Represents a 2D-grid of <c><see cref="ConsoleChar"/></c>.
+/// </summary>
 public class ConsoleGrid
 {
     private readonly object lockObject;
@@ -18,7 +21,7 @@ public class ConsoleGrid
         {
             lock (lockObject)
             {
-                return AreCoordinatesWithinGrid(x, y)
+                return IsCoordinateWithinGrid(x, y)
                     ? Grid.Span[x + y * Width]
                     : default;
             }
@@ -27,7 +30,7 @@ public class ConsoleGrid
         {
             lock (lockObject)
             {
-                if (AreCoordinatesWithinGrid(x, y))
+                if (IsCoordinateWithinGrid(x, y))
                 {
                     Grid.Span[x + y * Width] = value;
                 }
@@ -74,7 +77,13 @@ public class ConsoleGrid
         }
     }
 
-    private bool AreCoordinatesWithinGrid(int x, int y)
+    /// <summary>
+    /// Returns <c>true</c> if the coordinate (<paramref name="x"/>, <paramref name="y"/>) is a valid location within the grid.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    private bool IsCoordinateWithinGrid(int x, int y)
         => x >= 0
         && x < Width
         && y >= 0
