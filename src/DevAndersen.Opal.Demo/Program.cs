@@ -4,6 +4,7 @@ Action[] actions = new Action[]
 {
     RawRenderDemo.Run,
     ViewDemo.Run,
+    DrawingDemo.Run
 };
 
 bool hasValidChoiceBeenMade = false;
