@@ -15,6 +15,8 @@ public class WindowsConsoleHandler : IConsoleHandler
     private readonly Thread consoleSizeThread;
     private const int consoleSizeThreadTimeout = 50;
 
+    private OpalSettings? settings;
+
     public event ConsoleSizeChangedEventHandler? OnConsoleSizeChanged;
 
     public bool Running { get; private set; }
@@ -23,12 +25,16 @@ public class WindowsConsoleHandler : IConsoleHandler
 
     public int Height { get; private set; }
 
+    public int BufferWidthOffset => settings?.WidthOffset ?? 0;
+
+    public int BufferHeightOffset => settings?.HeightOffset ?? 0;
+
     public WindowsConsoleHandler()
     {
         consoleSizeThread = new Thread(ConsoleSizeThreadMethod);
     }
 
-    public void Start()
+    public void Start(OpalSettings settings)
     {
         if (Running)
         {
@@ -36,14 +42,14 @@ public class WindowsConsoleHandler : IConsoleHandler
         }
 
         Running = true;
+        this.settings = settings;
 
         if (!consoleSizeThread.IsAlive)
         {
             consoleSizeThread.Start();
         }
 
-        Width = Console.WindowWidth;
-        Height = Console.WindowHeight;
+        (Width, Height) = GetClampedConsoleSize();
 
         inputHandle = GetStdHandle(StdHandle.STD_INPUT_HANDLE);
         outputHandle = GetStdHandle(StdHandle.STD_OUTPUT_HANDLE);
@@ -54,7 +60,10 @@ public class WindowsConsoleHandler : IConsoleHandler
         ConsoleOutputModes modifiedConsoleOutputModes = originalConsoleOutputModes | ConsoleOutputModes.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
         SetConsoleOutputMode(outputHandle, modifiedConsoleOutputModes);
 
-        Print(SequenceProvider.EnableAlternateBuffer());
+        if (settings.UseAlternateBuffer)
+        {
+            Print(SequenceProvider.EnableAlternateBuffer());
+        }
 
         Console.CursorVisible = false;
     }
@@ -63,7 +72,11 @@ public class WindowsConsoleHandler : IConsoleHandler
     {
         Console.CursorVisible = true;
 
-        Print(SequenceProvider.DisableAlternateBuffer());
+        if (settings?.UseAlternateBuffer == true)
+        {
+            Print(SequenceProvider.DisableAlternateBuffer());
+        }
+
         Print(SequenceProvider.Wrap(SequenceProvider.Reset()));
         SetConsoleInputMode(inputHandle, originalConsoleInputModes);
         SetConsoleOutputMode(inputHandle, originalConsoleOutputModes);
@@ -76,6 +89,10 @@ public class WindowsConsoleHandler : IConsoleHandler
         WriteConsole(outputHandle, str, str.Length, out _);
     }
 
+    /// <summary>
+    /// Print <c><paramref name="stringBuilder"/></c> to the console, without allocating a new <see cref="string"/> in order to avoid GC.
+    /// </summary>
+    /// <param name="stringBuilder"></param>
     public unsafe void Print(StringBuilder stringBuilder)
     {
         nint ptr = Marshal.AllocHGlobal(stringBuilder.Length * sizeof(char));
@@ -91,8 +108,7 @@ public class WindowsConsoleHandler : IConsoleHandler
         {
             Thread.Sleep(consoleSizeThreadTimeout);
 
-            int newWidth = Console.WindowWidth;
-            int newHeight = Console.WindowHeight;
+            (int newWidth, int newHeight) = GetClampedConsoleSize();
 
             if (Width != newWidth || Height != newHeight)
             {
@@ -107,5 +123,16 @@ public class WindowsConsoleHandler : IConsoleHandler
     {
         Stop();
         GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Returns the width and height of the console, clamped according to the settings.
+    /// </summary>
+    /// <returns></returns>
+    private (int width, int height) GetClampedConsoleSize()
+    {
+        int width = Math.Clamp(Console.WindowWidth, settings?.MinWidth ?? 1, settings?.MaxWidth ?? int.MaxValue);
+        int height = Math.Clamp(Console.WindowHeight, settings?.MinHeight ?? 1, settings?.MaxHeight ?? int.MaxValue);
+        return (width, height);
     }
 }

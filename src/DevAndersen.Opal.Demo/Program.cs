@@ -4,6 +4,7 @@ Action[] actions = new Action[]
 {
     RawRenderDemo.Run,
     ViewDemo.Run,
+    LoadingDemo.Run,
 };
 
 bool hasValidChoiceBeenMade = false;
@@ -25,6 +26,7 @@ do
 } while (!hasValidChoiceBeenMade);
 
 Console.WriteLine("Program exit.");
+Console.ReadLine();
 
 static void PrintActions(Action[] actions)
 {

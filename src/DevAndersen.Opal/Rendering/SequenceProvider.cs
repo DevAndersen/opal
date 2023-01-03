@@ -34,7 +34,7 @@ public class SequenceProvider
 
     public static string ResetBackground() => "49";
 
-    public static string SetCursorPosition(int x, int y) => $"{y};{x}";
+    public static string SetCursorPosition(int x, int y) => $"{y + 1};{x + 1}";
 
     public static string EnableAlternateBuffer() => $"{Escape}[?1049h";
 

@@ -21,23 +21,44 @@ public class ConsoleRenderer
         lock (this)
         {
             stringBuilder.Clear();
+
+            SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.Reset());
+            SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.SetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset), "H");
+
             ConsoleChar? previousConsoleChar = null;
 
             int start = 0;
             while (start < grid.Grid.Length)
             {
                 int end = 0;
-                while (start + end < grid.Grid.Length && grid.Grid.Span[start].HasSameStylingAs(grid.Grid.Span[start + end]))
+
+                while (start + end < grid.Grid.Length
+                    && grid.Grid.Span[start].HasSameStylingAs(grid.Grid.Span[start + end]) // While chars are all the same style
+                    && (end == 0 || (start + end) % consoleHandler.Width != 0)) // While not at the end of a line
                 {
                     end++;
                 }
+
                 Span<ConsoleChar> slice = grid.Grid.Span.Slice(start, end);
                 AppendNew(stringBuilder, slice, previousConsoleChar);
+
+                int x = (start + end) / consoleHandler.Width;
+                if (end != 0 && (start + end) % consoleHandler.Width == 0 && x < consoleHandler.Height)
+                {
+                    SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.SetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset + x), "H");
+                    //stringBuilder.Append($"{(char)27}[32m+");
+                    //stringBuilder.Append($"{(char)27}[0;0H");
+                }
                 start += end;
                 previousConsoleChar = grid.Grid.Span[start - 1];
+
+                //stringBuilder.Append($"{(char)27}[?25l");
+                //SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.SetCursorPosition(0, 0), "H");
             }
 
-            SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.SetCursorPosition(0, 0), "H");
+            //SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.SetCursorPosition(0, 0), "H");
+            //SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.SetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset), "H");
+            SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.Reset());
             consoleHandler.Print(stringBuilder);
 
             if (stringBuilder.Length > sbCap)
