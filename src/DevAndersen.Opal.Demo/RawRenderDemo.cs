@@ -11,7 +11,7 @@ internal class RawRenderDemo
         bool keepGoing = true;
         int loops = 0;
 
-        using IConsoleHandler handler = IConsoleHandler.StartNew();
+        using IConsoleHandler handler = IConsoleHandler.StartNewFullscreen();
         ConsoleRenderer renderer = new ConsoleRenderer(handler);
         ConsoleGrid grid = OpalController.GetConsoleGrid(handler);
         Stopwatch sw = Stopwatch.StartNew();

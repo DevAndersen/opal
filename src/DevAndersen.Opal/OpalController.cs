@@ -8,22 +8,25 @@ public class OpalController : IDisposable
 {
     private readonly IConsoleHandler handler;
     private readonly ConsoleRenderer renderer;
-    private ConsoleGrid? grid;
-
-    public ConsoleView? GetCurrentView() => viewStack.TryPeek(out ConsoleView? view) ? view : null;
-
     private readonly Stack<ConsoleView> viewStack;
+    private readonly OpalSettings settings;
+    private ConsoleGrid? grid;
 
     public static bool IsRunning { get; private set; }
 
-    public OpalController(IConsoleHandler consoleHandler)
+    public OpalController(IConsoleHandler consoleHandler, OpalSettings settings)
     {
         handler = consoleHandler;
         renderer = new ConsoleRenderer(consoleHandler);
         viewStack = new Stack<ConsoleView>();
+        this.settings = settings;
     }
 
-    public OpalController() : this(IConsoleHandler.CreateDefaultHandlerForCurrentPlatform())
+    public OpalController(OpalSettings settings) : this(IConsoleHandler.CreateDefaultHandlerForCurrentPlatform(), settings)
+    {
+    }
+
+    public OpalController() : this(IConsoleHandler.CreateDefaultHandlerForCurrentPlatform(), OpalSettings.CreateFullscreen())
     {
     }
 
@@ -34,7 +37,7 @@ public class OpalController : IDisposable
             throw new InvalidOperationException("Opal is already running.");
         }
 
-        handler.Start();
+        handler.Start(settings);
         handler.OnConsoleSizeChanged += HandleConsoleSizeChanged;
         viewStack.Push(view);
         IsRunning = true;
@@ -75,7 +78,7 @@ public class OpalController : IDisposable
                 }
                 else
                 {
-                    // If the current view isn't listening for keyboard input, discard them.
+                    // Discard keyboard input if the current view is not listening.
                     if (Console.KeyAvailable)
                     {
                         Console.ReadKey(true);
@@ -100,6 +103,11 @@ public class OpalController : IDisposable
         }
 
         Stop();
+    }
+
+    public ConsoleView? GetCurrentView()
+    {
+        return viewStack.TryPeek(out ConsoleView? view) ? view : null;
     }
 
     private void RenderView(ConsoleView? view)
