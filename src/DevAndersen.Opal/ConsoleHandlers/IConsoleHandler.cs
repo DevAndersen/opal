@@ -6,6 +6,8 @@ public interface IConsoleHandler : IDisposable
 {
     public event ConsoleSizeChangedEventHandler? OnConsoleSizeChanged;
 
+    public OpalSettings? Settings { get; }
+
     /// <summary>
     /// Is the console handler currently running?
     /// </summary>
@@ -100,5 +102,16 @@ public interface IConsoleHandler : IDisposable
             PlatformID.Win32NT => new WindowsConsoleHandler(),
             _ => throw new PlatformNotSupportedException()
         };
+    }
+
+    /// <summary>
+    /// Returns the width and height of the console, clamped according to the settings.
+    /// </summary>
+    /// <returns></returns>
+    protected static (int width, int height) GetClampedConsoleSize(OpalSettings? Settings)
+    {
+        int width = Math.Clamp(Console.WindowWidth, Settings?.MinWidth ?? 1, Settings?.MaxWidth ?? int.MaxValue);
+        int height = Math.Clamp(Console.WindowHeight, Settings?.MinHeight ?? 1, Settings?.MaxHeight ?? int.MaxValue);
+        return (width, height);
     }
 }

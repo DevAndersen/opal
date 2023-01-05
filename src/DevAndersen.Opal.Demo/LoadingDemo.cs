@@ -7,7 +7,7 @@ internal class LoadingDemo
 {
     public static void Run()
     {
-        OpalController controller = new OpalController(OpalSettings.CreateFixedInline(5, 5, 8, 8));
+        OpalController controller = new OpalController(OpalSettings.CreateFixedInline(32, 16, 5, 5));
         controller.Start(new LoadingView());
     }
 }
