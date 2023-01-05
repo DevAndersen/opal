@@ -4,7 +4,7 @@ namespace DevAndersen.Opal.ConsoleHandlers;
 
 public interface IConsoleHandler : IDisposable
 {
-    public event ConsoleSizeChangedEventHandler OnConsoleSizeChanged;
+    public event ConsoleSizeChangedEventHandler? OnConsoleSizeChanged;
 
     /// <summary>
     /// Is the console handler currently running?
