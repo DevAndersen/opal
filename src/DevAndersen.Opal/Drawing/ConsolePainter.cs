@@ -1,4 +1,5 @@
 ﻿using DevAndersen.Opal.Rendering;
+using System.Data;
 
 namespace DevAndersen.Opal.Drawing;
 
@@ -163,6 +164,49 @@ public static class ConsolePainter
                 grid[posX + charIndex, posY + lineIndex] = template with { Character = GetSafeChar(line[charIndex]) };
             }
         }
+    }
+
+    public static void DrawTextArea(ConsoleGrid grid, int posX, int posY, int width, int height, int viewOffsetX, int viewOffsetY, int wrapWidth, string text, ConsoleChar template)
+    {
+        string[] lines = text.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.None);
+
+        for (int y = 0; y < height; y++)
+        {
+            int yOffset = y + viewOffsetY;
+            if (yOffset >= 0 && yOffset < lines.Length)
+            {
+                string line = lines[y + viewOffsetY];
+
+                for (int x = 0; x < width; x++)
+                {
+                    int xOffset = x + viewOffsetX;
+                    if (xOffset >= 0 && xOffset < line.Length)
+                    {
+                        grid[posX + x, posY + y] = template with { Character = line[xOffset] };
+                    }
+                }
+            }
+        }
+    }
+
+    public static void DrawHorizontalScrollbar(ConsoleGrid grid, int posX, int posY, int length, float size, float value)
+    {
+        int pos = Math.Clamp((int)(value / size * (length - 3)), 0, length - 3);
+
+        grid[posX, posY] = new ConsoleChar { Character = (char)0x2190 };
+        grid[posX + length - 1, posY] = new ConsoleChar { Character = (char)0x2192 };
+        DrawHorizontalLine(grid, posX + 1, posY, length - 2);
+        grid[posX + pos + 1, posY] = new ConsoleChar { Character = DrawStyle.HeavyDrawStyle.Horizontal };
+    }
+
+    public static void DrawVerticalScrollbar(ConsoleGrid grid, int posX, int posY, int length, float size, float value)
+    {
+        int pos = Math.Clamp((int)(value / size * (length - 3)), 0, length - 3);
+
+        grid[posX, posY] = new ConsoleChar { Character = (char)0x2191 };
+        grid[posX, posY + length - 1] = new ConsoleChar { Character = (char)0x2193 };
+        DrawVerticalLine(grid, posX, posY + 1, length - 2);
+        grid[posX, posY + pos + 1] = new ConsoleChar { Character = DrawStyle.HeavyDrawStyle.Vertical };
     }
 
     #endregion

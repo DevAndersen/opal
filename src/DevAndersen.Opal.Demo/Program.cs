@@ -1,39 +1,31 @@
 ﻿using DevAndersen.Opal.Demo;
 
-Action[] actions = new Action[]
-{
-    RawRenderDemo.Run,
-    ViewDemo.Run,
-    DrawingDemo.Run
-};
+bool keepGoing = true;
 
-bool hasValidChoiceBeenMade = false;
+(string DisplayName, Action Action)[] options =
+{
+    ("Raw render demo", RawRenderDemo.Run),
+    ("View demo", ViewDemo.Run),
+    ("Drawing demo", DrawingDemo.Run),
+    ("Exit", () => keepGoing = false)
+};
 
 do
 {
     Console.Clear();
-    PrintActions(actions);
-
-    Console.Write("> ");
-    string? input = Console.ReadLine();
-    bool inputIsValidNumber = int.TryParse(input, out int inputNumber);
-
-    if (inputIsValidNumber && inputNumber > 0 && inputNumber <= actions.Length)
+    for (int i = 0; i < options.Length; i++)
     {
-        hasValidChoiceBeenMade = true;
-        actions[inputNumber - 1].Invoke();
-    }
-} while (!hasValidChoiceBeenMade);
-
-Console.WriteLine("Program exit.");
-
-static void PrintActions(Action[] actions)
-{
-    for (int i = 0; i < actions.Length; i++)
-    {
-        Action action = actions[i];
-        string act = action.Method.DeclaringType?.Name ?? "[UNKNOWN]";
-        Console.WriteLine($"{i + 1} {act}");
+        Console.WriteLine($"{i + 1} {options[i].DisplayName}");
     }
     Console.WriteLine();
-}
+
+    Console.Write("> ");
+    bool inputIsValidNumber = int.TryParse(Console.ReadLine(), out int inputNumber);
+
+    if (inputIsValidNumber && inputNumber > 0 && inputNumber <= options.Length)
+    {
+        options[inputNumber - 1].Action.Invoke();
+    }
+} while (keepGoing);
+
+Console.WriteLine("Program exit.");
