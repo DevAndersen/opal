@@ -13,21 +13,49 @@ internal class DrawingDemo
     }
 }
 
-public class DrawingView : ConsoleView
+public class DrawingView : ConsoleView, IKeyboardInputHandler
 {
-    public override int Delay => 50;
+    int x = 0;
+    int y = 0;
+
+    public void HandleKeyInput(ConsoleKeyEvent keyEvent)
+    {
+        switch (keyEvent.Key)
+        {
+            case ConsoleKey.RightArrow when x < 10:
+                x++;
+                break;
+            case ConsoleKey.LeftArrow when x > 0:
+                x--;
+                break;
+            case ConsoleKey.DownArrow when y < 10:
+                y++;
+                break;
+            case ConsoleKey.UpArrow when y > 0:
+                y--;
+                break;
+                case ConsoleKey.Escape:
+                ExitView();
+                break;
+            default:
+                break;
+        }
+    }
 
     public override void Render(ConsoleGrid grid)
     {
-        ConsolePainter.DrawBox(grid, 2, 2, 5, 7, new ConsoleChar { Modes = ConsoleCharModes.DoubleUnderscore });
-        ConsolePainter.DrawBox(grid, 12, 2, 5, 7, DrawStyle.HeavyDrawStyle, new ConsoleChar { ForegroundSimple = ConsoleColor.Green });
+        ConsolePainter.DrawString(grid, 2, 2, $"X: {x}");
+        ConsolePainter.DrawString(grid, 2, 4, $"Y: {y}");
 
-        ConsolePainter.DrawHorizontalLine(grid, 12, 13, 5);
-        ConsolePainter.DrawVerticalLine(grid, 5, 12, 3);
+        int posX = 40;
+        int posY = 2;
+        int width = 24;
+        int height = 12;
 
-        ConsolePainter.DrawString(grid, 22, 3, "Some text");
-        ConsolePainter.DrawWrappingString(grid, 22, 8, 6, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        ConsolePainter.DrawBox(grid, posX, posY, width, height, DrawStyle.DoubleDrawStyle, new ConsoleChar { ForegroundSimple = ConsoleColor.Magenta });
+        ConsolePainter.DrawTextArea(grid, posX + 1, posY + 1, width - 2, height - 2, x, y, 0, "Line one\nLine two\r\nLine three\n\nLine five\nThis line is really rather long.", new ConsoleChar { ForegroundRgb = 0x3377ff });
 
-        ConsolePainter.DrawTextArea(grid, 38, 3, "Line one\nLine two\r\nLine three\n\n\tIndented line");
+        ConsolePainter.DrawHorizontalScrollbar(grid, posX + 1, posY + height, width - 2, 10, x);
+        ConsolePainter.DrawVerticalScrollbar(grid, posX + width, posY + 1, height - 2, 10, y);
     }
 }
