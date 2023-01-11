@@ -1,5 +1,8 @@
 ﻿using DevAndersen.Opal.Demo;
 
+ViewDemo.RunTest();
+Console.ReadLine();
+
 Action[] actions = new Action[]
 {
     RawRenderDemo.Run,

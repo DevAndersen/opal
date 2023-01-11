@@ -26,6 +26,10 @@ public class OpalController : IDisposable
     {
     }
 
+    public OpalController(IConsoleHandler consoleHandler) : this(consoleHandler, OpalSettings.CreateFullscreen())
+    {
+    }
+
     public OpalController() : this(IConsoleHandler.CreateDefaultHandlerForCurrentPlatform(), OpalSettings.CreateFullscreen())
     {
     }
