@@ -9,6 +9,7 @@ public class ConsoleRenderer
     private readonly IConsoleHandler consoleHandler;
     private readonly StringBuilder stringBuilder;
     private int sbCap;
+    private bool firstEdit;
 
     public ConsoleRenderer(IConsoleHandler consoleHandler)
     {
@@ -25,7 +26,7 @@ public class ConsoleRenderer
             SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.Reset());
             SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.SetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset), "H");
 
-            ConsoleChar? previousConsoleChar = null;
+            ConsoleChar previousConsoleChar = default;
 
             int start = 0;
             while (start < grid.Grid.Length)
@@ -69,30 +70,30 @@ public class ConsoleRenderer
         }
     }
 
-    private static void AppendNew(StringBuilder sb, Span<ConsoleChar> consoleChars, ConsoleChar? previousConsoleChar)
+    private void AppendNew(StringBuilder sb, Span<ConsoleChar> consoleChars, ConsoleChar previousConsoleChar)
     {
         ConsoleChar consoleChar = consoleChars[0];
         int start = sb.Length;
-        bool firstEdit = true;
+        firstEdit = true;
 
         // Foreground
         if (consoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet))
         {
             if (consoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundRgb))
             {
-                if (previousConsoleChar?.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == false || consoleChar.ForegroundRgb != previousConsoleChar?.ForegroundRgb)
+                if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == false || consoleChar.ForegroundRgb != previousConsoleChar.ForegroundRgb)
                 {
-                    AppendStyling(sb, SequenceProvider.ForegroundRgb(consoleChar.ForegroundRed, consoleChar.ForegroundGreen, consoleChar.ForegroundBlue), ref firstEdit);
+                    AppendStyling(sb, SequenceProvider.ForegroundRgb(consoleChar.ForegroundRed, consoleChar.ForegroundGreen, consoleChar.ForegroundBlue));
                 }
             }
-            else if (consoleChar.ForegroundSimple != previousConsoleChar?.ForegroundSimple)
+            else if (consoleChar.ForegroundSimple != previousConsoleChar.ForegroundSimple)
             {
-                AppendStyling(sb, SequenceProvider.ForegroundSimple(consoleChar.ForegroundSimple), ref firstEdit);
+                AppendStyling(sb, SequenceProvider.ForegroundSimple(consoleChar.ForegroundSimple));
             }
         }
-        else if (previousConsoleChar?.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == true)
+        else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == true)
         {
-            AppendStyling(sb, SequenceProvider.ResetForeground(), ref firstEdit);
+            AppendStyling(sb, SequenceProvider.ResetForeground());
         }
 
         // Background
@@ -100,28 +101,28 @@ public class ConsoleRenderer
         {
             if (consoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundRgb))
             {
-                if (previousConsoleChar?.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == false || consoleChar.BackgroundRgb != previousConsoleChar?.BackgroundRgb)
+                if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == false || consoleChar.BackgroundRgb != previousConsoleChar.BackgroundRgb)
                 {
-                    AppendStyling(sb, SequenceProvider.BackgroundRgb(consoleChar.BackgroundRed, consoleChar.BackgroundGreen, consoleChar.BackgroundBlue), ref firstEdit);
+                    AppendStyling(sb, SequenceProvider.BackgroundRgb(consoleChar.BackgroundRed, consoleChar.BackgroundGreen, consoleChar.BackgroundBlue));
                 }
             }
-            else if (consoleChar.BackgroundSimple != previousConsoleChar?.BackgroundSimple)
+            else if (consoleChar.BackgroundSimple != previousConsoleChar.BackgroundSimple)
             {
-                AppendStyling(sb, SequenceProvider.BackgroundSimple(consoleChar.BackgroundSimple), ref firstEdit);
+                AppendStyling(sb, SequenceProvider.BackgroundSimple(consoleChar.BackgroundSimple));
             }
         }
-        else if (previousConsoleChar?.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == true)
+        else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == true)
         {
-            AppendStyling(sb, SequenceProvider.ResetBackground(), ref firstEdit);
+            AppendStyling(sb, SequenceProvider.ResetBackground());
         }
 
         // Modes
         foreach (ConsoleCharModes mode in modes)
         {
-            bool? state = GetModeStylingState(consoleChar, previousConsoleChar, mode);
-            if (state != null)
+            StyleApplyMode state = GetModeStylingState(consoleChar, previousConsoleChar, mode);
+            if (state != StyleApplyMode.Keep)
             {
-                AppendModeStyling(sb, mode, state.Value, ref firstEdit);
+                AppendModeStyling(sb, mode, state == StyleApplyMode.Enable);
                 firstEdit = false;
             }
         }
@@ -144,7 +145,7 @@ public class ConsoleRenderer
         }
     }
 
-    private static void AppendStyling(StringBuilder sb, string str, ref bool firstEdit)
+    private void AppendStyling(StringBuilder sb, string str)
     {
         if (firstEdit)
         {
@@ -157,26 +158,26 @@ public class ConsoleRenderer
         }
     }
 
-    private static bool? GetModeStylingState(ConsoleChar consoleChar, ConsoleChar? previousConsoleChar, ConsoleCharModes mode)
+    private static StyleApplyMode GetModeStylingState(ConsoleChar consoleChar, ConsoleChar previousConsoleChar, ConsoleCharModes mode)
     {
         bool currentHasFlag = (consoleChar.Modes & mode) == mode;
+        bool previousHasFlag = (previousConsoleChar.Modes & mode) == mode;
 
-        if (previousConsoleChar == null)
+        if (currentHasFlag == previousHasFlag)
         {
-            return currentHasFlag
-                ? true
-                : null;
+            return StyleApplyMode.Keep;
+        }
+        else if (currentHasFlag)
+        {
+            return StyleApplyMode.Enable;
         }
         else
         {
-            bool previousHasFlag = (previousConsoleChar?.Modes & mode) == mode;
-            return currentHasFlag == previousHasFlag
-                ? null
-                : currentHasFlag;
+            return StyleApplyMode.Disable;
         }
     }
 
-    private static void AppendModeStyling(StringBuilder sb, ConsoleCharModes mode, bool state, ref bool firstEdit)
+    private void AppendModeStyling(StringBuilder sb, ConsoleCharModes mode, bool state)
     {
         string value = mode switch
         {
@@ -188,6 +189,13 @@ public class ConsoleRenderer
             _ => string.Empty
         };
 
-        AppendStyling(sb, value, ref firstEdit);
+        AppendStyling(sb, value);
+    }
+
+    private enum StyleApplyMode : byte
+    {
+        Enable,
+        Disable,
+        Keep
     }
 }

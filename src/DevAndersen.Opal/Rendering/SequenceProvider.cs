@@ -22,7 +22,24 @@ public class SequenceProvider
 
     public static string Blinking(bool state) => state ? "5" : "25";
 
+    public static StringBuilder AppendForegroundRgb(StringBuilder sb, byte r, byte g, byte b) => sb
+        .Append("38;2;")
+        .Append(r)
+        .Append(';')
+        .Append(g)
+        .Append(';')
+        .Append(b)
+        .Append('m');
+
     public static string ForegroundRgb(byte r, byte g, byte b) => $"38;2;{r};{g};{b}";
+
+    public static StringBuilder AppendBackgroundRgb(StringBuilder sb, byte r, byte g, byte b) => sb
+        .Append("48;2;")
+        .Append(r)
+        .Append(';')
+        .Append(g)
+        .Append(';')
+        .Append(b);
 
     public static string BackgroundRgb(byte r, byte g, byte b) => $"48;2;{r};{g};{b}";
 
