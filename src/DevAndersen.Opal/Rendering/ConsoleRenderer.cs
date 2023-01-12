@@ -21,10 +21,14 @@ public class ConsoleRenderer
     {
         lock (this)
         {
-            stringBuilder.Clear();
-
-            SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.Reset());
-            SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.SetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset), "H");
+            stringBuilder
+                .Clear()
+                .AppendEscapeBracket()
+                .AppendReset()
+                .AppendSGREnding()
+                .AppendEscapeBracket()
+                .AppendSetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset)
+                .Append('H');
 
             ConsoleChar previousConsoleChar = default;
 
@@ -46,20 +50,21 @@ public class ConsoleRenderer
                 int x = (start + end) / consoleHandler.Width;
                 if (end != 0 && (start + end) % consoleHandler.Width == 0 && x < consoleHandler.Height)
                 {
-                    SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.SetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset + x), "H");
-                    //stringBuilder.Append($"{(char)27}[32m+");
-                    //stringBuilder.Append($"{(char)27}[0;0H");
+                    stringBuilder
+                        .AppendEscapeBracket()
+                        .AppendSetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset + x)
+                        .Append('H');
                 }
+
                 start += end;
                 previousConsoleChar = grid.Grid.Span[start - 1];
-
-                //stringBuilder.Append($"{(char)27}[?25l");
-                //SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.SetCursorPosition(0, 0), "H");
             }
 
-            //SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.SetCursorPosition(0, 0), "H");
-            //SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.SetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset), "H");
-            SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.Reset());
+            stringBuilder
+                .AppendEscapeBracket()
+                .AppendReset()
+                .AppendSGREnding();
+
             consoleHandler.Print(stringBuilder);
 
             if (stringBuilder.Length > sbCap)
@@ -73,7 +78,6 @@ public class ConsoleRenderer
     private void AppendNew(StringBuilder sb, Span<ConsoleChar> consoleChars, ConsoleChar previousConsoleChar)
     {
         ConsoleChar consoleChar = consoleChars[0];
-        int start = sb.Length;
         firstEdit = true;
 
         // Foreground
@@ -83,17 +87,21 @@ public class ConsoleRenderer
             {
                 if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == false || consoleChar.ForegroundRgb != previousConsoleChar.ForegroundRgb)
                 {
-                    AppendStyling(sb, SequenceProvider.ForegroundRgb(consoleChar.ForegroundRed, consoleChar.ForegroundGreen, consoleChar.ForegroundBlue));
+                    stringBuilder
+                        .AppendStart(ref firstEdit)
+                        .AppendForegroundRgb(consoleChar.ForegroundRed, consoleChar.ForegroundGreen, consoleChar.ForegroundBlue);
                 }
             }
             else if (consoleChar.ForegroundSimple != previousConsoleChar.ForegroundSimple)
             {
-                AppendStyling(sb, SequenceProvider.ForegroundSimple(consoleChar.ForegroundSimple));
+                sb.AppendStart(ref firstEdit)
+                    .AppendForegroundSimple(consoleChar.ForegroundSimple);
             }
         }
         else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == true)
         {
-            AppendStyling(sb, SequenceProvider.ResetForeground());
+            sb.AppendStart(ref firstEdit)
+                .AppendResetForeground();
         }
 
         // Background
@@ -103,17 +111,21 @@ public class ConsoleRenderer
             {
                 if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == false || consoleChar.BackgroundRgb != previousConsoleChar.BackgroundRgb)
                 {
-                    AppendStyling(sb, SequenceProvider.BackgroundRgb(consoleChar.BackgroundRed, consoleChar.BackgroundGreen, consoleChar.BackgroundBlue));
+                    stringBuilder
+                        .AppendStart(ref firstEdit)
+                        .AppendBackgroundRgb(consoleChar.BackgroundRed, consoleChar.BackgroundGreen, consoleChar.BackgroundBlue);
                 }
             }
             else if (consoleChar.BackgroundSimple != previousConsoleChar.BackgroundSimple)
             {
-                AppendStyling(sb, SequenceProvider.BackgroundSimple(consoleChar.BackgroundSimple));
+                sb.AppendStart(ref firstEdit)
+                    .AppendBackgroundSimple(consoleChar.BackgroundSimple);
             }
         }
         else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == true)
         {
-            AppendStyling(sb, SequenceProvider.ResetBackground());
+            sb.AppendStart(ref firstEdit)
+                .AppendResetBackground();
         }
 
         // Modes
@@ -127,9 +139,9 @@ public class ConsoleRenderer
             }
         }
 
-        if (start != sb.Length)
+        if (!firstEdit)
         {
-            sb.Append('m');
+            sb.AppendSGREnding();
         }
 
         foreach (ConsoleChar item in consoleChars)
@@ -142,19 +154,6 @@ public class ConsoleRenderer
             {
                 sb.Append(item.Character);
             }
-        }
-    }
-
-    private void AppendStyling(StringBuilder sb, string str)
-    {
-        if (firstEdit)
-        {
-            sb.Append(SequenceProvider.Escape).Append('[').Append(str);
-            firstEdit = false;
-        }
-        else
-        {
-            sb.Append(';').Append(str);
         }
     }
 
@@ -177,19 +176,18 @@ public class ConsoleRenderer
         }
     }
 
-    private void AppendModeStyling(StringBuilder sb, ConsoleCharModes mode, bool state)
+    private StringBuilder AppendModeStyling(StringBuilder sb, ConsoleCharModes mode, bool state)
     {
-        string value = mode switch
+        sb.AppendStart(ref firstEdit);
+        return mode switch
         {
-            ConsoleCharModes.Italic => SequenceProvider.Italic(state),
-            ConsoleCharModes.Underscore => SequenceProvider.Underscore(state),
-            ConsoleCharModes.DoubleUnderscore => SequenceProvider.DoubleUnderscore(state),
-            ConsoleCharModes.Strike => SequenceProvider.Strike(state),
-            ConsoleCharModes.Blinking => SequenceProvider.Blinking(state),
-            _ => string.Empty
+            ConsoleCharModes.Italic => sb.AppendItalic(state),
+            ConsoleCharModes.Underscore => sb.AppendUnderscore(state),
+            ConsoleCharModes.DoubleUnderscore => sb.AppendDoubleUnderscore(state),
+            ConsoleCharModes.Strike => sb.AppendStrike(state),
+            ConsoleCharModes.Blinking => sb.AppendBlinking(state),
+            _ => sb
         };
-
-        AppendStyling(sb, value);
     }
 
     private enum StyleApplyMode : byte

@@ -81,7 +81,7 @@ public class WindowsConsoleHandler : IConsoleHandler
             Print("\n");
         }
 
-        Print(SequenceProvider.Wrap(SequenceProvider.Reset()));
+        Print(SequenceProvider.Reset());
         SetConsoleInputMode(inputHandle, originalConsoleInputModes);
         SetConsoleOutputMode(inputHandle, originalConsoleOutputModes);
 
