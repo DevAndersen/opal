@@ -1,61 +1,105 @@
 ﻿namespace DevAndersen.Opal.Rendering;
 
-public class SequenceProvider
+public static class SequenceProvider
 {
     public const char Escape = (char)27;
+    public const char SGREnding = 'm';
+    public const char DelimiterCharacter = ';';
 
-    public static void Wrap(StringBuilder sb, int startIndex = 0) => sb.Insert(startIndex, $"{Escape}[").Append('m');
+    public static StringBuilder AppendStart(this StringBuilder sb, ref bool firstEdit)
+    {
+        if (firstEdit)
+        {
+            firstEdit = false;
+            return sb.AppendEscapeBracket();
+        }
+        else
+        {
+            return sb.Append(DelimiterCharacter);
+        }
+    }
 
-    public static void AppendWrapped(StringBuilder sb, string sequence, string ending = "m") => sb.Append($"{Escape}[{sequence}{ending}");
+    public static string Reset()
+        => $"{Escape}[0m";
 
-    public static string Wrap(string str) => $"{Escape}[{str}m";
+    public static string EnableAlternateBuffer()
+        => $"{Escape}[?1049h";
 
-    public static string Reset() => "0";
+    public static string DisableAlternateBuffer()
+        => $"{Escape}[?1049l";
 
-    public static string Italic(bool state) => state ? "3" : "23";
+    public static StringBuilder AppendEscapeBracket(this StringBuilder sb)
+        => sb
+        .Append(Escape)
+        .Append('[');
 
-    public static string Underscore(bool state) => state ? "4" : "24";
+    public static StringBuilder AppendSGREnding(this StringBuilder sb)
+        =>
+        sb.Append(SGREnding);
 
-    public static string DoubleUnderscore(bool state) => state ? "21" : "24";
+    public static StringBuilder AppendReset(this StringBuilder sb)
+        => sb.Append('0');
 
-    public static string Strike(bool state) => state ? "9" : "29";
+    public static StringBuilder AppendItalic(this StringBuilder sb, bool state)
+        => state
+            ? sb.Append('3')
+            : sb.Append("23");
 
-    public static string Blinking(bool state) => state ? "5" : "25";
+    public static StringBuilder AppendUnderscore(this StringBuilder sb, bool state)
+        => state
+            ? sb.Append('4')
+            : sb.Append("24");
 
-    public static StringBuilder AppendForegroundRgb(StringBuilder sb, byte r, byte g, byte b) => sb
+    public static StringBuilder AppendDoubleUnderscore(this StringBuilder sb, bool state)
+        => state
+            ? sb.Append("21")
+            : sb.Append("24");
+
+    public static StringBuilder AppendStrike(this StringBuilder sb, bool state)
+        => state
+            ? sb.Append('9')
+            : sb.Append("29");
+
+    public static StringBuilder AppendBlinking(this StringBuilder sb, bool state)
+        => state
+            ? sb.Append('5')
+            : sb.Append("25");
+
+    public static StringBuilder AppendForegroundRgb(this StringBuilder sb, byte r, byte g, byte b)
+        => sb
         .Append("38;2;")
         .Append(r)
-        .Append(';')
+        .Append(DelimiterCharacter)
         .Append(g)
-        .Append(';')
-        .Append(b)
-        .Append('m');
-
-    public static string ForegroundRgb(byte r, byte g, byte b) => $"38;2;{r};{g};{b}";
-
-    public static StringBuilder AppendBackgroundRgb(StringBuilder sb, byte r, byte g, byte b) => sb
-        .Append("48;2;")
-        .Append(r)
-        .Append(';')
-        .Append(g)
-        .Append(';')
+        .Append(DelimiterCharacter)
         .Append(b);
 
-    public static string BackgroundRgb(byte r, byte g, byte b) => $"48;2;{r};{g};{b}";
+    public static StringBuilder AppendBackgroundRgb(this StringBuilder sb, byte r, byte g, byte b)
+        => sb
+            .Append("48;2;")
+            .Append(r)
+            .Append(DelimiterCharacter)
+            .Append(g)
+            .Append(DelimiterCharacter)
+            .Append(b);
 
-    public static string ForegroundSimple(ConsoleColor color) => GetColorCodeFromConsoleColor(color).ToString();
+    public static StringBuilder AppendForegroundSimple(this StringBuilder sb, ConsoleColor color)
+        => sb.Append(GetColorCodeFromConsoleColor(color));
 
-    public static string BackgroundSimple(ConsoleColor color) => (GetColorCodeFromConsoleColor(color) + 10).ToString();
+    public static StringBuilder AppendBackgroundSimple(this StringBuilder sb, ConsoleColor color)
+        => sb.Append(GetColorCodeFromConsoleColor(color) + 10);
 
-    public static string ResetForeground() => "39";
+    public static StringBuilder AppendResetForeground(this StringBuilder sb)
+        => sb.Append(39);
 
-    public static string ResetBackground() => "49";
+    public static StringBuilder AppendResetBackground(this StringBuilder sb)
+        => sb.Append(49);
 
-    public static string SetCursorPosition(int x, int y) => $"{y + 1};{x + 1}";
-
-    public static string EnableAlternateBuffer() => $"{Escape}[?1049h";
-
-    public static string DisableAlternateBuffer() => $"{Escape}[?1049l";
+    public static StringBuilder AppendSetCursorPosition(this StringBuilder sb, int x, int y)
+        => sb
+        .Append(y + 1)
+        .Append(DelimiterCharacter)
+        .Append(x + 1);
 
     private static int GetColorCodeFromConsoleColor(ConsoleColor color)
     {
