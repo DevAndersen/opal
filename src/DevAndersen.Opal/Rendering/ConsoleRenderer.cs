@@ -45,7 +45,10 @@ public class ConsoleRenderer
                 }
 
                 Span<ConsoleChar> slice = grid.Grid.Span.Slice(start, end);
-                AppendNew(stringBuilder, slice, previousConsoleChar);
+                if (slice.Length > 0)
+                {
+                    AppendNew(slice, previousConsoleChar);
+                }
 
                 int x = (start + end) / consoleHandler.Width;
                 if (end != 0 && (start + end) % consoleHandler.Width == 0 && x < consoleHandler.Height)
@@ -75,7 +78,7 @@ public class ConsoleRenderer
         }
     }
 
-    private void AppendNew(StringBuilder sb, Span<ConsoleChar> consoleChars, ConsoleChar previousConsoleChar)
+    private void AppendNew(Span<ConsoleChar> consoleChars, ConsoleChar previousConsoleChar)
     {
         ConsoleChar consoleChar = consoleChars[0];
         firstEdit = true;
@@ -94,13 +97,13 @@ public class ConsoleRenderer
             }
             else if (consoleChar.ForegroundSimple != previousConsoleChar.ForegroundSimple)
             {
-                sb.AppendStart(ref firstEdit)
+                stringBuilder.AppendStart(ref firstEdit)
                     .AppendForegroundSimple(consoleChar.ForegroundSimple);
             }
         }
         else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == true)
         {
-            sb.AppendStart(ref firstEdit)
+            stringBuilder.AppendStart(ref firstEdit)
                 .AppendResetForeground();
         }
 
@@ -118,13 +121,13 @@ public class ConsoleRenderer
             }
             else if (consoleChar.BackgroundSimple != previousConsoleChar.BackgroundSimple)
             {
-                sb.AppendStart(ref firstEdit)
+                stringBuilder.AppendStart(ref firstEdit)
                     .AppendBackgroundSimple(consoleChar.BackgroundSimple);
             }
         }
         else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == true)
         {
-            sb.AppendStart(ref firstEdit)
+            stringBuilder.AppendStart(ref firstEdit)
                 .AppendResetBackground();
         }
 
@@ -134,25 +137,25 @@ public class ConsoleRenderer
             StyleApplyMode state = GetModeStylingState(consoleChar, previousConsoleChar, mode);
             if (state != StyleApplyMode.Keep)
             {
-                AppendModeStyling(sb, mode, state == StyleApplyMode.Enable);
+                AppendModeStyling(mode, state == StyleApplyMode.Enable);
                 firstEdit = false;
             }
         }
 
         if (!firstEdit)
         {
-            sb.AppendSGREnding();
+            stringBuilder.AppendSGREnding();
         }
 
         foreach (ConsoleChar item in consoleChars)
         {
             if (item.Character == default)
             {
-                sb.Append(' ');
+                stringBuilder.Append(' ');
             }
             else
             {
-                sb.Append(item.Character);
+                stringBuilder.Append(item.Character);
             }
         }
     }
@@ -176,17 +179,17 @@ public class ConsoleRenderer
         }
     }
 
-    private StringBuilder AppendModeStyling(StringBuilder sb, ConsoleCharModes mode, bool state)
+    private StringBuilder AppendModeStyling(ConsoleCharModes mode, bool state)
     {
-        sb.AppendStart(ref firstEdit);
+        stringBuilder.AppendStart(ref firstEdit);
         return mode switch
         {
-            ConsoleCharModes.Italic => sb.AppendItalic(state),
-            ConsoleCharModes.Underscore => sb.AppendUnderscore(state),
-            ConsoleCharModes.DoubleUnderscore => sb.AppendDoubleUnderscore(state),
-            ConsoleCharModes.Strike => sb.AppendStrike(state),
-            ConsoleCharModes.Blinking => sb.AppendBlinking(state),
-            _ => sb
+            ConsoleCharModes.Italic => stringBuilder.AppendItalic(state),
+            ConsoleCharModes.Underscore => stringBuilder.AppendUnderscore(state),
+            ConsoleCharModes.DoubleUnderscore => stringBuilder.AppendDoubleUnderscore(state),
+            ConsoleCharModes.Strike => stringBuilder.AppendStrike(state),
+            ConsoleCharModes.Blinking => stringBuilder.AppendBlinking(state),
+            _ => stringBuilder
         };
     }
 
