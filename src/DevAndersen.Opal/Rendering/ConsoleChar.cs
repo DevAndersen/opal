@@ -115,7 +115,7 @@ public readonly struct ConsoleChar
     #region Methods
 
     /// <summary>
-    /// Returns <c>true</c> if the style of <c>this</c> and <c><paramref name="other"/></c> are the same. Otherwise, returns <c>false</c>.
+    /// Returns <c>true</c> if the styling of <c>this</c> and <c><paramref name="other"/></c> are identical. Otherwise, returns <c>false</c>.
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
