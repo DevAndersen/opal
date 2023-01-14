@@ -38,7 +38,7 @@ public class ConsoleRenderer
                 int end = 0;
 
                 while (start + end < grid.Grid.Length
-                    && grid.Grid.Span[start].HasSameStylingAs(grid.Grid.Span[start + end]) // While chars are all the same style
+                    && grid.Grid.Span[start].HasSameStylingAs(grid.Grid.Span[start + end]) // While chars are all the same mode
                     && (end == 0 || (start + end) % consoleHandler.Width != 0)) // While not at the end of a line
                 {
                     end++;
@@ -78,6 +78,11 @@ public class ConsoleRenderer
         }
     }
 
+    /// <summary>
+    /// Appends <paramref name="consoleChars"/> to the <c>StringBuilder</c>.
+    /// </summary>
+    /// <param name="consoleChars"></param>
+    /// <param name="previousConsoleChar"></param>
     private void AppendNew(Span<ConsoleChar> consoleChars, ConsoleChar previousConsoleChar)
     {
         ConsoleChar consoleChar = consoleChars[0];
@@ -134,10 +139,10 @@ public class ConsoleRenderer
         // Modes
         foreach (ConsoleCharModes mode in modes)
         {
-            StyleApplyMode state = GetModeStylingState(consoleChar, previousConsoleChar, mode);
-            if (state != StyleApplyMode.Keep)
+            ModeApplyMode state = GetModeStylingState(consoleChar, previousConsoleChar, mode);
+            if (state != ModeApplyMode.Keep)
             {
-                AppendModeStyling(mode, state == StyleApplyMode.Enable);
+                AppendModeSequence(mode, state == ModeApplyMode.Enable);
                 firstEdit = false;
             }
         }
@@ -160,26 +165,39 @@ public class ConsoleRenderer
         }
     }
 
-    private static StyleApplyMode GetModeStylingState(ConsoleChar consoleChar, ConsoleChar previousConsoleChar, ConsoleCharModes mode)
+    /// <summary>
+    /// Compares the state of <paramref name="mode"/> on <paramref name="consoleChar"/> and <paramref name="previousConsoleChar"/>, returning a <see cref="ModeApplyMode"/>.
+    /// </summary>
+    /// <param name="consoleChar">The current console character.</param>
+    /// <param name="previousConsoleChar">The previous console character.</param>
+    /// <param name="mode">The mode to be compared.</param>
+    /// <returns></returns>
+    private static ModeApplyMode GetModeStylingState(ConsoleChar consoleChar, ConsoleChar previousConsoleChar, ConsoleCharModes mode)
     {
         bool currentHasFlag = (consoleChar.Modes & mode) == mode;
         bool previousHasFlag = (previousConsoleChar.Modes & mode) == mode;
 
         if (currentHasFlag == previousHasFlag)
         {
-            return StyleApplyMode.Keep;
+            return ModeApplyMode.Keep;
         }
         else if (currentHasFlag)
         {
-            return StyleApplyMode.Enable;
+            return ModeApplyMode.Enable;
         }
         else
         {
-            return StyleApplyMode.Disable;
+            return ModeApplyMode.Disable;
         }
     }
 
-    private StringBuilder AppendModeStyling(ConsoleCharModes mode, bool state)
+    /// <summary>
+    /// Appends the sequence that enables <paramref name="mode"/> if <paramref name="state"/> is <c>true</c>, or disable it if<paramref name="state"/> is <c>false</c>, to the <c>StringBuilder</c>.
+    /// </summary>
+    /// <param name="mode">The mode to be applied.</param>
+    /// <param name="state"><c>true</c> enables the mode, <c>false</c> disables the mode.</param>
+    /// <returns></returns>
+    private StringBuilder AppendModeSequence(ConsoleCharModes mode, bool state)
     {
         stringBuilder.AppendStart(ref firstEdit);
         return mode switch
@@ -193,10 +211,21 @@ public class ConsoleRenderer
         };
     }
 
-    private enum StyleApplyMode : byte
+    private enum ModeApplyMode : byte
     {
+        /// <summary>
+        /// Do nothing.
+        /// </summary>
+        Keep,
+
+        /// <summary>
+        /// Enable the mode.
+        /// </summary>
         Enable,
-        Disable,
-        Keep
+
+        /// <summary>
+        /// Disable the mode.
+        /// </summary>
+        Disable
     }
 }
