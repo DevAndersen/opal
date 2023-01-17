@@ -16,6 +16,12 @@ public static class ViewDemo
         OpalController controller = new OpalController();
         await controller.StartAsync(new WriteView());
     }
+
+    public static void RunTest()
+    {
+        OpalController controller = new OpalController();
+        controller.Start(new ColorView());
+    }
 }
 
 public class TimeView : ConsoleView
