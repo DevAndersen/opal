@@ -143,7 +143,6 @@ public class OpalController : IDisposable
     {
         grid = GetConsoleGrid(handler, grid);
         grid.SetSize(args.NewWidth, args.NewHeight);
-        handler.Print(SequenceProvider.EnableAlternateBuffer());
         if (viewStack.TryPeek(out ConsoleView? currentView))
         {
             currentView.Render(grid);
