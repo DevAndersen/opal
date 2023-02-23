@@ -3,7 +3,7 @@
 namespace DevAndersen.Opal.Rendering;
 
 /// <summary>
-/// Represents a 2D-grid of <c><see cref="ConsoleChar"/></c>.
+/// Represents a grid of <c><see cref="ConsoleChar"/></c>.
 /// </summary>
 public class ConsoleGrid
 {
@@ -50,18 +50,22 @@ public class ConsoleGrid
         SetSize(width, height);
     }
 
+    /// <summary>
+    /// Update the size of the console grid, if <see cref="IConsoleHandler.Width"/> or <see cref="IConsoleHandler.Height"/> of <paramref name="handler"/> are different from the current dimensions of the console grid.
+    /// </summary>
+    /// <param name="handler"></param>
     public void SetSize(IConsoleHandler handler)
     {
         SetSize(handler.Width, handler.Height);
     }
 
     /// <summary>
-    /// Updates the size of the console grid, if <paramref name="width"/> or <paramref name="height"/> are different from the current values, or if <paramref name="forceClear"/> is set to <c>true</c>.
+    /// Updates the size of the console grid, if <paramref name="width"/> or <paramref name="height"/> are different from the current dimensions of the console grid, or if <paramref name="forceClear"/> is set to <c>true</c>.
     /// </summary>
     /// <param name="width">The new width of the console grid.</param>
     /// <param name="height">The new height of the console grid.</param>
     /// <param name="forceClear">If true, the console grid will be reset even if the dimensions of the console grid won't change. This means the method will always return <c>true</c>.</param>
-    /// <returns>Returns <c>true</c> if the console grid was cleared.</returns>
+    /// <returns>Returns <c>true</c> if the console grid was cleared, otherwise returns <c>false</c>.</returns>
     public bool SetSize(int width, int height, bool forceClear = false)
     {
         lock (lockObject)
@@ -78,7 +82,7 @@ public class ConsoleGrid
     }
 
     /// <summary>
-    /// Returns <c>true</c> if the coordinate (<paramref name="x"/>, <paramref name="y"/>) is a valid location within the grid.
+    /// Returns <c>true</c> if the coordinate (<paramref name="x"/>, <paramref name="y"/>) is a valid location within the grid. Otherwise, returns <c>false</c>.
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>

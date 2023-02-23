@@ -43,5 +43,5 @@ public enum ConsoleCharModes : byte
     /// <remarks>
     /// Not supported by ConHost.
     /// </remarks>
-    Blinking = 0b_0001_0000,
+    Blinking = 0b_0001_0000
 }
