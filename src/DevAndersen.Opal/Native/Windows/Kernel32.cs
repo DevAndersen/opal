@@ -3,7 +3,7 @@
 namespace DevAndersen.Opal.Native.Windows;
 
 /// <summary>
-/// Wraps base Win32 API (kernel32.dll).
+/// Wrapper for base Win32 APIs (kernel32.dll).
 /// </summary>
 internal static partial class Kernel32
 {
