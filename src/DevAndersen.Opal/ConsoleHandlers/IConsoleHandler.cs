@@ -1,7 +1,8 @@
-﻿using System.Text;
+﻿namespace DevAndersen.Opal.ConsoleHandlers;
 
-namespace DevAndersen.Opal.ConsoleHandlers;
-
+/// <summary>
+/// Defines a handler that supports console interactions.
+/// </summary>
 public interface IConsoleHandler : IDisposable
 {
     public event ConsoleSizeChangedEventHandler? OnConsoleSizeChanged;
@@ -100,18 +101,7 @@ public interface IConsoleHandler : IDisposable
         return Environment.OSVersion.Platform switch
         {
             PlatformID.Win32NT => new WindowsConsoleHandler(),
-            _ => throw new PlatformNotSupportedException()
+            _ => new CommonConsoleHandler()
         };
-    }
-
-    /// <summary>
-    /// Returns the width and height of the console, clamped according to the settings.
-    /// </summary>
-    /// <returns></returns>
-    protected static (int width, int height) GetClampedConsoleSize(OpalSettings? Settings)
-    {
-        int width = Math.Clamp(Console.WindowWidth, Settings?.MinWidth ?? 1, Settings?.MaxWidth ?? int.MaxValue);
-        int height = Math.Clamp(Console.WindowHeight, Settings?.MinHeight ?? 1, Settings?.MaxHeight ?? int.MaxValue);
-        return (width, height);
     }
 }

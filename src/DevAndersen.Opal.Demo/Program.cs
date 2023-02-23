@@ -5,6 +5,7 @@ Action[] actions = new Action[]
     RawRenderDemo.Run,
     ViewDemo.Run,
     LoadingDemo.Run,
+    LinesTestDemo.Run,
 };
 
 bool hasValidChoiceBeenMade = false;

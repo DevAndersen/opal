@@ -27,7 +27,7 @@ internal class RawRenderDemo
             {
                 for (int x = 0; x < handler.Width; x++)
                 {
-                    var v2 = grid[x, y];
+                    ConsoleChar character = grid[x, y];
 
                     if (loops == 0 || grid[x, y].Equals(default(ConsoleChar)))
                     {
@@ -50,57 +50,8 @@ internal class RawRenderDemo
                 }
             }
 
-            //for (int i = 0; i < 100; i++)
-            //{
-            //    grid[6 + i, 3] = new ConsoleChar
-            //    {
-            //        Character = (char)(48 + (i % 10)),
-            //        ForegroundRgb = 0xff0000 + (i << 8) + (255 - i * 2)
-            //    };
-
-            //    grid[6 + i, 4] = new ConsoleChar
-            //    {
-            //        Character = (char)0x2584,
-            //        ForegroundRgb = 0x880000 + (i << 8) + (255 - i * 2),
-            //        BackgroundRgb = 0xff0000 + (i << 8) + (255 - i * 2)
-            //    };
-            //}
-
-            //grid[posX, posY] = new ConsoleChar
-            //{
-            //    Character = (char)0x2588,
-            //    ForegroundSimple = ConsoleColor.Green,
-            //    BackgroundSimple = ConsoleColor.Magenta
-            //};
-
             renderer.Render(grid);
-
-            //switch (Console.ReadKey(true).Key)
-            //{
-            //    case ConsoleKey.W:
-            //        posY = Math.Max(posY - 1, 0);
-            //        break;
-            //    case ConsoleKey.A:
-            //        posX = Math.Max(posX - 1, 0);
-            //        break;
-            //    case ConsoleKey.S:
-            //        posY = Math.Min(posY + 1, height - 1);
-            //        break;
-            //    case ConsoleKey.D:
-            //        posX = Math.Min(posX + 1, width - 1);
-            //        break;
-            //    default:
-            //        break;
-            //}
-            if (loops >= 3000000)
-            {
-                //keepGoing = false;
-            }
-            else
-            {
-                loops++;
-            }
-            //Console.Title = loops.ToString();
+            loops++;
         }
         sw.Stop();
         Console.Title = $"Rendered {loops} frames in {sw.ElapsedMilliseconds} ms";
