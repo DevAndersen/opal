@@ -19,11 +19,17 @@ public enum ConsoleCharModes : byte
     /// <summary>
     /// The character is underscored.
     /// </summary>
+    /// <remarks>
+    /// Might conflict with <c><see cref="DoubleUnderscore"/></c>, depending on the console host.
+    /// </remarks>
     Underscore = 0b_0000_0010,
 
     /// <summary>
     /// The character is double-underscored.
     /// </summary>
+    /// <remarks>
+    /// Might conflict with <c><see cref="Underscore"/></c>, depending on the console host. Not supported by ConHost.
+    /// </remarks>
     DoubleUnderscore = 0b_0000_0100,
 
     /// <summary>
@@ -34,5 +40,8 @@ public enum ConsoleCharModes : byte
     /// <summary>
     /// The character is blinking.
     /// </summary>
-    Blinking = 0b_0001_0000,
+    /// <remarks>
+    /// Not supported by ConHost.
+    /// </remarks>
+    Blinking = 0b_0001_0000
 }

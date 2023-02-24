@@ -9,6 +9,9 @@ public class ConsoleRenderer
     private readonly IConsoleHandler consoleHandler;
     private readonly StringBuilder stringBuilder;
     private int sbCap;
+    private int charsToSkip;
+    private bool firstEdit;
+    private object lockObject = new object();
 
     public ConsoleRenderer(IConsoleHandler consoleHandler)
     {
@@ -18,26 +21,55 @@ public class ConsoleRenderer
 
     public void Render(ConsoleGrid grid)
     {
-        lock (this)
+        lock (lockObject)
         {
-            stringBuilder.Clear();
-            ConsoleChar? previousConsoleChar = null;
+            stringBuilder
+                .Clear()
+                .AppendEscapeBracket()
+                .AppendReset()
+                .AppendSGREnding()
+                .AppendEscapeBracket()
+                .AppendSetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset)
+                .Append('H');
+
+            ConsoleChar previousConsoleChar = default;
 
             int start = 0;
+            int end = 0;
             while (start < grid.Grid.Length)
             {
-                int end = 0;
-                while (start + end < grid.Grid.Length && grid.Grid.Span[start].HasSameStylingAs(grid.Grid.Span[start + end]))
+                end = 0;
+
+                while (CanCharsBeGroupedTogether(grid, start, start + end))
                 {
                     end++;
                 }
+
                 Span<ConsoleChar> slice = grid.Grid.Span.Slice(start, end);
-                AppendNew(stringBuilder, slice, previousConsoleChar);
+                if (slice.Length > 0)
+                {
+                    AppendNew(slice, previousConsoleChar);
+                }
+
+                int x = (start + end) / consoleHandler.Width;
+                if (end != 0 && (start + end) % consoleHandler.Width == 0 && x < consoleHandler.Height)
+                {
+                    charsToSkip = 0;
+                    stringBuilder
+                        .AppendEscapeBracket()
+                        .AppendSetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset + x)
+                        .Append('H');
+                }
+
                 start += end;
                 previousConsoleChar = grid.Grid.Span[start - 1];
             }
 
-            SequenceProvider.AppendWrapped(stringBuilder, SequenceProvider.SetCursorPosition(0, 0), "H");
+            stringBuilder
+                .AppendEscapeBracket()
+                .AppendReset()
+                .AppendSGREnding();
+
             consoleHandler.Print(stringBuilder);
 
             if (stringBuilder.Length > sbCap)
@@ -48,30 +80,52 @@ public class ConsoleRenderer
         }
     }
 
-    private static void AppendNew(StringBuilder sb, Span<ConsoleChar> consoleChars, ConsoleChar? previousConsoleChar)
+    /// <summary>
+    /// Asserts if the <c><see cref="ConsoleChar"/></c>s at <c><paramref name="startPosition"/></c> and <c><paramref name="currentPosition"/></c> should be grouped together.
+    /// </summary>
+    /// <param name="grid"></param>
+    /// <param name="startPosition">The index of the start character.</param>
+    /// <param name="currentPosition">The index of the current character.</param>
+    /// <returns></returns>
+    private bool CanCharsBeGroupedTogether(ConsoleGrid grid, int startPosition, int currentPosition)
+    {
+        return currentPosition < grid.Grid.Length // Is the position outside of the bounds of the grid?
+            && grid.Grid.Span[startPosition].HasSameStylingAs(grid.Grid.Span[currentPosition]) // Do the chars have the same mode?
+            && (currentPosition == startPosition || currentPosition % consoleHandler.Width != 0); // Has the end of the line been reached?
+    }
+
+    /// <summary>
+    /// Appends <paramref name="consoleChars"/> to the <c>StringBuilder</c>.
+    /// </summary>
+    /// <param name="consoleChars"></param>
+    /// <param name="previousConsoleChar"></param>
+    private void AppendNew(Span<ConsoleChar> consoleChars, ConsoleChar previousConsoleChar)
     {
         ConsoleChar consoleChar = consoleChars[0];
-        int start = sb.Length;
-        bool firstEdit = true;
+        firstEdit = true;
 
         // Foreground
         if (consoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet))
         {
             if (consoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundRgb))
             {
-                if (previousConsoleChar?.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == false || consoleChar.ForegroundRgb != previousConsoleChar?.ForegroundRgb)
+                if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == false || consoleChar.ForegroundRgb != previousConsoleChar.ForegroundRgb)
                 {
-                    AppendStyling(sb, SequenceProvider.ForegroundRgb(consoleChar.ForegroundRed, consoleChar.ForegroundGreen, consoleChar.ForegroundBlue), ref firstEdit);
+                    stringBuilder
+                        .AppendStart(ref firstEdit)
+                        .AppendForegroundRgb(consoleChar.ForegroundRed, consoleChar.ForegroundGreen, consoleChar.ForegroundBlue);
                 }
             }
-            else if (consoleChar.ForegroundSimple != previousConsoleChar?.ForegroundSimple)
+            else if (consoleChar.ForegroundSimple != previousConsoleChar.ForegroundSimple)
             {
-                AppendStyling(sb, SequenceProvider.ForegroundSimple(consoleChar.ForegroundSimple), ref firstEdit);
+                stringBuilder.AppendStart(ref firstEdit)
+                    .AppendForegroundSimple(consoleChar.ForegroundSimple);
             }
         }
-        else if (previousConsoleChar?.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == true)
+        else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == true)
         {
-            AppendStyling(sb, SequenceProvider.ResetForeground(), ref firstEdit);
+            stringBuilder.AppendStart(ref firstEdit)
+                .AppendResetForeground();
         }
 
         // Background
@@ -79,94 +133,128 @@ public class ConsoleRenderer
         {
             if (consoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundRgb))
             {
-                if (previousConsoleChar?.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == false || consoleChar.BackgroundRgb != previousConsoleChar?.BackgroundRgb)
+                if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == false || consoleChar.BackgroundRgb != previousConsoleChar.BackgroundRgb)
                 {
-                    AppendStyling(sb, SequenceProvider.BackgroundRgb(consoleChar.BackgroundRed, consoleChar.BackgroundGreen, consoleChar.BackgroundBlue), ref firstEdit);
+                    stringBuilder
+                        .AppendStart(ref firstEdit)
+                        .AppendBackgroundRgb(consoleChar.BackgroundRed, consoleChar.BackgroundGreen, consoleChar.BackgroundBlue);
                 }
             }
-            else if (consoleChar.BackgroundSimple != previousConsoleChar?.BackgroundSimple)
+            else if (consoleChar.BackgroundSimple != previousConsoleChar.BackgroundSimple)
             {
-                AppendStyling(sb, SequenceProvider.BackgroundSimple(consoleChar.BackgroundSimple), ref firstEdit);
+                stringBuilder.AppendStart(ref firstEdit)
+                    .AppendBackgroundSimple(consoleChar.BackgroundSimple);
             }
         }
-        else if (previousConsoleChar?.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == true)
+        else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == true)
         {
-            AppendStyling(sb, SequenceProvider.ResetBackground(), ref firstEdit);
+            stringBuilder.AppendStart(ref firstEdit)
+                .AppendResetBackground();
         }
 
         // Modes
         foreach (ConsoleCharModes mode in modes)
         {
-            bool? state = GetModeStylingState(consoleChar, previousConsoleChar, mode);
-            if (state != null)
+            ModeApplyMode state = GetModeStylingState(consoleChar, previousConsoleChar, mode);
+            if (state != ModeApplyMode.Keep)
             {
-                AppendModeStyling(sb, mode, state.Value, ref firstEdit);
+                AppendModeSequence(mode, state == ModeApplyMode.Enable);
                 firstEdit = false;
             }
         }
 
-        if (start != sb.Length)
+        if (!firstEdit)
         {
-            sb.Append('m');
+            stringBuilder.AppendSGREnding();
         }
 
         foreach (ConsoleChar item in consoleChars)
         {
-            if (item.Character == default)
+            if (charsToSkip > 1)
             {
-                sb.Append(' ');
+                charsToSkip--;
+                continue;
+            }
+
+            if (item.RenderAsString())
+            {
+                charsToSkip = ConsoleCharStringCache.AppendFromCache(stringBuilder, item.Character);
             }
             else
             {
-                sb.Append(item.Character);
+                if (item.Character == default)
+                {
+                    stringBuilder.Append(' ');
+                }
+                else
+                {
+                    stringBuilder.Append(item.Character);
+                }
             }
         }
     }
 
-    private static void AppendStyling(StringBuilder sb, string str, ref bool firstEdit)
-    {
-        if (firstEdit)
-        {
-            sb.Append(SequenceProvider.Escape).Append('[').Append(str);
-            firstEdit = false;
-        }
-        else
-        {
-            sb.Append(';').Append(str);
-        }
-    }
-
-    private static bool? GetModeStylingState(ConsoleChar consoleChar, ConsoleChar? previousConsoleChar, ConsoleCharModes mode)
+    /// <summary>
+    /// Compares the state of <paramref name="mode"/> on <paramref name="consoleChar"/> and <paramref name="previousConsoleChar"/>, returning a <see cref="ModeApplyMode"/>.
+    /// </summary>
+    /// <param name="consoleChar">The current console character.</param>
+    /// <param name="previousConsoleChar">The previous console character.</param>
+    /// <param name="mode">The mode to be compared.</param>
+    /// <returns></returns>
+    private static ModeApplyMode GetModeStylingState(ConsoleChar consoleChar, ConsoleChar previousConsoleChar, ConsoleCharModes mode)
     {
         bool currentHasFlag = (consoleChar.Modes & mode) == mode;
+        bool previousHasFlag = (previousConsoleChar.Modes & mode) == mode;
 
-        if (previousConsoleChar == null)
+        if (currentHasFlag == previousHasFlag)
         {
-            return currentHasFlag
-                ? true
-                : null;
+            return ModeApplyMode.Keep;
+        }
+        else if (currentHasFlag)
+        {
+            return ModeApplyMode.Enable;
         }
         else
         {
-            bool previousHasFlag = (previousConsoleChar?.Modes & mode) == mode;
-            return currentHasFlag == previousHasFlag
-                ? null
-                : currentHasFlag;
+            return ModeApplyMode.Disable;
         }
     }
 
-    private static void AppendModeStyling(StringBuilder sb, ConsoleCharModes mode, bool state, ref bool firstEdit)
+    /// <summary>
+    /// Appends the sequence that enables <paramref name="mode"/> if <paramref name="state"/> is <c>true</c>, or disable it if<paramref name="state"/> is <c>false</c>, to the <c>StringBuilder</c>.
+    /// </summary>
+    /// <param name="mode">The mode to be applied.</param>
+    /// <param name="state"><c>true</c> enables the mode, <c>false</c> disables the mode.</param>
+    /// <returns></returns>
+    private StringBuilder AppendModeSequence(ConsoleCharModes mode, bool state)
     {
-        string value = mode switch
+        stringBuilder.AppendStart(ref firstEdit);
+        return mode switch
         {
-            ConsoleCharModes.Italic => SequenceProvider.Italic(state),
-            ConsoleCharModes.Underscore => SequenceProvider.Underscore(state),
-            ConsoleCharModes.DoubleUnderscore => SequenceProvider.DoubleUnderscore(state),
-            ConsoleCharModes.Strike => SequenceProvider.Strike(state),
-            ConsoleCharModes.Blinking => SequenceProvider.Blinking(state),
-            _ => string.Empty
+            ConsoleCharModes.Italic => stringBuilder.AppendItalic(state),
+            ConsoleCharModes.Underscore => stringBuilder.AppendUnderscore(state),
+            ConsoleCharModes.DoubleUnderscore => stringBuilder.AppendDoubleUnderscore(state),
+            ConsoleCharModes.Strike => stringBuilder.AppendStrike(state),
+            ConsoleCharModes.Blinking => stringBuilder.AppendBlinking(state),
+            _ => stringBuilder
         };
+    }
 
-        AppendStyling(sb, value, ref firstEdit);
+    private enum ModeApplyMode : byte
+    {
+        /// <summary>
+        /// Do nothing.
+        /// </summary>
+        Keep,
+
+        /// <summary>
+        /// Enable the mode.
+        /// </summary>
+        Enable,
+
+        /// <summary>
+        /// Disable the mode.
+        /// </summary>
+        Disable
     }
 }
