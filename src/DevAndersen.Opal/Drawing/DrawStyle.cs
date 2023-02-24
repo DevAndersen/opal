@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace DevAndersen.Opal.Drawing;
+﻿namespace DevAndersen.Opal.Drawing;
 
 public readonly record struct DrawStyle
 {
