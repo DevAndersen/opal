@@ -9,7 +9,9 @@ public class ConsoleRenderer
     private readonly IConsoleHandler consoleHandler;
     private readonly StringBuilder stringBuilder;
     private int sbCap;
+    private int charsToSkip;
     private bool firstEdit;
+    private object lockObject = new object();
 
     public ConsoleRenderer(IConsoleHandler consoleHandler)
     {
@@ -19,7 +21,7 @@ public class ConsoleRenderer
 
     public void Render(ConsoleGrid grid)
     {
-        lock (this)
+        lock (lockObject)
         {
             stringBuilder
                 .Clear()
@@ -33,13 +35,12 @@ public class ConsoleRenderer
             ConsoleChar previousConsoleChar = default;
 
             int start = 0;
+            int end = 0;
             while (start < grid.Grid.Length)
             {
-                int end = 0;
+                end = 0;
 
-                while (start + end < grid.Grid.Length
-                    && grid.Grid.Span[start].HasSameStylingAs(grid.Grid.Span[start + end]) // While chars are all the same mode
-                    && (end == 0 || (start + end) % consoleHandler.Width != 0)) // While not at the end of a line
+                while (CanCharsBeGroupedTogether(grid, start, start + end))
                 {
                     end++;
                 }
@@ -53,6 +54,7 @@ public class ConsoleRenderer
                 int x = (start + end) / consoleHandler.Width;
                 if (end != 0 && (start + end) % consoleHandler.Width == 0 && x < consoleHandler.Height)
                 {
+                    charsToSkip = 0;
                     stringBuilder
                         .AppendEscapeBracket()
                         .AppendSetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset + x)
@@ -76,6 +78,20 @@ public class ConsoleRenderer
                 stringBuilder.Capacity = sbCap;
             }
         }
+    }
+
+    /// <summary>
+    /// Asserts if the <c><see cref="ConsoleChar"/></c>s at <c><paramref name="startPosition"/></c> and <c><paramref name="currentPosition"/></c> should be grouped together.
+    /// </summary>
+    /// <param name="grid"></param>
+    /// <param name="startPosition">The index of the start character.</param>
+    /// <param name="currentPosition">The index of the current character.</param>
+    /// <returns></returns>
+    private bool CanCharsBeGroupedTogether(ConsoleGrid grid, int startPosition, int currentPosition)
+    {
+        return currentPosition < grid.Grid.Length // Is the position outside of the bounds of the grid?
+            && grid.Grid.Span[startPosition].HasSameStylingAs(grid.Grid.Span[currentPosition]) // Do the chars have the same mode?
+            && (currentPosition == startPosition || currentPosition % consoleHandler.Width != 0); // Has the end of the line been reached?
     }
 
     /// <summary>
@@ -154,13 +170,26 @@ public class ConsoleRenderer
 
         foreach (ConsoleChar item in consoleChars)
         {
-            if (item.Character == default)
+            if (charsToSkip > 1)
             {
-                stringBuilder.Append(' ');
+                charsToSkip--;
+                continue;
+            }
+
+            if (item.RenderAsString())
+            {
+                charsToSkip = ConsoleCharStringCache.AppendFromCache(stringBuilder, item.Character);
             }
             else
             {
-                stringBuilder.Append(item.Character);
+                if (item.Character == default)
+                {
+                    stringBuilder.Append(' ');
+                }
+                else
+                {
+                    stringBuilder.Append(item.Character);
+                }
             }
         }
     }
