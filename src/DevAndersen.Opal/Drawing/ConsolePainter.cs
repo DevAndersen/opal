@@ -1,11 +1,11 @@
 ﻿using DevAndersen.Opal.Rendering;
-using System.Data;
 
 namespace DevAndersen.Opal.Drawing;
 
 public static class ConsolePainter
 {
     #region DrawBox
+
     public static void DrawBox(ConsoleGrid grid, int posX, int posY, int width, int height)
     {
         DrawBox(grid, posX, posY, width, height, DrawStyle.StandardDrawStyle, default);
@@ -187,26 +187,6 @@ public static class ConsolePainter
                 }
             }
         }
-    }
-
-    public static void DrawHorizontalScrollbar(ConsoleGrid grid, int posX, int posY, int length, float size, float value)
-    {
-        int pos = Math.Clamp((int)(value / size * (length - 3)), 0, length - 3);
-
-        grid[posX, posY] = new ConsoleChar { Character = (char)0x2190 };
-        grid[posX + length - 1, posY] = new ConsoleChar { Character = (char)0x2192 };
-        DrawHorizontalLine(grid, posX + 1, posY, length - 2);
-        grid[posX + pos + 1, posY] = new ConsoleChar { Character = DrawStyle.HeavyDrawStyle.Horizontal };
-    }
-
-    public static void DrawVerticalScrollbar(ConsoleGrid grid, int posX, int posY, int length, float size, float value)
-    {
-        int pos = Math.Clamp((int)(value / size * (length - 3)), 0, length - 3);
-
-        grid[posX, posY] = new ConsoleChar { Character = (char)0x2191 };
-        grid[posX, posY + length - 1] = new ConsoleChar { Character = (char)0x2193 };
-        DrawVerticalLine(grid, posX, posY + 1, length - 2);
-        grid[posX, posY + pos + 1] = new ConsoleChar { Character = DrawStyle.HeavyDrawStyle.Vertical };
     }
 
     #endregion
