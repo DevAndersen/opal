@@ -7,7 +7,42 @@ public readonly struct ConsoleChar
 {
     #region Properties and fields
 
-    public char Character { get; init; }
+    private readonly char character;
+
+    /// <summary>
+    /// The UTF-16 character that the console character should print as.
+    /// </summary>
+    /// <remarks>
+    /// If <c><see cref="Sequence"/></c> has been set, this contains the string's index in <c><see cref="ConsoleCharStringCache"/></c>.
+    /// </remarks>
+    public char Character
+    {
+        get => character;
+        init
+        {
+            character = value;
+            Metadata &= ~ConsoleCharMetadata.UseStringCache;
+        }
+    }
+
+    /// <summary>
+    /// The string that the console character should print as.
+    /// </summary>
+    /// <remarks>
+    /// This is intended to be used in cases where the desired symbols/characters consist of multiple UTF-16 characters.
+    /// </remarks>
+    public string? Sequence
+    {
+        get => RenderAsString() ? ConsoleCharStringCache.Get(Character) : null;
+        init
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                Character = (char)ConsoleCharStringCache.Add(value);
+                Metadata |= ConsoleCharMetadata.UseStringCache;
+            }
+        }
+    }
 
     private readonly byte foregroundSimple;
     public ConsoleColor ForegroundSimple
@@ -110,12 +145,47 @@ public readonly struct ConsoleChar
         BackgroundRgb = backgroundColor;
     }
 
+    public ConsoleChar(string sequence)
+    {
+        Sequence = sequence;
+    }
+
+    public ConsoleChar(string sequence, ConsoleColor foregroundColor) : this(sequence)
+    {
+        ForegroundSimple = foregroundColor;
+    }
+
+    public ConsoleChar(string sequence, int foregroundColor) : this(sequence)
+    {
+        ForegroundRgb = foregroundColor;
+    }
+
+    public ConsoleChar(string sequence, ConsoleColor foregroundColor, ConsoleColor backgroundColor) : this(sequence, foregroundColor)
+    {
+        BackgroundSimple = backgroundColor;
+    }
+
+    public ConsoleChar(string sequence, ConsoleColor foregroundColor, int backgroundColor) : this(sequence, foregroundColor)
+    {
+        BackgroundRgb = backgroundColor;
+    }
+
+    public ConsoleChar(string sequence, int foregroundColor, ConsoleColor backgroundColor) : this(sequence, foregroundColor)
+    {
+        BackgroundSimple = backgroundColor;
+    }
+
+    public ConsoleChar(string sequence, int foregroundColor, int backgroundColor) : this(sequence, foregroundColor)
+    {
+        BackgroundRgb = backgroundColor;
+    }
+
     #endregion
 
     #region Methods
 
     /// <summary>
-    /// Returns <c>true</c> if the style of <c>this</c> and <c><paramref name="other"/></c> are the same. Otherwise, returns <c>false</c>.
+    /// Returns <c>true</c> if the styling of <c>this</c> and <c><paramref name="other"/></c> are identical. Otherwise, returns <c>false</c>.
     /// </summary>
     /// <param name="other"></param>
     /// <returns></returns>
@@ -127,6 +197,11 @@ public readonly struct ConsoleChar
             && ForegroundRgb == other.ForegroundRgb
             && BackgroundSimple == other.BackgroundSimple
             && BackgroundRgb == other.BackgroundRgb;
+    }
+
+    public bool RenderAsString()
+    {
+        return (Metadata & ConsoleCharMetadata.UseStringCache) == ConsoleCharMetadata.UseStringCache;
     }
 
     #endregion

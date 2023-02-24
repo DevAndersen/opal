@@ -1,31 +1,43 @@
 ﻿using DevAndersen.Opal.Demo;
 
-bool keepGoing = true;
-
-(string DisplayName, Action Action)[] options =
+Action[] actions = new Action[]
 {
-    ("Raw render demo", RawRenderDemo.Run),
-    ("View demo", ViewDemo.Run),
-    ("Drawing demo", DrawingDemo.Run),
-    ("Exit", () => keepGoing = false)
+    RawRenderDemo.Run,
+    ViewDemo.Run,
+    LoadingDemo.Run,
+    LinesTestDemo.Run,
+    StringCacheDemo.Run,
+    DrawingDemo.Run
 };
+
+bool hasValidChoiceBeenMade = false;
 
 do
 {
     Console.Clear();
-    for (int i = 0; i < options.Length; i++)
-    {
-        Console.WriteLine($"{i + 1} {options[i].DisplayName}");
-    }
-    Console.WriteLine();
+    PrintActions(actions);
 
     Console.Write("> ");
-    bool inputIsValidNumber = int.TryParse(Console.ReadLine(), out int inputNumber);
+    string? input = Console.ReadLine();
+    bool inputIsValidNumber = int.TryParse(input, out int inputNumber);
 
-    if (inputIsValidNumber && inputNumber > 0 && inputNumber <= options.Length)
+    if (inputIsValidNumber && inputNumber > 0 && inputNumber <= actions.Length)
     {
-        options[inputNumber - 1].Action.Invoke();
+        hasValidChoiceBeenMade = true;
+        actions[inputNumber - 1].Invoke();
     }
-} while (keepGoing);
+} while (!hasValidChoiceBeenMade);
 
 Console.WriteLine("Program exit.");
+Console.ReadLine();
+
+static void PrintActions(Action[] actions)
+{
+    for (int i = 0; i < actions.Length; i++)
+    {
+        Action action = actions[i];
+        string act = action.Method.DeclaringType?.Name ?? "[UNKNOWN]";
+        Console.WriteLine($"{i + 1} {act}");
+    }
+    Console.WriteLine();
+}

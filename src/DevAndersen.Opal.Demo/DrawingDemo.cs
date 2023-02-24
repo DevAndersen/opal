@@ -54,8 +54,5 @@ public class DrawingView : ConsoleView, IKeyboardInputHandler
 
         ConsolePainter.DrawBox(grid, posX, posY, width, height, DrawStyle.DoubleDrawStyle, new ConsoleChar { ForegroundSimple = ConsoleColor.Magenta });
         ConsolePainter.DrawTextArea(grid, posX + 1, posY + 1, width - 2, height - 2, x, y, 0, "Line one\nLine two\r\nLine three\n\nLine five\nThis line is really rather long.", new ConsoleChar { ForegroundRgb = 0x3377ff });
-
-        ConsolePainter.DrawHorizontalScrollbar(grid, posX + 1, posY + height, width - 2, 10, x);
-        ConsolePainter.DrawVerticalScrollbar(grid, posX + width, posY + 1, height - 2, 10, y);
     }
 }
