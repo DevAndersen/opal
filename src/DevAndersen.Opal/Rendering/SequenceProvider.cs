@@ -19,14 +19,11 @@ public static class SequenceProvider
         }
     }
 
-    public static string Reset()
-        => $"{Escape}[0m";
+    public static string Reset() => $"{Escape}[0m";
 
-    public static string EnableAlternateBuffer()
-        => $"{Escape}[?1049h";
+    public static string EnableAlternateBuffer() => $"{Escape}[?1049h";
 
-    public static string DisableAlternateBuffer()
-        => $"{Escape}[?1049l";
+    public static string DisableAlternateBuffer() => $"{Escape}[?1049l";
 
     public static StringBuilder AppendEscapeBracket(this StringBuilder sb)
         => sb
@@ -34,8 +31,7 @@ public static class SequenceProvider
         .Append('[');
 
     public static StringBuilder AppendSGREnding(this StringBuilder sb)
-        =>
-        sb.Append(SGREnding);
+        => sb.Append(SGREnding);
 
     public static StringBuilder AppendReset(this StringBuilder sb)
         => sb.Append('0');
@@ -101,27 +97,24 @@ public static class SequenceProvider
         .Append(DelimiterCharacter)
         .Append(x + 1);
 
-    private static int GetColorCodeFromConsoleColor(ConsoleColor color)
+    private static int GetColorCodeFromConsoleColor(ConsoleColor color) => color switch
     {
-        return color switch
-        {
-            ConsoleColor.Black => 30,
-            ConsoleColor.DarkBlue => 34,
-            ConsoleColor.DarkGreen => 32,
-            ConsoleColor.DarkCyan => 36,
-            ConsoleColor.DarkRed => 31,
-            ConsoleColor.DarkMagenta => 35,
-            ConsoleColor.DarkYellow => 33,
-            ConsoleColor.Gray => 37,
-            ConsoleColor.DarkGray => 90,
-            ConsoleColor.Blue => 94,
-            ConsoleColor.Green => 92,
-            ConsoleColor.Cyan => 96,
-            ConsoleColor.Red => 91,
-            ConsoleColor.Magenta => 95,
-            ConsoleColor.Yellow => 93,
-            ConsoleColor.White => 97,
-            _ => 39
-        };
-    }
+        ConsoleColor.Black => 30,
+        ConsoleColor.DarkBlue => 34,
+        ConsoleColor.DarkGreen => 32,
+        ConsoleColor.DarkCyan => 36,
+        ConsoleColor.DarkRed => 31,
+        ConsoleColor.DarkMagenta => 35,
+        ConsoleColor.DarkYellow => 33,
+        ConsoleColor.Gray => 37,
+        ConsoleColor.DarkGray => 90,
+        ConsoleColor.Blue => 94,
+        ConsoleColor.Green => 92,
+        ConsoleColor.Cyan => 96,
+        ConsoleColor.Red => 91,
+        ConsoleColor.Magenta => 95,
+        ConsoleColor.Yellow => 93,
+        ConsoleColor.White => 97,
+        _ => 39
+    };
 }
