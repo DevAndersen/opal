@@ -6,6 +6,7 @@ Action[] actions = new Action[]
     ViewDemo.Run,
     LoadingDemo.Run,
     LinesTestDemo.Run,
+    StringCacheDemo.Run
 };
 
 bool hasValidChoiceBeenMade = false;
