@@ -35,7 +35,7 @@ public class LoadingView : ConsoleView
         }
     }
 
-    public override void Render(ConsoleGrid grid)
+    public override void Render(IConsoleGrid grid)
     {
         for (int x = 0; x < grid.Width; x++)
         {

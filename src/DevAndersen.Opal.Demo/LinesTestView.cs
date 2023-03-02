@@ -29,7 +29,7 @@ public class LinesTestView : ConsoleView
         cycles++;
     }
 
-    public override void Render(ConsoleGrid grid)
+    public override void Render(IConsoleGrid grid)
     {
         for (int x = 0; x < ConsoleWidth; x++)
         {

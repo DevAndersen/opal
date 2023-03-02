@@ -23,7 +23,7 @@ public abstract class ConsoleView : IRenderable
     {
     }
 
-    public abstract void Render(ConsoleGrid grid);
+    public abstract void Render(IConsoleGrid grid);
 
     protected void Goto(ConsoleView view)
     {

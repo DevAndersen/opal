@@ -4,5 +4,5 @@ namespace DevAndersen.Opal.Views;
 
 public interface IRenderable
 {
-    public void Render(ConsoleGrid grid);
+    public void Render(IConsoleGrid grid);
 }
