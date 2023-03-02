@@ -6,22 +6,22 @@ public static class ConsolePainter
 {
     #region DrawBox
 
-    public static void DrawBox(ConsoleGrid grid, int posX, int posY, int width, int height)
+    public static void DrawBox(IConsoleGrid grid, int posX, int posY, int width, int height)
     {
         DrawBox(grid, posX, posY, width, height, DrawStyle.StandardDrawStyle, default);
     }
 
-    public static void DrawBox(ConsoleGrid grid, int posX, int posY, int width, int height, DrawStyle style)
+    public static void DrawBox(IConsoleGrid grid, int posX, int posY, int width, int height, DrawStyle style)
     {
         DrawBox(grid, posX, posY, width, height, style, default);
     }
 
-    public static void DrawBox(ConsoleGrid grid, int posX, int posY, int width, int height, ConsoleChar template)
+    public static void DrawBox(IConsoleGrid grid, int posX, int posY, int width, int height, ConsoleChar template)
     {
         DrawBox(grid, posX, posY, width, height, DrawStyle.StandardDrawStyle, template);
     }
 
-    public static void DrawBox(ConsoleGrid grid, int posX, int posY, int width, int height, DrawStyle style, ConsoleChar template)
+    public static void DrawBox(IConsoleGrid grid, int posX, int posY, int width, int height, DrawStyle style, ConsoleChar template)
     {
         grid[posX, posY] = template with { Character = style.TopLeftCorner };
         grid[posX + width, posY] = template with { Character = style.TopRightCorner };
@@ -45,22 +45,22 @@ public static class ConsolePainter
 
     #region DrawHorizontalLine
 
-    public static void DrawHorizontalLine(ConsoleGrid grid, int posX, int posY, int length)
+    public static void DrawHorizontalLine(IConsoleGrid grid, int posX, int posY, int length)
     {
         DrawHorizontalLine(grid, posX, posY, length, DrawStyle.StandardDrawStyle, default);
     }
 
-    public static void DrawHorizontalLine(ConsoleGrid grid, int posX, int posY, int length, DrawStyle style)
+    public static void DrawHorizontalLine(IConsoleGrid grid, int posX, int posY, int length, DrawStyle style)
     {
         DrawHorizontalLine(grid, posX, posY, length, style, default);
     }
 
-    public static void DrawHorizontalLine(ConsoleGrid grid, int posX, int posY, int length, ConsoleChar template)
+    public static void DrawHorizontalLine(IConsoleGrid grid, int posX, int posY, int length, ConsoleChar template)
     {
         DrawHorizontalLine(grid, posX, posY, length, DrawStyle.StandardDrawStyle, template);
     }
 
-    public static void DrawHorizontalLine(ConsoleGrid grid, int posX, int posY, int length, DrawStyle style, ConsoleChar template)
+    public static void DrawHorizontalLine(IConsoleGrid grid, int posX, int posY, int length, DrawStyle style, ConsoleChar template)
     {
         for (int x = 0; x < length; x++)
         {
@@ -72,22 +72,22 @@ public static class ConsolePainter
 
     #region DrawVerticalLine
 
-    public static void DrawVerticalLine(ConsoleGrid grid, int posX, int posY, int length)
+    public static void DrawVerticalLine(IConsoleGrid grid, int posX, int posY, int length)
     {
         DrawVerticalLine(grid, posX, posY, length, DrawStyle.StandardDrawStyle, default);
     }
 
-    public static void DrawVerticalLine(ConsoleGrid grid, int posX, int posY, int length, DrawStyle style)
+    public static void DrawVerticalLine(IConsoleGrid grid, int posX, int posY, int length, DrawStyle style)
     {
         DrawVerticalLine(grid, posX, posY, length, style, default);
     }
 
-    public static void DrawVerticalLine(ConsoleGrid grid, int posX, int posY, int length, ConsoleChar template)
+    public static void DrawVerticalLine(IConsoleGrid grid, int posX, int posY, int length, ConsoleChar template)
     {
         DrawVerticalLine(grid, posX, posY, length, DrawStyle.StandardDrawStyle, template);
     }
 
-    public static void DrawVerticalLine(ConsoleGrid grid, int posX, int posY, int length, DrawStyle style, ConsoleChar template)
+    public static void DrawVerticalLine(IConsoleGrid grid, int posX, int posY, int length, DrawStyle style, ConsoleChar template)
     {
         for (int y = 0; y < length; y++)
         {
@@ -99,12 +99,12 @@ public static class ConsolePainter
 
     #region DrawString
 
-    public static void DrawString(ConsoleGrid grid, int posX, int posY, string text)
+    public static void DrawString(IConsoleGrid grid, int posX, int posY, string text)
     {
         DrawString(grid, posX, posY, text, default);
     }
 
-    public static void DrawString(ConsoleGrid grid, int posX, int posY, string text, ConsoleChar template)
+    public static void DrawString(IConsoleGrid grid, int posX, int posY, string text, ConsoleChar template)
     {
         for (int i = 0; i < text.Length; i++)
         {
@@ -116,12 +116,12 @@ public static class ConsolePainter
 
     #region DrawWrappingString
 
-    public static void DrawWrappingString(ConsoleGrid grid, int posX, int posY, int width, string text)
+    public static void DrawWrappingString(IConsoleGrid grid, int posX, int posY, int width, string text)
     {
         DrawWrappingString(grid, posX, posY, width, int.MaxValue, text, default);
     }
 
-    public static void DrawWrappingString(ConsoleGrid grid, int posX, int posY, int width, int height, string text, ConsoleChar template)
+    public static void DrawWrappingString(IConsoleGrid grid, int posX, int posY, int width, int height, string text, ConsoleChar template)
     {
         for (int i = 0; i < text.Length; i++)
         {
@@ -141,17 +141,17 @@ public static class ConsolePainter
 
     #region DrawTextArea
 
-    public static void DrawTextArea(ConsoleGrid grid, int posX, int posY, string text)
+    public static void DrawTextArea(IConsoleGrid grid, int posX, int posY, string text)
     {
         DrawTextArea(grid, posX, posY, text, default, 4);
     }
 
-    public static void DrawTextArea(ConsoleGrid grid, int posX, int posY, string text, ConsoleChar template)
+    public static void DrawTextArea(IConsoleGrid grid, int posX, int posY, string text, ConsoleChar template)
     {
         DrawTextArea(grid, posX, posY, text, template, 4);
     }
 
-    public static void DrawTextArea(ConsoleGrid grid, int posX, int posY, string text, ConsoleChar template, int tabWidth)
+    public static void DrawTextArea(IConsoleGrid grid, int posX, int posY, string text, ConsoleChar template, int tabWidth)
     {
         string[] lines = text.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.None);
 
@@ -166,7 +166,7 @@ public static class ConsolePainter
         }
     }
 
-    public static void DrawTextArea(ConsoleGrid grid, int posX, int posY, int width, int height, int viewOffsetX, int viewOffsetY, int wrapWidth, string text, ConsoleChar template)
+    public static void DrawTextArea(IConsoleGrid grid, int posX, int posY, int width, int height, int viewOffsetX, int viewOffsetY, int wrapWidth, string text, ConsoleChar template)
     {
         string[] lines = text.Split(new string[] { "\n", "\r\n" }, StringSplitOptions.None);
 

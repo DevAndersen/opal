@@ -42,7 +42,7 @@ public class TimeView : ConsoleView
         }
     }
 
-    public override void Render(ConsoleGrid grid)
+    public override void Render(IConsoleGrid grid)
     {
         string s = $" The time is {DateTime.Now} ";
         for (int i = 0; i < s.Length; i++)
@@ -88,7 +88,7 @@ public class WriteView : ConsoleView, IKeyboardInputHandler
         }
     }
 
-    public override void Render(ConsoleGrid grid)
+    public override void Render(IConsoleGrid grid)
     {
         for (int i = 0; i < s.Length; i++)
         {
@@ -161,7 +161,7 @@ public class ColorView : ConsoleView
         frame++;
     }
 
-    public override void Render(ConsoleGrid grid)
+    public override void Render(IConsoleGrid grid)
     {
         for (int y = 0; y < grid.Height; y++)
         {

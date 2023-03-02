@@ -42,7 +42,7 @@ public class DrawingView : ConsoleView, IKeyboardInputHandler
         }
     }
 
-    public override void Render(ConsoleGrid grid)
+    public override void Render(IConsoleGrid grid)
     {
         ConsolePainter.DrawString(grid, 2, 2, $"X: {x}");
         ConsolePainter.DrawString(grid, 2, 4, $"Y: {y}");
