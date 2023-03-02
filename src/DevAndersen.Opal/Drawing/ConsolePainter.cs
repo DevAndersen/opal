@@ -191,6 +191,21 @@ public static class ConsolePainter
 
     #endregion
 
+    #region DrawFill
+
+    public static void DrawFill(IConsoleGrid grid, int posX, int posY, int width, int height, ConsoleChar template)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                grid[posX + x, posY + y] = template;
+            }
+        }
+    }
+
+    #endregion
+
     #region Private methods
 
     private static char GetSafeChar(char c)
