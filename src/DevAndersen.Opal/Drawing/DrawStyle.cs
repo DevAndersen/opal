@@ -1,6 +1,6 @@
 ﻿namespace DevAndersen.Opal.Drawing;
 
-public readonly record struct DrawStyle
+public record DrawStyle
 {
     public char Horizontal { get; init; }
 
