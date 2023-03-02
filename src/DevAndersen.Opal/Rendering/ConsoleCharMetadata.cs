@@ -34,5 +34,5 @@ internal enum ConsoleCharMetadata : byte
     /// <summary>
     /// Print <c><see cref="ConsoleChar.Sequence"/></c> instead of <c><see cref="ConsoleChar.Character"/></c>.
     /// </summary>
-    UseStringCache = 0b_0001_0000,
+    UseStringCache = 0b_0001_0000
 }

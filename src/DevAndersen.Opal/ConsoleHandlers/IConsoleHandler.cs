@@ -95,7 +95,6 @@ public interface IConsoleHandler : IDisposable
     /// Returns a new instance of the default <c><see cref="IConsoleHandler"/></c> for the current platform.
     /// </summary>
     /// <returns></returns>
-    /// <exception cref="PlatformNotSupportedException">Thrown if no default <c><see cref="IConsoleHandler"/></c> has been specified for the current platform.</exception>
     public static IConsoleHandler CreateDefaultHandlerForCurrentPlatform()
     {
         return Environment.OSVersion.Platform switch

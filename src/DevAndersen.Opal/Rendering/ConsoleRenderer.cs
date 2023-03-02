@@ -8,15 +8,16 @@ public class ConsoleRenderer
 
     private readonly IConsoleHandler consoleHandler;
     private readonly StringBuilder stringBuilder;
+    private readonly object lockObject;
     private int sbCap;
     private int charsToSkip;
     private bool firstEdit;
-    private object lockObject = new object();
 
     public ConsoleRenderer(IConsoleHandler consoleHandler)
     {
         this.consoleHandler = consoleHandler;
         stringBuilder = new StringBuilder();
+        lockObject = new object();
     }
 
     public void Render(ConsoleGrid grid)
@@ -33,9 +34,9 @@ public class ConsoleRenderer
                 .Append('H');
 
             ConsoleChar previousConsoleChar = default;
-
             int start = 0;
             int end = 0;
+
             while (start < grid.Grid.Length)
             {
                 end = 0;

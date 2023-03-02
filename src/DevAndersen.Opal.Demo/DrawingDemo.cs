@@ -34,7 +34,7 @@ public class DrawingView : ConsoleView, IKeyboardInputHandler
             case ConsoleKey.UpArrow when y > 0:
                 y--;
                 break;
-                case ConsoleKey.Escape:
+            case ConsoleKey.Escape:
                 ExitView();
                 break;
             default:
