@@ -1,15 +1,17 @@
 ﻿namespace DevAndersen.Opal.Rendering;
 
 /// <summary>
-/// String cache for <see cref="ConsoleChar"/> that should render as multiple UTF-16 characters.
-/// If the limit of the cache is reached, it will start overwriting old cached strings in the order that they were added.
+/// String cache for <see cref="ConsoleChar"/> that should render as multiple UTF-16 characters, such as emoji.
 /// </summary>
+/// <remarks>
+/// The cache has a limited size. If the limit is reached, it will start overwriting old cached strings in the order that they were added.
+/// </remarks>
 public static class ConsoleCharStringCache
 {
     private const ushort cacheSize = ushort.MaxValue;
     private static ushort position = 0;
     private static string[] cache = new string[cacheSize];
-    private static object lockObject = new object();
+    private static readonly object lockObject = new object();
 
     /// <summary>
     /// Clear the string cache, allowing GC to collect the old strings.
@@ -36,12 +38,12 @@ public static class ConsoleCharStringCache
     /// Adds <paramref name="sequence"/> to the cache if it is currently not in the cache, returning the index of the string in the cache.
     /// </summary>
     /// <param name="sequence">The sequence to be stored in the cache.</param>
-    /// <returns>The index of the string in the cache.</returns>
+    /// <returns>The index of <paramref name="sequence"/> in the cache.</returns>
     internal static ushort Add(string sequence)
     {
         lock (lockObject)
         {
-            var index = Array.FindIndex(cache, x => x != null && x.Equals(sequence));
+            int index = Array.FindIndex(cache, x => x != null && x.Equals(sequence));
             if (index >= 0)
             {
                 return (ushort)index;

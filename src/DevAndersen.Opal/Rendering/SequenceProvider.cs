@@ -19,16 +19,19 @@ public static class SequenceProvider
         }
     }
 
-    public static string Reset() => $"{Escape}[0m";
+    public static string Reset()
+        => $"{Escape}[0m";
 
-    public static string EnableAlternateBuffer() => $"{Escape}[?1049h";
+    public static string EnableAlternateBuffer()
+        => $"{Escape}[?1049h";
 
-    public static string DisableAlternateBuffer() => $"{Escape}[?1049l";
+    public static string DisableAlternateBuffer()
+        => $"{Escape}[?1049l";
 
     public static StringBuilder AppendEscapeBracket(this StringBuilder sb)
         => sb
-        .Append(Escape)
-        .Append('[');
+            .Append(Escape)
+            .Append('[');
 
     public static StringBuilder AppendSGREnding(this StringBuilder sb)
         => sb.Append(SGREnding);
@@ -63,12 +66,12 @@ public static class SequenceProvider
 
     public static StringBuilder AppendForegroundRgb(this StringBuilder sb, byte r, byte g, byte b)
         => sb
-        .Append("38;2;")
-        .Append(r)
-        .Append(DelimiterCharacter)
-        .Append(g)
-        .Append(DelimiterCharacter)
-        .Append(b);
+            .Append("38;2;")
+            .Append(r)
+            .Append(DelimiterCharacter)
+            .Append(g)
+            .Append(DelimiterCharacter)
+            .Append(b);
 
     public static StringBuilder AppendBackgroundRgb(this StringBuilder sb, byte r, byte g, byte b)
         => sb
@@ -93,9 +96,9 @@ public static class SequenceProvider
 
     public static StringBuilder AppendSetCursorPosition(this StringBuilder sb, int x, int y)
         => sb
-        .Append(y + 1)
-        .Append(DelimiterCharacter)
-        .Append(x + 1);
+            .Append(y + 1)
+            .Append(DelimiterCharacter)
+            .Append(x + 1);
 
     private static int GetColorCodeFromConsoleColor(ConsoleColor color) => color switch
     {
