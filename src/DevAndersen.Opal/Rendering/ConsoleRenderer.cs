@@ -37,7 +37,7 @@ public class ConsoleRenderer
             int start = 0;
             int end = 0;
 
-            while (start < grid.Grid.Length)
+            while (start < grid.Buffer.Length)
             {
                 end = 0;
 
@@ -46,7 +46,7 @@ public class ConsoleRenderer
                     end++;
                 }
 
-                Span<ConsoleChar> slice = grid.Grid.Span.Slice(start, end);
+                Span<ConsoleChar> slice = grid.Buffer.Span.Slice(start, end);
                 if (slice.Length > 0)
                 {
                     AppendNew(slice, previousConsoleChar);
@@ -63,7 +63,7 @@ public class ConsoleRenderer
                 }
 
                 start += end;
-                previousConsoleChar = grid.Grid.Span[start - 1];
+                previousConsoleChar = grid.Buffer.Span[start - 1];
             }
 
             stringBuilder
@@ -90,8 +90,8 @@ public class ConsoleRenderer
     /// <returns></returns>
     private bool CanCharsBeGroupedTogether(ConsoleGrid grid, int startPosition, int currentPosition)
     {
-        return currentPosition < grid.Grid.Length // Is the position outside of the bounds of the grid?
-            && grid.Grid.Span[startPosition].HasSameStylingAs(grid.Grid.Span[currentPosition]) // Do the chars have the same mode?
+        return currentPosition < grid.Buffer.Length // Is the position outside of the bounds of the grid?
+            && grid.Buffer.Span[startPosition].HasSameStylingAs(grid.Buffer.Span[currentPosition]) // Do the chars have the same mode?
             && (currentPosition == startPosition || currentPosition % consoleHandler.Width != 0); // Has the end of the line been reached?
     }
 
