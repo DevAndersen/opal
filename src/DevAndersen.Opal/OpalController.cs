@@ -167,7 +167,7 @@ public class OpalController : IDisposable
             {
                 grid.SetSize(handler.Width, handler.Height);
             }
-            grid.Grid.Span.Clear();
+            grid.Buffer.Span.Clear();
         }
         return grid;
     }

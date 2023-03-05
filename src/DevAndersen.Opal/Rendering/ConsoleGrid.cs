@@ -9,7 +9,7 @@ public class ConsoleGrid : BaseConsoleGrid
 {
     private readonly object lockObject;
 
-    internal Memory<ConsoleChar> Grid { get; private set; }
+    internal Memory<ConsoleChar> Buffer { get; private set; }
 
     public override ConsoleChar this[int x, int y]
     {
@@ -18,7 +18,7 @@ public class ConsoleGrid : BaseConsoleGrid
             lock (lockObject)
             {
                 return IsCoordinateWithinGrid(x, y)
-                    ? Grid.Span[x + y * Width]
+                    ? Buffer.Span[x + y * Width]
                     : default;
             }
         }
@@ -28,7 +28,7 @@ public class ConsoleGrid : BaseConsoleGrid
             {
                 if (IsCoordinateWithinGrid(x, y))
                 {
-                    Grid.Span[x + y * Width] = value;
+                    Buffer.Span[x + y * Width] = value;
                 }
             }
         }
@@ -64,7 +64,7 @@ public class ConsoleGrid : BaseConsoleGrid
             {
                 Width = width;
                 Height = height;
-                Grid = new ConsoleChar[Width * Height];
+                Buffer = new ConsoleChar[Width * Height];
                 return true;
             }
             return false;
