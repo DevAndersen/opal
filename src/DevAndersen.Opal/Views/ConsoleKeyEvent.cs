@@ -10,8 +10,6 @@ public struct ConsoleKeyEvent
 
     public char KeyChar => KeyInfo.KeyChar;
 
-    public bool Handled { get; set; }
-
     public ConsoleKeyEvent(ConsoleKeyInfo keyInfo)
     {
         KeyInfo = keyInfo;
