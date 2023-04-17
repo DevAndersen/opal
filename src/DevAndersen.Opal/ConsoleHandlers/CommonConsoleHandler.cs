@@ -79,7 +79,7 @@ public class CommonConsoleHandler : IConsoleHandler
 
     public virtual void Print(StringBuilder stringBuilder)
     {
-        Console.Write(stringBuilder.ToString());
+        Console.Out.Write(stringBuilder);
     }
 
     protected virtual void ConsoleSizeThreadMethod()
