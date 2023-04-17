@@ -94,10 +94,10 @@ public class WindowsConsoleHandler : CommonConsoleHandler, IDisposable
     /// <param name="stringBuilder"></param>
     public unsafe override void Print(StringBuilder stringBuilder)
     {
-        nint ptr = Marshal.AllocHGlobal(stringBuilder.Length * sizeof(char));
-        Span<char> span = new Span<char>(ptr.ToPointer(), stringBuilder.Length);
+        char* ptr = (char*)NativeMemory.Alloc((nuint)stringBuilder.Length, sizeof(char));
+        Span<char> span = new Span<char>(ptr, stringBuilder.Length);
         stringBuilder.CopyTo(0, span, stringBuilder.Length);
         WriteConsole(outputHandle, ptr, stringBuilder.Length, out _);
-        Marshal.FreeHGlobal(ptr);
+        NativeMemory.Free(ptr);
     }
 }
