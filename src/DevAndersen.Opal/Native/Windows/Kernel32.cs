@@ -105,7 +105,7 @@ internal static partial class Kernel32
     /// <returns><c>true</c> if successful, <c>false</c> if not successful.</returns>
     [LibraryImport(kernel32, EntryPoint = writeConsole, StringMarshalling = StringMarshalling.Utf16, SetLastError = false)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool WriteConsole(nint hConsoleOutput, nint lpBuffer, int nNumberOfCharsToWrite, out nint lpNumberOfCharsWritten);
+    public static unsafe partial bool WriteConsole(nint hConsoleOutput, char* lpBuffer, int nNumberOfCharsToWrite, out nint lpNumberOfCharsWritten);
 
     /// <summary>
     /// Standard console devices.
