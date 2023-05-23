@@ -57,11 +57,11 @@ public class TimeView : ConsoleView
     }
 }
 
-public class WriteView : ConsoleView, IKeyboardInputHandler
+public class WriteView : ConsoleView, IKeyInputHandler
 {
     private string s = string.Empty;
 
-    public void HandleKeyInput(ConsoleKeyEvent keyEvent)
+    public void HandleKeyInput(KeyInput keyEvent)
     {
         if (keyEvent.Key == ConsoleKey.Enter)
         {

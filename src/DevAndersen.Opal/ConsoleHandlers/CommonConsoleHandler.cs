@@ -1,4 +1,5 @@
-﻿using DevAndersen.Opal.Rendering;
+﻿using DevAndersen.Opal.ConsoleHandlers.InputHandlers;
+using DevAndersen.Opal.Rendering;
 
 namespace DevAndersen.Opal.ConsoleHandlers;
 
@@ -9,6 +10,7 @@ public class CommonConsoleHandler : IConsoleHandler
 {
     protected const int consoleSizeThreadTimeout = 50;
     protected readonly Thread consoleSizeThread;
+    protected IInputHandler inputHandler;
 
     public OpalSettings? Settings { get; protected set; }
 
@@ -27,6 +29,7 @@ public class CommonConsoleHandler : IConsoleHandler
     public CommonConsoleHandler()
     {
         consoleSizeThread = new Thread(ConsoleSizeThreadMethod);
+        inputHandler = new UnixInputHandler(this);
     }
 
     public virtual void Start(OpalSettings settings)
@@ -52,10 +55,12 @@ public class CommonConsoleHandler : IConsoleHandler
         }
 
         Console.CursorVisible = false;
+        inputHandler.StartInputListening();
     }
 
     public virtual void Stop()
     {
+        inputHandler.StopInputListening();
         Console.CursorVisible = true;
 
         if (Settings?.UseAlternateBuffer == true)
@@ -81,6 +86,8 @@ public class CommonConsoleHandler : IConsoleHandler
     {
         Console.Out.Write(stringBuilder);
     }
+
+    public virtual IConsoleInput? GetInput() => inputHandler.GetInput();
 
     protected virtual void ConsoleSizeThreadMethod()
     {

@@ -28,6 +28,12 @@ public static class SequenceProvider
     public static string DisableAlternateBuffer()
         => $"{Escape}[?1049l";
 
+    public static string EnableMouseReporting()
+        => $"{Escape}[?1003h{Escape}[?1006h";
+
+    public static string DisableMouseReporting()
+        => $"{Escape}[?1003l{Escape}[?1006l";
+
     public static StringBuilder AppendEscapeBracket(this StringBuilder sb)
         => sb
             .Append(Escape)

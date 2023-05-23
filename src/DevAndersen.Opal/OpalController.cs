@@ -1,17 +1,57 @@
 ﻿using DevAndersen.Opal.ConsoleHandlers;
 using DevAndersen.Opal.Rendering;
 using DevAndersen.Opal.Views;
+using System.Collections.Concurrent;
 
 namespace DevAndersen.Opal;
 
 public class OpalController : IDisposable
 {
+    /// <summary>
+    /// The console handler.
+    /// </summary>
     private readonly IConsoleHandler handler;
+
+    /// <summary>
+    /// The console renderer.
+    /// </summary>
     private readonly ConsoleRenderer renderer;
+
+    /// <summary>
+    /// The stack of console views, allowing the exit of one view to return the user to the previous view.
+    /// </summary>
     private readonly Stack<ConsoleView> viewStack;
+
+    /// <summary>
+    /// The input queue, containing user input to be processed with the next update of the view.
+    /// </summary>
+    private readonly ConcurrentQueue<IConsoleInput> inputQueue;
+
+    /// <summary>
+    /// The thread responsible for listening to user input and enqueue these input to <see cref="inputQueue"/>.
+    /// </summary>
+    private readonly Thread inputThread;
+
+    /// <summary>
+    /// The base settings that for Opal.
+    /// </summary>
     private readonly OpalSettings settings;
+
+    /// <summary>
+    /// The current console grid, containing the data that will be printed to the console.
+    /// </summary>
     private ConsoleGrid? grid;
 
+    /// <summary>
+    /// The previous state of <see cref="grid"/>.
+    /// This is used to check if the console grid differs from the previous rendered grid, in order to avoid redundant prints.
+    /// </summary>
+    private ConsoleGrid? previousGrid;
+
+    /// <summary>
+    /// Returns <c>true</c> if an instance of <see cref="OpalController"/> currently running.
+    /// This property be checked before invoking <see cref="Start"/> or <see cref="StartAsync"/>.
+    /// </summary>
     public static bool IsRunning { get; private set; }
 
     public OpalController(IConsoleHandler consoleHandler, OpalSettings settings)
@@ -19,6 +59,8 @@ public class OpalController : IDisposable
         handler = consoleHandler;
         renderer = new ConsoleRenderer(consoleHandler);
         viewStack = new Stack<ConsoleView>();
+        inputQueue = new ConcurrentQueue<IConsoleInput>();
+        inputThread = new Thread(InputHandlerThreadMethod);
         this.settings = settings;
     }
 
@@ -62,6 +104,7 @@ public class OpalController : IDisposable
 
     private void Run()
     {
+        inputThread.Start();
         while (IsRunning && viewStack.TryPeek(out ConsoleView? currentView))
         {
             bool initRun = false;
@@ -75,17 +118,15 @@ public class OpalController : IDisposable
 
             if (!initRun)
             {
-                if (currentView is IKeyboardInputHandler keyboardHandler && keyboardHandler.AcceptsKeyboardInput())
+                while (inputQueue.TryDequeue(out IConsoleInput? input))
                 {
-                    ConsoleKeyInfo readKey = Console.ReadKey(true);
-                    keyboardHandler.HandleKeyInput(new ConsoleKeyEvent(readKey));
-                }
-                else
-                {
-                    // Discard keyboard input if the current view is not listening.
-                    if (Console.KeyAvailable)
+                    if (currentView is IKeyInputHandler keyHandler && keyHandler.AcceptsKeyInput() && input is KeyInput keyInput)
                     {
-                        Console.ReadKey(true);
+                        keyHandler.HandleKeyInput(keyInput);
+                    }
+                    else if (currentView is IMouseInputHandler mouseHandler && mouseHandler.AcceptsMouseInput() && input is MouseInput mouseInput)
+                    {
+                        mouseHandler.HandleMouseInput(mouseInput);
                     }
                 }
             }
@@ -104,9 +145,25 @@ public class OpalController : IDisposable
             {
                 Task.Delay(currentView.Delay).GetAwaiter().GetResult();
             }
+            else
+            {
+                Task.Delay(10).GetAwaiter().GetResult();
+            }
         }
 
         Stop();
+    }
+
+    public void InputHandlerThreadMethod()
+    {
+        while (IsRunning)
+        {
+            IConsoleInput? input = handler.GetInput();
+            if (input != null)
+            {
+                inputQueue.Enqueue(input);
+            }
+        }
     }
 
     public ConsoleView? GetCurrentView()
@@ -118,9 +175,15 @@ public class OpalController : IDisposable
     {
         if (view != null)
         {
+            previousGrid = grid?.MakeClone();
             grid = GetConsoleGrid(handler, grid);
             view.Render(grid);
-            RenderGrid(renderer, grid);
+
+            // Only print the grid if the current grid is different from the previously printed grid.
+            if (previousGrid?.IsDifferentFrom(grid) != false)
+            {
+                RenderGrid(renderer, grid);
+            }
         }
     }
 

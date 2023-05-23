@@ -1,4 +1,6 @@
-﻿using DevAndersen.Opal.Rendering;
+﻿using DevAndersen.Opal.ConsoleHandlers.InputHandlers;
+using DevAndersen.Opal.Native.Windows;
+using DevAndersen.Opal.Rendering;
 using System.Runtime.InteropServices;
 using static DevAndersen.Opal.Native.Windows.Kernel32;
 
@@ -29,6 +31,11 @@ public class WindowsConsoleHandler : CommonConsoleHandler, IDisposable
     /// </summary>
     private ConsoleOutputModes originalConsoleOutputModes;
 
+    public WindowsConsoleHandler()
+    {
+        inputHandler = new WindowsInputHandler();
+    }
+
     public override void Start(OpalSettings settings)
     {
         if (Running)
@@ -46,8 +53,8 @@ public class WindowsConsoleHandler : CommonConsoleHandler, IDisposable
 
         (Width, Height) = GetClampedConsoleSize(settings);
 
-        inputHandle = GetStdHandle(StdHandle.STD_INPUT_HANDLE);
-        outputHandle = GetStdHandle(StdHandle.STD_OUTPUT_HANDLE);
+        inputHandle = GetStdHandle(StandardDevice.STD_INPUT_HANDLE);
+        outputHandle = GetStdHandle(StandardDevice.STD_OUTPUT_HANDLE);
 
         GetConsoleInputMode(inputHandle, out originalConsoleInputModes);
         GetConsoleOutputMode(outputHandle, out originalConsoleOutputModes);
@@ -61,10 +68,13 @@ public class WindowsConsoleHandler : CommonConsoleHandler, IDisposable
         }
 
         Console.CursorVisible = false;
+        ((WindowsInputHandler)inputHandler).Initialize(inputHandle);
+        inputHandler.StartInputListening();
     }
 
     public override void Stop()
     {
+        inputHandler.StopInputListening();
         Console.CursorVisible = true;
 
         if (Settings?.UseAlternateBuffer == true)

@@ -70,4 +70,27 @@ public class ConsoleGrid : BaseConsoleGrid
             return false;
         }
     }
+
+    /// <summary>
+    /// Creates a new <see cref="ConsoleGrid"/> with the same dimensions and buffer content as this grid.
+    /// </summary>
+    /// <returns></returns>
+    public ConsoleGrid MakeClone()
+    {
+        ConsoleGrid clone = new ConsoleGrid(Width, Height);
+        Buffer.CopyTo(clone.Buffer);
+        return clone;
+    }
+
+    /// <summary>
+    /// Determines if <paramref name="other"/> has a different size or content that this grid.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public bool IsDifferentFrom(ConsoleGrid other)
+    {
+        return Width != other.Width
+            || Height != other.Height
+            || !Buffer.Span.SequenceEqual(other.Buffer.Span);
+    }
 }

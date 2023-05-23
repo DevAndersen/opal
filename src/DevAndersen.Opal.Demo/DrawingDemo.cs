@@ -13,12 +13,12 @@ internal class DrawingDemo
     }
 }
 
-public class DrawingView : ConsoleView, IKeyboardInputHandler
+public class DrawingView : ConsoleView, IKeyInputHandler
 {
     int x = 0;
     int y = 0;
 
-    public void HandleKeyInput(ConsoleKeyEvent keyEvent)
+    public void HandleKeyInput(KeyInput keyEvent)
     {
         switch (keyEvent.Key)
         {
