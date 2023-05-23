@@ -12,7 +12,7 @@ internal class StringCacheDemo
     }
 }
 
-public class StringCacheView : ConsoleView, IKeyboardInputHandler
+public class StringCacheView : ConsoleView, IKeyInputHandler
 {
     private bool hasRenderedOnce = false;
 
@@ -47,7 +47,7 @@ public class StringCacheView : ConsoleView, IKeyboardInputHandler
         hasRenderedOnce = true;
     }
 
-    public void HandleKeyInput(ConsoleKeyEvent keyEvent)
+    public void HandleKeyInput(KeyInput keyEvent)
     {
     }
 }

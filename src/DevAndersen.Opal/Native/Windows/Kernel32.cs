@@ -13,6 +13,9 @@ internal static partial class Kernel32
     private const string getConsoleMode = "GetConsoleMode";
     private const string setConsoleMode = "SetConsoleMode";
     private const string writeConsole = "WriteConsoleW";
+    private const string readConsoleInput = "ReadConsoleInputW";
+    private const string peekConsoleInput = "PeekConsoleInputW";
+    private const string getNumberOfConsoleInputEvents = "GetNumberOfConsoleInputEvents";
 
     /// <summary>
     /// Gets a handler for the standard console device <c><paramref name="nStdHandle"/></c>.
@@ -23,7 +26,7 @@ internal static partial class Kernel32
     /// <param name="nStdHandle">A standard console device.</param>
     /// <returns>A handle for the specified standard console device.</returns>
     [LibraryImport(kernel32, EntryPoint = getStdHandle, SetLastError = false)]
-    public static partial nint GetStdHandle(StdHandle nStdHandle);
+    public static partial nint GetStdHandle(StandardDevice nStdHandle);
 
     /// <summary>
     /// Gets the console input mode.
@@ -108,53 +111,45 @@ internal static partial class Kernel32
     public static unsafe partial bool WriteConsole(nint hConsoleOutput, char* lpBuffer, int nNumberOfCharsToWrite, out nint lpNumberOfCharsWritten);
 
     /// <summary>
-    /// Standard console devices.
+    /// Read an input from the console input stream.
     /// </summary>
-    public enum StdHandle
-    {
-        /// <summary>
-        /// The standard input device.
-        /// </summary>
-        STD_INPUT_HANDLE = -10,
-
-        /// <summary>
-        /// The standard output device.
-        /// </summary>
-        STD_OUTPUT_HANDLE = -11,
-
-        /// <summary>
-        /// The standard error device.
-        /// </summary>
-        STD_ERROR_HANDLE = -12
-    }
+    /// <remarks>
+    /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/readconsoleinput"/>
+    /// </remarks>
+    /// <param name="hConsoleInput">The console input handle.</param>
+    /// <param name="lpBuffer">The buffer containing the read data.</param>
+    /// <param name="nLength">The number of inputs to read.</param>
+    /// <param name="lpNumberOfEventsRead">The number of inputs read from the console input stream.</param>
+    /// <returns></returns>
+    [LibraryImport(kernel32, EntryPoint = readConsoleInput)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool ReadConsoleInput(nint hConsoleInput, out INPUT_RECORD lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
 
     /// <summary>
-    /// Modes for the console input buffer.
+    /// Peak an input from the console input stream, without removing the input from the stream.
     /// </summary>
-    [Flags]
-    public enum ConsoleInputModes : uint
-    {
-        ENABLE_ECHO_INPUT = 0x0004,
-        ENABLE_INSERT_MODE = 0x0020,
-        ENABLE_LINE_INPUT = 0x0002,
-        ENABLE_MOUSE_INPUT = 0x0010,
-        ENABLE_PROCESSED_INPUT = 0x0001,
-        ENABLE_QUICK_EDIT_MODE = 0x0040,
-        ENABLE_WINDOW_INPUT = 0x0008,
-        ENABLE_VIRTUAL_TERMINAL_INPUT = 0x0200,
-        ENABLE_EXTENDED_FLAGS = 0x0080
-    }
+    /// <remarks>
+    /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/peekconsoleinput"/>
+    /// </remarks>
+    /// <param name="hConsoleInput">The console input handle.</param>
+    /// <param name="lpBuffer">The buffer containing the read data.</param>
+    /// <param name="nLength">The number of inputs to read.</param>
+    /// <param name="lpNumberOfEventsRead">The number of inputs read from the console input stream.</param>
+    /// <returns></returns>
+    [LibraryImport(kernel32, EntryPoint = peekConsoleInput)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool PeekConsoleInput(nint hConsoleInput, out INPUT_RECORD lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
 
     /// <summary>
-    /// Modes for the console output buffer.
+    /// Gets the number of availalbe input events.
     /// </summary>
-    [Flags]
-    public enum ConsoleOutputModes : uint
-    {
-        ENABLE_PROCESSED_OUTPUT = 0x0001,
-        ENABLE_WRAP_AT_EOL_OUTPUT = 0x0002,
-        ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004,
-        DISABLE_NEWLINE_AUTO_RETURN = 0x0008,
-        ENABLE_LVB_GRID_WORLDWIDE = 0x0010
-    }
+    /// <remarks>
+    /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/getnumberofconsoleinputevents"/>
+    /// </remarks>
+    /// <param name="hConsoleInput">The console input handle.</param>
+    /// <param name="lpcNumberOfEvents">The number of available input events.</param>
+    /// <returns></returns>
+    [LibraryImport(kernel32, EntryPoint = getNumberOfConsoleInputEvents)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool GetNumberOfConsoleInputEvents(nint hConsoleInput, out uint lpcNumberOfEvents);
 }

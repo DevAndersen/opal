@@ -99,16 +99,19 @@ public static class ConsolePainter
 
     #region DrawString
 
-    public static void DrawString(IConsoleGrid grid, int posX, int posY, string text)
+    public static void DrawString(IConsoleGrid grid, int posX, int posY, string? text)
     {
         DrawString(grid, posX, posY, text, default);
     }
 
-    public static void DrawString(IConsoleGrid grid, int posX, int posY, string text, ConsoleChar template)
+    public static void DrawString(IConsoleGrid grid, int posX, int posY, string? text, ConsoleChar template)
     {
-        for (int i = 0; i < text.Length; i++)
+        if (!string.IsNullOrEmpty(text))
         {
-            grid[posX + i, posY] = template with { Character = GetSafeChar(text[i]) };
+            for (int i = 0; i < text.Length; i++)
+            {
+                grid[posX + i, posY] = template with { Character = GetSafeChar(text[i]) };
+            }
         }
     }
 

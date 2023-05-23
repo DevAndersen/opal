@@ -54,6 +54,12 @@ public interface IConsoleHandler : IDisposable
     public void Print(StringBuilder stringBuilder);
 
     /// <summary>
+    /// Returns a user input. If the returned value is <c>null</c>, it represents a lack of new user input.
+    /// </summary>
+    /// <returns></returns>
+    public IConsoleInput? GetInput();
+
+    /// <summary>
     /// Returns a new instance of <c><see cref="IConsoleHandler"/></c> using <c><see cref="CreateDefaultHandlerForCurrentPlatform"/></c> and set to fullscreen mode, after executing its <c><see cref="Start()"/></c> method.
     /// Intended for use in <c>using</c> blocks.
     /// </summary>
