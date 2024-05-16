@@ -105,9 +105,15 @@ public class WindowsConsoleHandler : CommonConsoleHandler, IDisposable
     public unsafe override void Print(StringBuilder stringBuilder)
     {
         char* ptr = (char*)NativeMemory.Alloc((nuint)stringBuilder.Length, sizeof(char));
-        Span<char> span = new Span<char>(ptr, stringBuilder.Length);
-        stringBuilder.CopyTo(0, span, stringBuilder.Length);
-        WriteConsole(outputHandle, ptr, stringBuilder.Length, out _);
-        NativeMemory.Free(ptr);
+        try
+        {
+            Span<char> span = new Span<char>(ptr, stringBuilder.Length);
+            stringBuilder.CopyTo(0, span, stringBuilder.Length);
+            WriteConsole(outputHandle, ptr, stringBuilder.Length, out _);
+        }
+        finally
+        {
+            NativeMemory.Free(ptr);
+        }
     }
 }
