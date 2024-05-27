@@ -46,7 +46,7 @@ public class ConsoleRenderer
                     end++;
                 }
 
-                Span<ConsoleChar> slice = grid.Buffer.Span.Slice(start, end);
+                ReadOnlySpan<ConsoleChar> slice = grid.Buffer.Span.Slice(start, end);
                 if (slice.Length > 0)
                 {
                     AppendNew(slice, previousConsoleChar);
@@ -100,7 +100,7 @@ public class ConsoleRenderer
     /// </summary>
     /// <param name="consoleChars"></param>
     /// <param name="previousConsoleChar"></param>
-    private void AppendNew(Span<ConsoleChar> consoleChars, ConsoleChar previousConsoleChar)
+    private void AppendNew(ReadOnlySpan<ConsoleChar> consoleChars, ConsoleChar previousConsoleChar)
     {
         ConsoleChar consoleChar = consoleChars[0];
         firstEdit = true;
