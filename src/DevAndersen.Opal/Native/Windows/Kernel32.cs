@@ -141,7 +141,7 @@ internal static partial class Kernel32
     public static partial bool PeekConsoleInput(nint hConsoleInput, out INPUT_RECORD lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
 
     /// <summary>
-    /// Gets the number of availalbe input events.
+    /// Gets the number of available input events.
     /// </summary>
     /// <remarks>
     /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/getnumberofconsoleinputevents"/>
