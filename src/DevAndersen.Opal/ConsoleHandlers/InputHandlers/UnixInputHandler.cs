@@ -18,7 +18,7 @@ internal class UnixInputHandler : IInputHandler
     public IConsoleInput? GetInput()
     {
         ConsoleKeyInfo input = Console.ReadKey(true);
-        if (input.KeyChar != SequenceProvider.Escape)
+        if (input.KeyChar != '\e')
         {
             return new KeyInput(input);
         }

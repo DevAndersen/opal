@@ -2,7 +2,6 @@
 
 public static class SequenceProvider
 {
-    public const char Escape = (char)27;
     public const char SGREnding = 'm';
     public const char DelimiterCharacter = ';';
 
@@ -20,24 +19,23 @@ public static class SequenceProvider
     }
 
     public static string Reset()
-        => $"{Escape}[0m";
+        => $"\e[0m";
 
     public static string EnableAlternateBuffer()
-        => $"{Escape}[?1049h";
+        => $"\e[?1049h";
 
     public static string DisableAlternateBuffer()
-        => $"{Escape}[?1049l";
+        => $"\e[?1049l";
 
     public static string EnableMouseReporting()
-        => $"{Escape}[?1003h{Escape}[?1006h";
+        => $"\e[?1003h\e[?1006h";
 
     public static string DisableMouseReporting()
-        => $"{Escape}[?1003l{Escape}[?1006l";
+        => $"\e[?1003l\e[?1006l";
 
     public static StringBuilder AppendEscapeBracket(this StringBuilder sb)
         => sb
-            .Append(Escape)
-            .Append('[');
+            .Append("\e[");
 
     public static StringBuilder AppendSGREnding(this StringBuilder sb)
         => sb.Append(SGREnding);
