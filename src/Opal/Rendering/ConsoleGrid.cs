@@ -7,7 +7,7 @@ namespace Opal.Rendering;
 /// </summary>
 public class ConsoleGrid : BaseConsoleGrid
 {
-    private readonly object lockObject;
+    private readonly Lock lockObject;
 
     internal Memory<ConsoleChar> Buffer { get; private set; }
 
@@ -36,7 +36,7 @@ public class ConsoleGrid : BaseConsoleGrid
 
     public ConsoleGrid(int width, int height) : base(width, height)
     {
-        lockObject = new object();
+        lockObject = new Lock();
         SetSize(width, height, true);
     }
 

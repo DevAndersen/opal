@@ -8,7 +8,7 @@ public class ConsoleRenderer
 
     private readonly IConsoleHandler consoleHandler;
     private readonly StringBuilder stringBuilder;
-    private readonly object lockObject;
+    private readonly Lock lockObject;
     private int sbCap;
     private int charsToSkip;
     private bool firstEdit;
@@ -17,7 +17,7 @@ public class ConsoleRenderer
     {
         this.consoleHandler = consoleHandler;
         stringBuilder = new StringBuilder();
-        lockObject = new object();
+        lockObject = new Lock();
     }
 
     public void Render(ConsoleGrid grid)

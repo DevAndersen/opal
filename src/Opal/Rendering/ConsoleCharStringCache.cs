@@ -11,7 +11,7 @@ public static class ConsoleCharStringCache
     private const ushort cacheSize = ushort.MaxValue;
     private static ushort position = 0;
     private static string[] cache = new string[cacheSize];
-    private static readonly object lockObject = new object();
+    private static readonly Lock lockObject = new Lock();
 
     /// <summary>
     /// Clear the string cache, allowing GC to collect the old strings.
