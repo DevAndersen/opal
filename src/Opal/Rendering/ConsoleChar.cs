@@ -33,7 +33,7 @@ public readonly struct ConsoleChar
     /// </remarks>
     public string? Sequence
     {
-        get => RenderAsString() ? ConsoleCharStringCache.Get(Character) : null;
+        get => ShouldRenderAsString() ? ConsoleCharStringCache.Get(Character) : null;
         init
         {
             if (!string.IsNullOrWhiteSpace(value))
@@ -199,7 +199,7 @@ public readonly struct ConsoleChar
             && BackgroundRgb == other.BackgroundRgb;
     }
 
-    public bool RenderAsString()
+    public bool ShouldRenderAsString()
     {
         return (Metadata & ConsoleCharMetadata.UseStringCache) == ConsoleCharMetadata.UseStringCache;
     }

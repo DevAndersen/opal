@@ -177,7 +177,7 @@ public class ConsoleRenderer
                 continue;
             }
 
-            if (item.RenderAsString())
+            if (item.ShouldRenderAsString())
             {
                 charsToSkip = ConsoleCharStringCache.AppendFromCache(stringBuilder, item.Character);
             }
