@@ -1,6 +1,7 @@
 ﻿using Opal.ConsoleHandlers.InputHandlers;
 using Opal.Native.Windows;
 using Opal.Rendering;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using static Opal.Native.Windows.Kernel32;
 
@@ -9,7 +10,7 @@ namespace Opal.ConsoleHandlers;
 /// <summary>
 /// A console handler for Windows systems.
 /// </summary>
-public class WindowsConsoleHandler : CommonConsoleHandler, IDisposable
+public class WindowsConsoleHandler : CommonConsoleHandler<WindowsInputHandler>, IDisposable
 {
     /// <summary>
     /// The console input handle.
@@ -31,9 +32,10 @@ public class WindowsConsoleHandler : CommonConsoleHandler, IDisposable
     /// </summary>
     private ConsoleOutputModes originalConsoleOutputModes;
 
+    [SetsRequiredMembers]
     public WindowsConsoleHandler()
     {
-        inputHandler = new WindowsInputHandler();
+        InputHandler = new WindowsInputHandler();
     }
 
     public override void Start(OpalSettings settings)
@@ -46,9 +48,9 @@ public class WindowsConsoleHandler : CommonConsoleHandler, IDisposable
         Running = true;
         Settings = settings;
 
-        if (!consoleSizeThread.IsAlive)
+        if (!ConsoleSizeThread.IsAlive)
         {
-            consoleSizeThread.Start();
+            ConsoleSizeThread.Start();
         }
 
         (Width, Height) = GetClampedConsoleSize(settings);
@@ -68,13 +70,13 @@ public class WindowsConsoleHandler : CommonConsoleHandler, IDisposable
         }
 
         Console.CursorVisible = false;
-        ((WindowsInputHandler)inputHandler).Initialize(inputHandle);
-        inputHandler.StartInputListening();
+        InputHandler.Initialize(inputHandle);
+        InputHandler.StartInputListening();
     }
 
     public override void Stop()
     {
-        inputHandler.StopInputListening();
+        InputHandler.StopInputListening();
         Console.CursorVisible = true;
 
         if (Settings?.UseAlternateBuffer == true)

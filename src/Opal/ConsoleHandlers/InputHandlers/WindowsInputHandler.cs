@@ -6,7 +6,7 @@ namespace Opal.ConsoleHandlers.InputHandlers;
 /// <summary>
 /// A console input handler for Windows systems.
 /// </summary>
-internal class WindowsInputHandler : IInputHandler
+public class WindowsInputHandler : IInputHandler
 {
     private nint inputHandle;
 

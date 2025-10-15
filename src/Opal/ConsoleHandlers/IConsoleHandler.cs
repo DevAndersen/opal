@@ -106,7 +106,7 @@ public interface IConsoleHandler : IDisposable
         return Environment.OSVersion.Platform switch
         {
             PlatformID.Win32NT => new WindowsConsoleHandler(),
-            _ => new CommonConsoleHandler()
+            _ => new UnixConsoleHandler()
         };
     }
 }

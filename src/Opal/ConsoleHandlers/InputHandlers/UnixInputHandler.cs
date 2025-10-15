@@ -7,7 +7,7 @@ namespace Opal.ConsoleHandlers.InputHandlers;
 /// <summary>
 /// A console input handler for UNIX-like systems.
 /// </summary>
-internal class UnixInputHandler : IInputHandler
+public class UnixInputHandler : IInputHandler
 {
     private readonly IConsoleHandler consoleHandler;
 

@@ -1,16 +1,18 @@
 ﻿using Opal.ConsoleHandlers.InputHandlers;
-using Opal.Rendering;
 
 namespace Opal.ConsoleHandlers;
 
 /// <summary>
-/// A general console handler for common use.
+/// A implementation of the platform independent aspects of <see cref="IConsoleHandler"/>.
 /// </summary>
-public class CommonConsoleHandler : IConsoleHandler
+public abstract class CommonConsoleHandler<TInputHandler> : IConsoleHandler
+    where TInputHandler : IInputHandler
 {
     protected const int consoleSizeThreadTimeout = 50;
-    protected readonly Thread consoleSizeThread;
-    protected IInputHandler inputHandler;
+
+    protected Thread ConsoleSizeThread { get; init; }
+
+    public required TInputHandler InputHandler { get; init; }
 
     public OpalSettings? Settings { get; protected set; }
 
@@ -26,68 +28,20 @@ public class CommonConsoleHandler : IConsoleHandler
 
     public int BufferHeightOffset => Settings?.HeightOffset ?? 0;
 
-    public CommonConsoleHandler()
+    protected CommonConsoleHandler()
     {
-        consoleSizeThread = new Thread(ConsoleSizeThreadMethod);
-        inputHandler = new UnixInputHandler(this);
+        ConsoleSizeThread = new Thread(ConsoleSizeThreadMethod);
     }
 
-    public virtual void Start(OpalSettings settings)
-    {
-        if (Running)
-        {
-            throw new InvalidOperationException();
-        }
+    public abstract void Start(OpalSettings settings);
 
-        Running = true;
-        Settings = settings;
+    public abstract void Stop();
 
-        if (!consoleSizeThread.IsAlive)
-        {
-            consoleSizeThread.Start();
-        }
+    public abstract void Print(string str);
 
-        (Width, Height) = GetClampedConsoleSize(settings);
+    public abstract void Print(StringBuilder stringBuilder);
 
-        if (settings.UseAlternateBuffer)
-        {
-            Print(SequenceProvider.EnableAlternateBuffer());
-        }
-
-        Console.CursorVisible = false;
-        inputHandler.StartInputListening();
-    }
-
-    public virtual void Stop()
-    {
-        inputHandler.StopInputListening();
-        Console.CursorVisible = true;
-
-        if (Settings?.UseAlternateBuffer == true)
-        {
-            Print(SequenceProvider.DisableAlternateBuffer());
-        }
-        else
-        {
-            Print("\n");
-        }
-
-        Print(SequenceProvider.Reset());
-
-        Running = false;
-    }
-
-    public virtual void Print(string str)
-    {
-        Console.Write(str);
-    }
-
-    public virtual void Print(StringBuilder stringBuilder)
-    {
-        Console.Out.Write(stringBuilder);
-    }
-
-    public virtual IConsoleInput? GetInput() => inputHandler.GetInput();
+    public virtual IConsoleInput? GetInput() => InputHandler.GetInput();
 
     protected virtual void ConsoleSizeThreadMethod()
     {
