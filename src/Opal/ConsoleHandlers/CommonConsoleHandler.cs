@@ -112,8 +112,8 @@ public class CommonConsoleHandler : IConsoleHandler
     /// <returns></returns>
     protected static (int width, int height) GetClampedConsoleSize(OpalSettings? Settings)
     {
-        int width = Math.Clamp(Console.WindowWidth, Settings?.MinWidth ?? 1, Settings?.MaxWidth ?? int.MaxValue);
-        int height = Math.Clamp(Console.WindowHeight, Settings?.MinHeight ?? 1, Settings?.MaxHeight ?? int.MaxValue);
+        int width = int.Clamp(Console.WindowWidth, Settings?.MinWidth ?? 1, Settings?.MaxWidth ?? int.MaxValue);
+        int height = int.Clamp(Console.WindowHeight, Settings?.MinHeight ?? 1, Settings?.MaxHeight ?? int.MaxValue);
         return (width, height);
     }
 

@@ -93,7 +93,7 @@ public class WriteView : ConsoleView, IKeyInputHandler
         for (int i = 0; i < s.Length; i++)
         {
             char item = s[i];
-            int fg = Math.Clamp((s.Length - i) * 15, 0, 255);
+            int fg = int.Clamp((s.Length - i) * 15, 0, 255);
             grid[2 + i, 2] = new ConsoleChar(item, fg + (127 << 8) + (127 << 16))
             {
                 Modes = item == 'a' ? ConsoleCharModes.Underscore : ConsoleCharModes.None
@@ -148,7 +148,7 @@ public class ColorView : ConsoleView
             }
         }
 
-        string fps = Math.Round(1000 / (DateTime.Now - lastTime).TotalMilliseconds, 1).ToString("#.0");
+        string fps = double.Round(1000 / (DateTime.Now - lastTime).TotalMilliseconds, 1).ToString("#.0");
         Console.Title = $"Frame {frame:0000} | {fps} FPS";
 
         if ((DateTime.Now - startTime) > TimeSpan.FromSeconds(15))

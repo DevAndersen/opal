@@ -117,7 +117,7 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseInputHand
                     <10 => ':',
                     _ => '.'
                 };
-                return new ConsoleChar(character, Math.Max(0, 0x888888 - (0x040404 * (Age - TransitionAge))));
+                return new ConsoleChar(character, int.Max(0, 0x888888 - (0x040404 * (Age - TransitionAge))));
             }
         }
     }
