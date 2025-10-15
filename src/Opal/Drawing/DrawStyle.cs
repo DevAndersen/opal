@@ -24,7 +24,7 @@ public record DrawStyle
 
     public char Plus { get; init; }
 
-    public static DrawStyle StandardDrawStyle => new DrawStyle
+    public static DrawStyle StandardDrawStyle { get; } = new DrawStyle
     {
         Horizontal = (char)9472,
         Vertical = (char)9474,
@@ -39,7 +39,7 @@ public record DrawStyle
         Plus = (char)9532
     };
 
-    public static DrawStyle HeavyDrawStyle => new DrawStyle
+    public static DrawStyle HeavyDrawStyle { get; } = new DrawStyle
     {
         Horizontal = (char)9473,
         Vertical = (char)9475,
@@ -54,7 +54,7 @@ public record DrawStyle
         Plus = (char)9547
     };
 
-    public static DrawStyle DoubleDrawStyle => new DrawStyle
+    public static DrawStyle DoubleDrawStyle { get; } = new DrawStyle
     {
         Horizontal = (char)9552,
         Vertical = (char)9553,
@@ -69,7 +69,7 @@ public record DrawStyle
         Plus = (char)9580
     };
 
-    public static DrawStyle RoundedDrawStyle => new DrawStyle
+    public static DrawStyle RoundedDrawStyle { get; } = new DrawStyle
     {
         Horizontal = (char)9472,
         Vertical = (char)9474,
