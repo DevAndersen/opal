@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/Opal.Demo/Opal.Demo.csproj" />
+  <Project Path="src/Opal/Opal.csproj" />
+</Solution>
