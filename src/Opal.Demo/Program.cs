@@ -8,7 +8,8 @@ Action[] actions = new Action[]
     LinesTestDemo.Run,
     StringCacheDemo.Run,
     DrawingDemo.Run,
-    MouseInputDemo.Run
+    MouseInputDemo.Run,
+    MatrixDemo.Run
 };
 
 bool hasValidChoiceBeenMade = false;
