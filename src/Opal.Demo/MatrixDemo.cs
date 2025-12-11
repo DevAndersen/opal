@@ -51,12 +51,19 @@ public class MatrixView : ConsoleView
         {
             for (int i = 0; i < particle.Trail.Count; i++)
             {
+                byte primary = (byte)(255 - (float)i / particle.Trail.Count * 200);
+                byte secondary = i switch
+                {
+                    0 => 255,
+                    1 => 255 / 2,
+                    2 => 255 / 3,
+                    _ => 0
+                };
+
+                int col = secondary + (primary << 8) + (secondary << 16);
+
                 char c = particle.Trail.ElementAt(i);
-                grid[particle.PosX, particle.PosY - i] = new ConsoleChar(
-                    c,
-                    i == 0
-                        ? 0xffffff
-                        : 0x00ff00 - ((byte.MaxValue / (particle.MaxLength + 1)) << 8));
+                grid[particle.PosX, particle.PosY - i] = new ConsoleChar(c, col);
             }
         }
     }
