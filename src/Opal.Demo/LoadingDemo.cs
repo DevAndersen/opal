@@ -5,10 +5,10 @@ namespace Opal.Demo;
 
 internal class LoadingDemo
 {
-    public static void Run()
+    public static async Task RunAsync()
     {
         OpalController controller = new OpalController(OpalSettings.CreateFixedInline(32, 16, 5, 5));
-        controller.Start(new LoadingView());
+        await controller.StartAsync(new LoadingView());
     }
 }
 
@@ -23,14 +23,13 @@ public class LoadingView : ConsoleView
         end = DateTime.Now.AddSeconds(3);
     }
 
-    public override void Update()
+    public override void Update(IConsoleState consoleState)
     {
-        base.Update();
         count++;
 
         if (DateTime.Now > end)
         {
-            ExitView();
+            consoleState.ExitView();
             return;
         }
     }

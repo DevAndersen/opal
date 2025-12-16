@@ -6,7 +6,7 @@ namespace Opal.Demo;
 
 internal class RawRenderDemo
 {
-    public static void Run()
+    public static async Task RunAsync()
     {
         bool keepGoing = true;
         int loops = 0;

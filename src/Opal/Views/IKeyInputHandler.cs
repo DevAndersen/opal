@@ -9,5 +9,5 @@ public interface IKeyInputHandler
 {
     public bool AcceptsKeyInput() => true;
 
-    public void HandleKeyInput(KeyInput keyEvent);
+    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState);
 }

@@ -5,10 +5,10 @@ namespace Opal.Demo;
 
 internal class MouseInputDemo
 {
-    public static void Run()
+    public static async Task RunAsync()
     {
         OpalController controller = new OpalController();
-        controller.Start(new MouseInputDemoView());
+        await controller.StartAsync(new MouseInputDemoView());
     }
 }
 
@@ -19,10 +19,8 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseInputHand
     private int posX = 0;
     private int posY = 0;
 
-    public override void Update()
+    public override void Update(IConsoleState consoleState)
     {
-        base.Update();
-
         for (int i = particles.Count - 1; i >= 0; i--)
         {
             Particle particle = particles[i];
@@ -42,15 +40,15 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseInputHand
         }
     }
 
-    public void HandleKeyInput(KeyInput keyEvent)
+    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
     {
         if (keyEvent.Key == ConsoleKey.Escape)
         {
-            ExitView();
+            consoleState.ExitView();
         }
     }
 
-    public void HandleMouseInput(MouseInput mouseEvent)
+    public void HandleMouseInput(MouseInput mouseEvent, IConsoleState consoleState)
     {
         posX = mouseEvent.X;
         posY = mouseEvent.Y;

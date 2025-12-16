@@ -6,10 +6,10 @@ namespace Opal.Demo;
 
 internal class DrawingDemo
 {
-    public static void Run()
+    public static async Task RunAsync()
     {
         OpalController controller = new OpalController();
-        controller.Start(new DrawingView());
+        await controller.StartAsync(new DrawingView());
     }
 }
 
@@ -18,7 +18,7 @@ public class DrawingView : ConsoleView, IKeyInputHandler
     int x = 0;
     int y = 0;
 
-    public void HandleKeyInput(KeyInput keyEvent)
+    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
     {
         switch (keyEvent.Key)
         {
@@ -35,7 +35,7 @@ public class DrawingView : ConsoleView, IKeyInputHandler
                 y--;
                 break;
             case ConsoleKey.Escape:
-                ExitView();
+                consoleState.ExitView();
                 break;
             default:
                 break;

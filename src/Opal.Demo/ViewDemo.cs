@@ -5,22 +5,10 @@ namespace Opal.Demo;
 
 public static class ViewDemo
 {
-    public static void Run()
-    {
-        Task task = RunAsync();
-        task.GetAwaiter().GetResult();
-    }
-
-    private static async Task RunAsync()
+    public static async Task RunAsync()
     {
         OpalController controller = new OpalController();
         await controller.StartAsync(new WriteView());
-    }
-
-    public static void RunTest()
-    {
-        OpalController controller = new OpalController();
-        controller.Start(new ColorView());
     }
 }
 
@@ -28,16 +16,14 @@ public class TimeView : ConsoleView
 {
     private int count = 0;
 
-    public override int Delay => 100;
+    //public override int Delay => 100;
 
-    public override void Update()
+    public override void Update(IConsoleState consoleState)
     {
-        base.Update();
-
         count++;
         if (count > 50)
         {
-            ExitView();
+            consoleState.ExitView();
             return;
         }
     }
@@ -61,19 +47,19 @@ public class WriteView : ConsoleView, IKeyInputHandler
 {
     private string s = string.Empty;
 
-    public void HandleKeyInput(KeyInput keyEvent)
+    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
     {
         if (keyEvent.Key == ConsoleKey.Enter)
         {
-            GotoChild(new TimeView());
+            consoleState.GotoChild(new TimeView());
         }
         else if (keyEvent.Key == ConsoleKey.X)
         {
-            GotoChild(new ColorView());
+            consoleState.GotoChild(new ColorView());
         }
         else if (keyEvent.Key == ConsoleKey.Escape)
         {
-            ExitView();
+            consoleState.ExitView();
         }
         else if (keyEvent.Key == ConsoleKey.Backspace)
         {
@@ -101,9 +87,9 @@ public class WriteView : ConsoleView, IKeyInputHandler
         }
 
         grid[0, 0] = new ConsoleChar('X');
-        grid[0, ConsoleHeight - 1] = new ConsoleChar('X');
-        grid[ConsoleWidth - 1, 0] = new ConsoleChar('X');
-        grid[ConsoleWidth - 1, ConsoleHeight - 1] = new ConsoleChar('X');
+        grid[0, grid.Height - 1] = new ConsoleChar('X');
+        grid[grid.Width - 1, 0] = new ConsoleChar('X');
+        grid[grid.Width - 1, grid.Height - 1] = new ConsoleChar('X');
     }
 }
 
@@ -120,18 +106,16 @@ public class ColorView : ConsoleView
 
     private (int f, int b)[,] colors = default!;
 
-    public override void Update()
+    public override void Update(IConsoleState consoleState)
     {
-        base.Update();
-
         if (frame == 0)
         {
-            colors = new (int, int)[ConsoleWidth, ConsoleHeight];
+            colors = new (int, int)[consoleState.Width, consoleState.Height];
         }
 
-        for (int y = 0; y < ConsoleHeight; y++)
+        for (int y = 0; y < consoleState.Height; y++)
         {
-            for (int x = 0; x < ConsoleWidth; x++)
+            for (int x = 0; x < consoleState.Width; x++)
             {
                 if (frame == 0)
                 {
@@ -153,7 +137,7 @@ public class ColorView : ConsoleView
 
         if ((DateTime.Now - startTime) > TimeSpan.FromSeconds(15))
         {
-            ExitView();
+            consoleState.ExitView();
             return;
         }
 

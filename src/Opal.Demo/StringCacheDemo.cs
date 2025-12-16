@@ -5,10 +5,10 @@ namespace Opal.Demo;
 
 internal class StringCacheDemo
 {
-    public static void Run()
+    public static async Task RunAsync()
     {
         OpalController controller = new OpalController();
-        controller.Start(new StringCacheView());
+        await controller.StartAsync(new StringCacheView());
     }
 }
 
@@ -37,17 +37,16 @@ public class StringCacheView : ConsoleView, IKeyInputHandler
         grid[2, 3] = new ConsoleChar(red);
     }
 
-    public override void Update()
+    public override void Update(IConsoleState consoleState)
     {
-        base.Update();
         if (hasRenderedOnce)
         {
-            ExitView();
+            consoleState.ExitView();
         }
         hasRenderedOnce = true;
     }
 
-    public void HandleKeyInput(KeyInput keyEvent)
+    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
     {
     }
 }

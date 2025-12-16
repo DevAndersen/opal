@@ -20,7 +20,7 @@ public class OpalController : IDisposable
     /// <summary>
     /// The stack of console views, allowing the exit of one view to return the user to the previous view.
     /// </summary>
-    private readonly Stack<ConsoleView> viewStack;
+    private readonly Stack<IBaseConsoleView> viewStack;
 
     /// <summary>
     /// The input queue, containing user input to be processed with the next update of the view.
@@ -50,7 +50,7 @@ public class OpalController : IDisposable
 
     /// <summary>
     /// Returns <c>true</c> if an instance of <see cref="OpalController"/> currently running.
-    /// This property be checked before invoking <see cref="Start"/> or <see cref="StartAsync"/>.
+    /// This property be checked before invoking <see cref="StartAsync"/>.
     /// </summary>
     public static bool IsRunning { get; private set; }
 
@@ -58,7 +58,7 @@ public class OpalController : IDisposable
     {
         handler = consoleHandler;
         renderer = new ConsoleRenderer(consoleHandler);
-        viewStack = new Stack<ConsoleView>();
+        viewStack = new Stack<IBaseConsoleView>();
         inputQueue = new ConcurrentQueue<IConsoleInput>();
         inputThread = new Thread(InputHandlerThreadMethod);
         this.settings = settings;
@@ -76,7 +76,7 @@ public class OpalController : IDisposable
     {
     }
 
-    public void Start(ConsoleView view)
+    public async Task StartAsync(IBaseConsoleView view, CancellationToken cancellationToken = default)
     {
         if (IsRunning)
         {
@@ -85,69 +85,92 @@ public class OpalController : IDisposable
 
         handler.Start(settings);
         handler.OnConsoleSizeChanged += HandleConsoleSizeChanged;
-        viewStack.Push(view);
-        IsRunning = true;
-        Run();
-    }
 
-    public async Task StartAsync(ConsoleView view)
-    {
-        await Task.Run(() => Start(view));
+        inputThread.Start();
+
+        IsRunning = true;
+
+        await RunAsync(view, cancellationToken);
     }
 
     public void Stop()
     {
+        // Todo: Dispose of all disposable views in view stack.
+
         IsRunning = false;
         handler.OnConsoleSizeChanged -= HandleConsoleSizeChanged;
         handler.Stop();
     }
 
-    private void Run()
+    private async Task RunAsync(IBaseConsoleView initialView, CancellationToken cancellationToken)
     {
-        inputThread.Start();
-        while (IsRunning && viewStack.TryPeek(out ConsoleView? currentView))
-        {
-            bool initRun = false;
-            if (currentView.OpalController == null)
-            {
-                initRun = true;
-                currentView.OpalController = this;
-                currentView.Handler = handler;
-                currentView.Init();
-            }
+        viewStack.Push(initialView);
 
-            if (!initRun)
+        ConsoleState state = new ConsoleState();
+
+        while (IsRunning && !cancellationToken.IsCancellationRequested && viewStack.TryPeek(out IBaseConsoleView? currentView))
+        {
+            // Reset console state object.
+            state.Reset(handler.Height, handler.Width);
+
+            // Todo: Call init once per view.
+
+            // Todo: Should the input queue be cleared when changing view?
+
+            // Handle input
+            while (inputQueue.TryDequeue(out IConsoleInput? input) && !state.HaltViewExecution)
             {
-                while (inputQueue.TryDequeue(out IConsoleInput? input))
+                if (currentView is IKeyInputHandler keyHandler && keyHandler.AcceptsKeyInput() && input is KeyInput keyInput)
                 {
-                    if (currentView is IKeyInputHandler keyHandler && keyHandler.AcceptsKeyInput() && input is KeyInput keyInput)
-                    {
-                        keyHandler.HandleKeyInput(keyInput);
-                    }
-                    else if (currentView is IMouseInputHandler mouseHandler && mouseHandler.AcceptsMouseInput() && input is MouseInput mouseInput)
-                    {
-                        mouseHandler.HandleMouseInput(mouseInput);
-                    }
+                    keyHandler.HandleKeyInput(keyInput, state);
+                }
+                else if (currentView is IMouseInputHandler mouseHandler && mouseHandler.AcceptsMouseInput() && input is MouseInput mouseInput)
+                {
+                    mouseHandler.HandleMouseInput(mouseInput, state);
                 }
             }
 
-            if (GetCurrentView() == currentView)
+            // Update view.
+            if (!state.HasExitViewBeenRequested && !cancellationToken.IsCancellationRequested)
             {
-                currentView.Update();
+                if (currentView is IConsoleView updateableView)
+                {
+                    updateableView.Update(state);
+                }
+                else if (currentView is IAsyncConsoleView asyncUpdateableView)
+                {
+                    await asyncUpdateableView.UpdateAsync(state, cancellationToken);
+                }
             }
 
-            if (GetCurrentView() == currentView)
+            // Render view.
+            if (!state.HasExitViewBeenRequested && !cancellationToken.IsCancellationRequested)
             {
                 RenderView(currentView);
             }
 
-            if (currentView.Delay > 0)
+            // Delay.
+            if (!state.HasExitViewBeenRequested && !cancellationToken.IsCancellationRequested)
             {
-                Task.Delay(currentView.Delay).GetAwaiter().GetResult();
+                // Todo: Add mechanism for views to specify a custom delay between renders.
+                await Task.Delay(10, cancellationToken);
             }
-            else
+
+            // Handle console state.
+            if (!cancellationToken.IsCancellationRequested)
             {
-                Task.Delay(10).GetAwaiter().GetResult();
+                if (state.HasExitBeenRequested)
+                {
+                    IsRunning = false;
+                }
+                if (state.HasExitViewBeenRequested)
+                {
+                    viewStack.Pop();
+                }
+                else if (state.NextViewState is { } nextViewState)
+                {
+                    SetView(nextViewState.View, nextViewState.RemoveCurrentViewFromViewStack);
+                }
             }
         }
 
@@ -166,12 +189,12 @@ public class OpalController : IDisposable
         }
     }
 
-    public ConsoleView? GetCurrentView()
+    public IBaseConsoleView? GetCurrentView()
     {
-        return viewStack.TryPeek(out ConsoleView? view) ? view : null;
+        return viewStack.TryPeek(out IBaseConsoleView? view) ? view : null;
     }
 
-    private void RenderView(ConsoleView? view)
+    private void RenderView(IBaseConsoleView? view)
     {
         if (view != null)
         {
@@ -187,7 +210,7 @@ public class OpalController : IDisposable
         }
     }
 
-    internal void SetView(ConsoleView view, bool removeCurrentViewFromViewStack)
+    internal void SetView(IBaseConsoleView view, bool removeCurrentViewFromViewStack)
     {
         if (removeCurrentViewFromViewStack)
         {
@@ -206,7 +229,7 @@ public class OpalController : IDisposable
     {
         grid = GetConsoleGrid(handler, grid);
         grid.SetSize(args.NewWidth, args.NewHeight);
-        if (viewStack.TryPeek(out ConsoleView? currentView))
+        if (viewStack.TryPeek(out IBaseConsoleView? currentView))
         {
             currentView.Render(grid);
         }

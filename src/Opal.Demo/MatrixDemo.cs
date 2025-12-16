@@ -5,10 +5,10 @@ namespace Opal.Demo;
 
 internal static class MatrixDemo
 {
-    public static void Run()
+    public static async Task RunAsync()
     {
         OpalController controller = new OpalController();
-        controller.Start(new MatrixView());
+        await controller.StartAsync(new MatrixView());
     }
 }
 
@@ -17,7 +17,7 @@ public class MatrixView : ConsoleView
     public int _age;
     private readonly List<MatrixParticle> _particles = [];
 
-    public override void Update()
+    public override void Update(IConsoleState consoleState)
     {
         _age++;
 
@@ -29,7 +29,7 @@ public class MatrixView : ConsoleView
         for (int i = _particles.Count - 1; i >= 0; i--)
         {
             MatrixParticle particle = _particles[i];
-            if (particle.PosY - particle.Trail.Count >= ConsoleHeight)
+            if (particle.PosY - particle.Trail.Count >= consoleState.Height)
             {
                 _particles.RemoveAt(i);
             }
@@ -41,7 +41,7 @@ public class MatrixView : ConsoleView
 
         if (Random.Shared.Next(2) == 0)
         {
-            _particles.Add(new MatrixParticle(Random.Shared.Next(ConsoleWidth)));
+            _particles.Add(new MatrixParticle(Random.Shared.Next(consoleState.Width)));
         }
     }
 
