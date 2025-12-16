@@ -1,14 +1,10 @@
 ﻿namespace Opal.Rendering;
 
 /// <summary>
-/// Represents a complex console character, including color, styles, and effects.
+/// Represents a complex console character, including optional colors, styling, and effects.
 /// </summary>
 public readonly struct ConsoleChar
 {
-    #region Properties and fields
-
-    private readonly char character;
-
     /// <summary>
     /// The UTF-16 character that the console character should print as.
     /// </summary>
@@ -17,10 +13,10 @@ public readonly struct ConsoleChar
     /// </remarks>
     public char Character
     {
-        get => character;
+        get => field;
         init
         {
-            character = value;
+            field = value;
             Metadata &= ~ConsoleCharMetadata.UseStringCache;
         }
     }
@@ -36,11 +32,8 @@ public readonly struct ConsoleChar
         get => ShouldRenderAsString() ? ConsoleCharStringCache.Get(Character) : null;
         init
         {
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                Character = (char)ConsoleCharStringCache.Add(value);
-                Metadata |= ConsoleCharMetadata.UseStringCache;
-            }
+            Character = (char)ConsoleCharStringCache.Add(value ?? string.Empty);
+            Metadata |= ConsoleCharMetadata.UseStringCache;
         }
     }
 
@@ -106,83 +99,141 @@ public readonly struct ConsoleChar
 
     public ConsoleCharModes Modes { get; init; }
 
-    #endregion
-
-    #region Constructors
-
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/>.
+    /// </summary>
+    /// <param name="character"></param>
     public ConsoleChar(char character)
     {
         Character = character;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a simple foreground color.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="foregroundColor"></param>
     public ConsoleChar(char character, ConsoleColor foregroundColor) : this(character)
     {
         ForegroundSimple = foregroundColor;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with an RGB foreground color.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="foregroundColor"></param>
     public ConsoleChar(char character, int foregroundColor) : this(character)
     {
         ForegroundRgb = foregroundColor;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a simple foreground color and a simple background color.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="foregroundColor"></param>
+    /// <param name="backgroundColor"></param>
     public ConsoleChar(char character, ConsoleColor foregroundColor, ConsoleColor backgroundColor) : this(character, foregroundColor)
     {
         BackgroundSimple = backgroundColor;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a simple foreground color and an RGB background color.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="foregroundColor"></param>
+    /// <param name="backgroundColor"></param>
     public ConsoleChar(char character, ConsoleColor foregroundColor, int backgroundColor) : this(character, foregroundColor)
     {
         BackgroundRgb = backgroundColor;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with an RGB foreground color and a simple background color.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="foregroundColor"></param>
+    /// <param name="backgroundColor"></param>
     public ConsoleChar(char character, int foregroundColor, ConsoleColor backgroundColor) : this(character, foregroundColor)
     {
         BackgroundSimple = backgroundColor;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with an RGB foreground color and an RGB background color.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="foregroundColor"></param>
+    /// <param name="backgroundColor"></param>
     public ConsoleChar(char character, int foregroundColor, int backgroundColor) : this(character, foregroundColor)
     {
         BackgroundRgb = backgroundColor;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence.
+    /// </summary>
+    /// <param name="sequence"></param>
     public ConsoleChar(string sequence)
     {
         Sequence = sequence;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence and a simple foreground color.
+    /// </summary>
+    /// <param name="sequence"></param>
     public ConsoleChar(string sequence, ConsoleColor foregroundColor) : this(sequence)
     {
         ForegroundSimple = foregroundColor;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence and an RGB foreground color.
+    /// </summary>
+    /// <param name="sequence"></param>
     public ConsoleChar(string sequence, int foregroundColor) : this(sequence)
     {
         ForegroundRgb = foregroundColor;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence, a simple foreground color, and a simple background color.
+    /// </summary>
+    /// <param name="sequence"></param>
     public ConsoleChar(string sequence, ConsoleColor foregroundColor, ConsoleColor backgroundColor) : this(sequence, foregroundColor)
     {
         BackgroundSimple = backgroundColor;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence, a simple foreground color, and an RGB background color.
+    /// </summary>
+    /// <param name="sequence"></param>
     public ConsoleChar(string sequence, ConsoleColor foregroundColor, int backgroundColor) : this(sequence, foregroundColor)
     {
         BackgroundRgb = backgroundColor;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence, an RGB foreground color, and a simple background color.
+    /// </summary>
+    /// <param name="sequence"></param>
     public ConsoleChar(string sequence, int foregroundColor, ConsoleColor backgroundColor) : this(sequence, foregroundColor)
     {
         BackgroundSimple = backgroundColor;
     }
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence, an RGB foreground color, and an RGB background color.
+    /// </summary>
+    /// <param name="sequence"></param>
     public ConsoleChar(string sequence, int foregroundColor, int backgroundColor) : this(sequence, foregroundColor)
     {
         BackgroundRgb = backgroundColor;
     }
-
-    #endregion
-
-    #region Methods
 
     /// <summary>
     /// Returns <c>true</c> if the styling of <c>this</c> and <c><paramref name="other"/></c> are identical. Otherwise, returns <c>false</c>.
@@ -203,6 +254,4 @@ public readonly struct ConsoleChar
     {
         return (Metadata & ConsoleCharMetadata.UseStringCache) == ConsoleCharMetadata.UseStringCache;
     }
-
-    #endregion
 }

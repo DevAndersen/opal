@@ -111,8 +111,8 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseInputHand
             {
                 char character = (Age - TransitionAge) switch
                 {
-                    <5 => '#',
-                    <10 => ':',
+                    < 5 => '#',
+                    < 10 => ':',
                     _ => '.'
                 };
                 return new ConsoleChar(character, int.Max(0, 0x888888 - (0x040404 * (Age - TransitionAge))));

@@ -1,7 +1,7 @@
 ﻿using Opal.Demo;
 
-Func<Task>[] actions = new Func<Task>[]
-{
+Func<Task>[] actions =
+[
     RawRenderDemo.RunAsync,
     ViewDemo.RunAsync,
     LoadingDemo.RunAsync,
@@ -10,7 +10,7 @@ Func<Task>[] actions = new Func<Task>[]
     DrawingDemo.RunAsync,
     MouseInputDemo.RunAsync,
     MatrixDemo.RunAsync
-};
+];
 
 bool hasValidChoiceBeenMade = false;
 

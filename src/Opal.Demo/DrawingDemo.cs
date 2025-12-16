@@ -1,5 +1,5 @@
-﻿using Opal.Rendering;
-using Opal.Drawing;
+﻿using Opal.Drawing;
+using Opal.Rendering;
 using Opal.Views;
 
 namespace Opal.Demo;

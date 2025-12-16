@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Opal.Rendering;
+﻿namespace Opal.Rendering;
 
 /// <summary>
 /// Contains shared logic for console grids.
