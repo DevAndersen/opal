@@ -95,7 +95,10 @@ public class OpalController : IDisposable
 
     public void Stop()
     {
-        // Todo: Dispose of all disposable views in view stack.
+        while (viewStack.TryPop(out IBaseConsoleView? view))
+        {
+            ExitView(view);
+        }
 
         IsRunning = false;
         handler.OnConsoleSizeChanged -= HandleConsoleSizeChanged;
@@ -165,7 +168,7 @@ public class OpalController : IDisposable
                 }
                 if (state.HasExitViewBeenRequested)
                 {
-                    viewStack.Pop();
+                    ExitView(viewStack.Pop());
                 }
                 else if (state.NextViewState is { } nextViewState)
                 {
@@ -192,6 +195,14 @@ public class OpalController : IDisposable
     public IBaseConsoleView? GetCurrentView()
     {
         return viewStack.TryPeek(out IBaseConsoleView? view) ? view : null;
+    }
+
+    private static void ExitView(IBaseConsoleView view)
+    {
+        if (view is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
     }
 
     private void RenderView(IBaseConsoleView? view)
