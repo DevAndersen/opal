@@ -15,22 +15,22 @@ public class WindowsConsoleHandler : CommonConsoleHandler<WindowsInputHandler>, 
     /// <summary>
     /// The console input handle.
     /// </summary>
-    private nint inputHandle;
+    private nint _inputHandle;
 
     /// <summary>
     /// The console output handle.
     /// </summary>
-    private nint outputHandle;
+    private nint _outputHandle;
 
     /// <summary>
     /// The initial mode of the console input handle.
     /// </summary>
-    private ConsoleInputModes originalConsoleInputModes;
+    private ConsoleInputModes _originalConsoleInputModes;
 
     /// <summary>
     /// The initial mode of the console output handle.
     /// </summary>
-    private ConsoleOutputModes originalConsoleOutputModes;
+    private ConsoleOutputModes _originalConsoleOutputModes;
 
     [SetsRequiredMembers]
     public WindowsConsoleHandler()
@@ -55,14 +55,14 @@ public class WindowsConsoleHandler : CommonConsoleHandler<WindowsInputHandler>, 
 
         (Width, Height) = GetClampedConsoleSize(settings);
 
-        inputHandle = GetStdHandle(StandardDevice.STD_INPUT_HANDLE);
-        outputHandle = GetStdHandle(StandardDevice.STD_OUTPUT_HANDLE);
+        _inputHandle = GetStdHandle(StandardDevice.STD_INPUT_HANDLE);
+        _outputHandle = GetStdHandle(StandardDevice.STD_OUTPUT_HANDLE);
 
-        GetConsoleInputMode(inputHandle, out originalConsoleInputModes);
-        GetConsoleOutputMode(outputHandle, out originalConsoleOutputModes);
+        GetConsoleInputMode(_inputHandle, out _originalConsoleInputModes);
+        GetConsoleOutputMode(_outputHandle, out _originalConsoleOutputModes);
 
-        ConsoleOutputModes modifiedConsoleOutputModes = originalConsoleOutputModes | ConsoleOutputModes.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-        SetConsoleOutputMode(outputHandle, modifiedConsoleOutputModes);
+        ConsoleOutputModes modifiedConsoleOutputModes = _originalConsoleOutputModes | ConsoleOutputModes.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        SetConsoleOutputMode(_outputHandle, modifiedConsoleOutputModes);
 
         if (settings.UseAlternateBuffer)
         {
@@ -70,7 +70,7 @@ public class WindowsConsoleHandler : CommonConsoleHandler<WindowsInputHandler>, 
         }
 
         Console.CursorVisible = false;
-        InputHandler.Initialize(inputHandle);
+        InputHandler.Initialize(_inputHandle);
         InputHandler.StartInputListening();
     }
 
@@ -89,15 +89,15 @@ public class WindowsConsoleHandler : CommonConsoleHandler<WindowsInputHandler>, 
         }
 
         Print(SequenceProvider.Reset());
-        SetConsoleInputMode(inputHandle, originalConsoleInputModes);
-        SetConsoleOutputMode(inputHandle, originalConsoleOutputModes);
+        SetConsoleInputMode(_inputHandle, _originalConsoleInputModes);
+        SetConsoleOutputMode(_inputHandle, _originalConsoleOutputModes);
 
         Running = false;
     }
 
     public override void Print(string str)
     {
-        WriteConsole(outputHandle, str, str.Length, out _);
+        WriteConsole(_outputHandle, str, str.Length, out _);
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ public class WindowsConsoleHandler : CommonConsoleHandler<WindowsInputHandler>, 
         {
             Span<char> span = new Span<char>(ptr, stringBuilder.Length);
             stringBuilder.CopyTo(0, span, stringBuilder.Length);
-            WriteConsole(outputHandle, ptr, stringBuilder.Length, out _);
+            WriteConsole(_outputHandle, ptr, stringBuilder.Length, out _);
         }
         finally
         {

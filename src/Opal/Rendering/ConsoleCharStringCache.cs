@@ -8,10 +8,10 @@
 /// </remarks>
 public static class ConsoleCharStringCache
 {
-    private const ushort cacheSize = ushort.MaxValue;
-    private static ushort position = 0;
-    private static string[] cache = new string[cacheSize];
-    private static readonly Lock lockObject = new Lock();
+    private const ushort _cacheSize = ushort.MaxValue;
+    private static ushort _position = 0;
+    private static string[] _cache = new string[_cacheSize];
+    private static readonly Lock _lockObject = new Lock();
 
     /// <summary>
     /// Clear the string cache, allowing GC to collect the old strings.
@@ -21,7 +21,7 @@ public static class ConsoleCharStringCache
     /// </remarks>
     public static void Clear()
     {
-        cache = new string[cacheSize];
+        _cache = new string[_cacheSize];
     }
 
     /// <summary>
@@ -31,7 +31,7 @@ public static class ConsoleCharStringCache
     /// <returns>The string corresponds to <paramref name="index"/>, or <c>null</c> if the index is not currently used.</returns>
     public static string? Get(ushort index)
     {
-        return cache.ElementAtOrDefault(index);
+        return _cache.ElementAtOrDefault(index);
     }
 
     /// <summary>
@@ -41,21 +41,21 @@ public static class ConsoleCharStringCache
     /// <returns>The index of <paramref name="sequence"/> in the cache.</returns>
     internal static ushort Add(string sequence)
     {
-        lock (lockObject)
+        lock (_lockObject)
         {
-            int index = Array.FindIndex(cache, x => x != null && x.Equals(sequence));
+            int index = Array.FindIndex(_cache, x => x != null && x.Equals(sequence));
             if (index >= 0)
             {
                 return (ushort)index;
             }
 
-            ushort newIndex = position;
-            cache[position] = sequence;
+            ushort newIndex = _position;
+            _cache[_position] = sequence;
 
-            position++;
-            if (position >= cacheSize)
+            _position++;
+            if (_position >= _cacheSize)
             {
-                position = 0;
+                _position = 0;
             }
 
             return newIndex;

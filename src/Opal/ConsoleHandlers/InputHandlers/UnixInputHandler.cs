@@ -8,11 +8,11 @@ namespace Opal.ConsoleHandlers.InputHandlers;
 /// </summary>
 public class UnixInputHandler : IInputHandler
 {
-    private readonly IConsoleHandler consoleHandler;
+    private readonly IConsoleHandler _consoleHandler;
 
     public UnixInputHandler(IConsoleHandler consoleHandler)
     {
-        this.consoleHandler = consoleHandler;
+        _consoleHandler = consoleHandler;
     }
 
     public IConsoleInput? GetInput()
@@ -49,12 +49,12 @@ public class UnixInputHandler : IInputHandler
 
     public void StartInputListening()
     {
-        consoleHandler.Print(SequenceProvider.EnableMouseReporting());
+        _consoleHandler.Print(SequenceProvider.EnableMouseReporting());
     }
 
     public void StopInputListening()
     {
-        consoleHandler.Print(SequenceProvider.DisableMouseReporting());
+        _consoleHandler.Print(SequenceProvider.DisableMouseReporting());
     }
 
     private IConsoleInput? ReadSequence(ReadOnlySpan<char> buffer)

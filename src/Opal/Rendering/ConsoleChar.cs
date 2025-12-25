@@ -37,24 +37,24 @@ public readonly struct ConsoleChar
         }
     }
 
-    private readonly byte foregroundSimple;
+    private readonly byte _foregroundSimple;
     public ConsoleColor ForegroundSimple
     {
-        get => (ConsoleColor)foregroundSimple;
+        get => (ConsoleColor)_foregroundSimple;
         init
         {
-            foregroundSimple = (byte)value;
+            _foregroundSimple = (byte)value;
             Metadata |= ConsoleCharMetadata.ForegroundSet;
         }
     }
 
-    private readonly byte backgroundSimple;
+    private readonly byte _backgroundSimple;
     public ConsoleColor BackgroundSimple
     {
-        get => (ConsoleColor)backgroundSimple;
+        get => (ConsoleColor)_backgroundSimple;
         init
         {
-            backgroundSimple = (byte)value;
+            _backgroundSimple = (byte)value;
             Metadata |= ConsoleCharMetadata.BackgroundSet;
         }
     }

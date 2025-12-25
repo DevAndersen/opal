@@ -4,33 +4,33 @@ namespace Opal.Rendering;
 
 public class ConsoleRenderer
 {
-    private static readonly ConsoleCharModes[] modes = Enum.GetValues<ConsoleCharModes>();
+    private static readonly ConsoleCharModes[] _modes = Enum.GetValues<ConsoleCharModes>();
 
-    private readonly IConsoleHandler consoleHandler;
-    private readonly StringBuilder stringBuilder;
-    private readonly Lock lockObject;
-    private int sbCap;
-    private int charsToSkip;
-    private bool firstEdit;
+    private readonly IConsoleHandler _consoleHandler;
+    private readonly StringBuilder _stringBuilder;
+    private readonly Lock _lockObject;
+    private int _sbCap;
+    private int _charsToSkip;
+    private bool _firstEdit;
 
     public ConsoleRenderer(IConsoleHandler consoleHandler)
     {
-        this.consoleHandler = consoleHandler;
-        stringBuilder = new StringBuilder();
-        lockObject = new Lock();
+        _consoleHandler = consoleHandler;
+        _stringBuilder = new StringBuilder();
+        _lockObject = new Lock();
     }
 
     public void Render(ConsoleGrid grid)
     {
-        lock (lockObject)
+        lock (_lockObject)
         {
-            stringBuilder
+            _stringBuilder
                 .Clear()
                 .AppendEscapeBracket()
                 .AppendReset()
                 .AppendSGREnding()
                 .AppendEscapeBracket()
-                .AppendSetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset)
+                .AppendSetCursorPosition(_consoleHandler.BufferWidthOffset, _consoleHandler.BufferHeightOffset)
                 .Append('H');
 
             ConsoleChar previousConsoleChar = default;
@@ -52,13 +52,13 @@ public class ConsoleRenderer
                     AppendNew(slice, previousConsoleChar);
                 }
 
-                int x = (start + end) / consoleHandler.Width;
-                if (end != 0 && (start + end) % consoleHandler.Width == 0 && x < consoleHandler.Height)
+                int x = (start + end) / _consoleHandler.Width;
+                if (end != 0 && (start + end) % _consoleHandler.Width == 0 && x < _consoleHandler.Height)
                 {
-                    charsToSkip = 0;
-                    stringBuilder
+                    _charsToSkip = 0;
+                    _stringBuilder
                         .AppendEscapeBracket()
-                        .AppendSetCursorPosition(consoleHandler.BufferWidthOffset, consoleHandler.BufferHeightOffset + x)
+                        .AppendSetCursorPosition(_consoleHandler.BufferWidthOffset, _consoleHandler.BufferHeightOffset + x)
                         .Append('H');
                 }
 
@@ -66,17 +66,17 @@ public class ConsoleRenderer
                 previousConsoleChar = grid.Buffer.Span[start - 1];
             }
 
-            stringBuilder
+            _stringBuilder
                 .AppendEscapeBracket()
                 .AppendReset()
                 .AppendSGREnding();
 
-            consoleHandler.Print(stringBuilder);
+            _consoleHandler.Print(_stringBuilder);
 
-            if (stringBuilder.Length > sbCap)
+            if (_stringBuilder.Length > _sbCap)
             {
-                sbCap = (int)(stringBuilder.Length * 1.1F);
-                stringBuilder.Capacity = sbCap;
+                _sbCap = (int)(_stringBuilder.Length * 1.1F);
+                _stringBuilder.Capacity = _sbCap;
             }
         }
     }
@@ -92,7 +92,7 @@ public class ConsoleRenderer
     {
         return currentPosition < grid.Buffer.Length // Is the position outside of the bounds of the grid?
             && grid.Buffer.Span[startPosition].HasSameStylingAs(grid.Buffer.Span[currentPosition]) // Do the chars have the same mode?
-            && (currentPosition == startPosition || currentPosition % consoleHandler.Width != 0); // Has the end of the line been reached?
+            && (currentPosition == startPosition || currentPosition % _consoleHandler.Width != 0); // Has the end of the line been reached?
     }
 
     /// <summary>
@@ -103,7 +103,7 @@ public class ConsoleRenderer
     private void AppendNew(ReadOnlySpan<ConsoleChar> consoleChars, ConsoleChar previousConsoleChar)
     {
         ConsoleChar consoleChar = consoleChars[0];
-        firstEdit = true;
+        _firstEdit = true;
 
         // Foreground
         if (consoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet))
@@ -112,20 +112,20 @@ public class ConsoleRenderer
             {
                 if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == false || consoleChar.ForegroundRgb != previousConsoleChar.ForegroundRgb)
                 {
-                    stringBuilder
-                        .AppendStart(ref firstEdit)
+                    _stringBuilder
+                        .AppendStart(ref _firstEdit)
                         .AppendForegroundRgb(consoleChar.ForegroundRed, consoleChar.ForegroundGreen, consoleChar.ForegroundBlue);
                 }
             }
             else if (consoleChar.ForegroundSimple != previousConsoleChar.ForegroundSimple)
             {
-                stringBuilder.AppendStart(ref firstEdit)
+                _stringBuilder.AppendStart(ref _firstEdit)
                     .AppendForegroundSimple(consoleChar.ForegroundSimple);
             }
         }
         else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == true)
         {
-            stringBuilder.AppendStart(ref firstEdit)
+            _stringBuilder.AppendStart(ref _firstEdit)
                 .AppendResetForeground();
         }
 
@@ -136,60 +136,60 @@ public class ConsoleRenderer
             {
                 if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == false || consoleChar.BackgroundRgb != previousConsoleChar.BackgroundRgb)
                 {
-                    stringBuilder
-                        .AppendStart(ref firstEdit)
+                    _stringBuilder
+                        .AppendStart(ref _firstEdit)
                         .AppendBackgroundRgb(consoleChar.BackgroundRed, consoleChar.BackgroundGreen, consoleChar.BackgroundBlue);
                 }
             }
             else if (consoleChar.BackgroundSimple != previousConsoleChar.BackgroundSimple)
             {
-                stringBuilder.AppendStart(ref firstEdit)
+                _stringBuilder.AppendStart(ref _firstEdit)
                     .AppendBackgroundSimple(consoleChar.BackgroundSimple);
             }
         }
         else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == true)
         {
-            stringBuilder.AppendStart(ref firstEdit)
+            _stringBuilder.AppendStart(ref _firstEdit)
                 .AppendResetBackground();
         }
 
         // Modes
-        foreach (ConsoleCharModes mode in modes)
+        foreach (ConsoleCharModes mode in _modes)
         {
             ModeApplyMode state = GetModeStylingState(consoleChar, previousConsoleChar, mode);
             if (state != ModeApplyMode.Keep)
             {
                 AppendModeSequence(mode, state == ModeApplyMode.Enable);
-                firstEdit = false;
+                _firstEdit = false;
             }
         }
 
-        if (!firstEdit)
+        if (!_firstEdit)
         {
-            stringBuilder.AppendSGREnding();
+            _stringBuilder.AppendSGREnding();
         }
 
         foreach (ConsoleChar item in consoleChars)
         {
-            if (charsToSkip > 1)
+            if (_charsToSkip > 1)
             {
-                charsToSkip--;
+                _charsToSkip--;
                 continue;
             }
 
             if (item.ShouldRenderAsString())
             {
-                charsToSkip = ConsoleCharStringCache.AppendFromCache(stringBuilder, item.Character);
+                _charsToSkip = ConsoleCharStringCache.AppendFromCache(_stringBuilder, item.Character);
             }
             else
             {
                 if (item.Character == default)
                 {
-                    stringBuilder.Append(' ');
+                    _stringBuilder.Append(' ');
                 }
                 else
                 {
-                    stringBuilder.Append(item.Character);
+                    _stringBuilder.Append(item.Character);
                 }
             }
         }
@@ -229,15 +229,15 @@ public class ConsoleRenderer
     /// <returns></returns>
     private StringBuilder AppendModeSequence(ConsoleCharModes mode, bool state)
     {
-        stringBuilder.AppendStart(ref firstEdit);
+        _stringBuilder.AppendStart(ref _firstEdit);
         return mode switch
         {
-            ConsoleCharModes.Italic => stringBuilder.AppendItalic(state),
-            ConsoleCharModes.Underscore => stringBuilder.AppendUnderscore(state),
-            ConsoleCharModes.DoubleUnderscore => stringBuilder.AppendDoubleUnderscore(state),
-            ConsoleCharModes.Strike => stringBuilder.AppendStrike(state),
-            ConsoleCharModes.Blinking => stringBuilder.AppendBlinking(state),
-            _ => stringBuilder
+            ConsoleCharModes.Italic => _stringBuilder.AppendItalic(state),
+            ConsoleCharModes.Underscore => _stringBuilder.AppendUnderscore(state),
+            ConsoleCharModes.DoubleUnderscore => _stringBuilder.AppendDoubleUnderscore(state),
+            ConsoleCharModes.Strike => _stringBuilder.AppendStrike(state),
+            ConsoleCharModes.Blinking => _stringBuilder.AppendBlinking(state),
+            _ => _stringBuilder
         };
     }
 

@@ -14,19 +14,19 @@ internal class MouseInputDemo
 
 public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseInputHandler
 {
-    private readonly List<Particle> particles = new List<Particle>();
+    private readonly List<Particle> _particles = [];
 
-    private int posX = 0;
-    private int posY = 0;
+    private int _posX = 0;
+    private int _posY = 0;
 
     public override void Update(IConsoleState consoleState)
     {
-        for (int i = particles.Count - 1; i >= 0; i--)
+        for (int i = _particles.Count - 1; i >= 0; i--)
         {
-            Particle particle = particles[i];
+            Particle particle = _particles[i];
             if (particle.Age > particle.MaxAge)
             {
-                particles.RemoveAt(i);
+                _particles.RemoveAt(i);
             }
             else
             {
@@ -36,7 +36,7 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseInputHand
 
         for (int i = 0; i < Random.Shared.Next(25, 30); i++)
         {
-            SpawnParticle(posX, posY);
+            SpawnParticle(_posX, _posY);
         }
     }
 
@@ -50,13 +50,13 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseInputHand
 
     public void HandleMouseInput(MouseInput mouseEvent, IConsoleState consoleState)
     {
-        posX = mouseEvent.X;
-        posY = mouseEvent.Y;
+        _posX = mouseEvent.X;
+        _posY = mouseEvent.Y;
     }
 
     public override void Render(IConsoleGrid grid)
     {
-        foreach (Particle particle in particles.OrderByDescending(x => x.Age > x.TransitionAge))
+        foreach (Particle particle in _particles.OrderByDescending(x => x.Age > x.TransitionAge))
         {
             grid[particle.X, particle.Y] = particle.GetVisuals();
         }
@@ -64,7 +64,7 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseInputHand
 
     private void SpawnParticle(int x, int y)
     {
-        particles.Add(new Particle
+        _particles.Add(new Particle
         {
             EarlyAge = 3 + Random.Shared.Next(2),
             TransitionAge = 10 + Random.Shared.Next(2),

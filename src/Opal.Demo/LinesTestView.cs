@@ -15,18 +15,18 @@ public static class LinesTestDemo
 
 public class LinesTestView : ConsoleView
 {
-    private int cycles = 0;
+    private int _cycles = 0;
 
     //public override int Delay => 200;
 
     public override void Update(IConsoleState consoleState)
     {
-        if (cycles > 10000)
+        if (_cycles > 10000)
         {
             consoleState.ExitView();
             return;
         }
-        cycles++;
+        _cycles++;
     }
 
     public override void Render(IConsoleGrid grid)
@@ -36,7 +36,7 @@ public class LinesTestView : ConsoleView
             for (int y = 0; y < grid.Height; y++)
             {
                 int index = (short)'0' + (x % 10);
-                grid[x, y] = new ConsoleChar((char)index, (ConsoleColor)(5 + (y % 2) * ((cycles % 2) * 2)));
+                grid[x, y] = new ConsoleChar((char)index, (ConsoleColor)(5 + (y % 2) * ((_cycles % 2) * 2)));
             }
         }
 

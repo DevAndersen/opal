@@ -7,7 +7,7 @@ namespace Opal.Rendering;
 /// </summary>
 public class ConsoleGrid : BaseConsoleGrid
 {
-    private readonly Lock lockObject;
+    private readonly Lock _lockObject;
 
     internal Memory<ConsoleChar> Buffer { get; private set; }
 
@@ -15,7 +15,7 @@ public class ConsoleGrid : BaseConsoleGrid
     {
         get
         {
-            lock (lockObject)
+            lock (_lockObject)
             {
                 return IsCoordinateWithinGrid(x, y)
                     ? Buffer.Span[x + y * Width]
@@ -24,7 +24,7 @@ public class ConsoleGrid : BaseConsoleGrid
         }
         set
         {
-            lock (lockObject)
+            lock (_lockObject)
             {
                 if (IsCoordinateWithinGrid(x, y))
                 {
@@ -36,7 +36,7 @@ public class ConsoleGrid : BaseConsoleGrid
 
     public ConsoleGrid(int width, int height) : base(width, height)
     {
-        lockObject = new Lock();
+        _lockObject = new Lock();
         SetSize(width, height, true);
     }
 
@@ -58,7 +58,7 @@ public class ConsoleGrid : BaseConsoleGrid
     /// <returns>Returns <c>true</c> if the console grid was cleared, otherwise returns <c>false</c>.</returns>
     public bool SetSize(int width, int height, bool force = false)
     {
-        lock (lockObject)
+        lock (_lockObject)
         {
             if (force || Width != width || Height != height)
             {

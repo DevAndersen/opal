@@ -14,14 +14,14 @@ public static class ViewDemo
 
 public class TimeView : ConsoleView
 {
-    private int count = 0;
+    private int _count = 0;
 
     //public override int Delay => 100;
 
     public override void Update(IConsoleState consoleState)
     {
-        count++;
-        if (count > 50)
+        _count++;
+        if (_count > 50)
         {
             consoleState.ExitView();
             return;
@@ -45,7 +45,7 @@ public class TimeView : ConsoleView
 
 public class WriteView : ConsoleView, IKeyInputHandler
 {
-    private string s = string.Empty;
+    private string _s = string.Empty;
 
     public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
     {
@@ -63,23 +63,23 @@ public class WriteView : ConsoleView, IKeyInputHandler
         }
         else if (keyEvent.Key == ConsoleKey.Backspace)
         {
-            if (s.Length != 0)
+            if (_s.Length != 0)
             {
-                s = s[..^1];
+                _s = _s[..^1];
             }
         }
         else if (char.IsLetterOrDigit(keyEvent.KeyChar) || char.IsWhiteSpace(keyEvent.KeyChar) || char.IsPunctuation(keyEvent.KeyChar))
         {
-            s += keyEvent.KeyChar;
+            _s += keyEvent.KeyChar;
         }
     }
 
     public override void Render(IConsoleGrid grid)
     {
-        for (int i = 0; i < s.Length; i++)
+        for (int i = 0; i < _s.Length; i++)
         {
-            char item = s[i];
-            int fg = int.Clamp((s.Length - i) * 15, 0, 255);
+            char item = _s[i];
+            int fg = int.Clamp((_s.Length - i) * 15, 0, 255);
             grid[2 + i, 2] = new ConsoleChar(item, fg + (127 << 8) + (127 << 16))
             {
                 Modes = item == 'a' ? ConsoleCharModes.Underscore : ConsoleCharModes.None
@@ -95,54 +95,54 @@ public class WriteView : ConsoleView, IKeyInputHandler
 
 public class ColorView : ConsoleView
 {
-    private readonly DateTime startTime;
-    private DateTime lastTime;
-    private int frame;
+    private readonly DateTime _startTime;
+    private DateTime _lastTime;
+    private int _frame;
+    private (int f, int b)[,] _colors = default!;
 
     public ColorView()
     {
-        startTime = lastTime = DateTime.Now;
+        _startTime = _lastTime = DateTime.Now;
     }
 
-    private (int f, int b)[,] colors = default!;
 
     public override void Update(IConsoleState consoleState)
     {
-        if (frame == 0)
+        if (_frame == 0)
         {
-            colors = new (int, int)[consoleState.Width, consoleState.Height];
+            _colors = new (int, int)[consoleState.Width, consoleState.Height];
         }
 
         for (int y = 0; y < consoleState.Height; y++)
         {
             for (int x = 0; x < consoleState.Width; x++)
             {
-                if (frame == 0)
+                if (_frame == 0)
                 {
-                    colors[x, y] = new(Random.Shared.Next(), Random.Shared.Next());
+                    _colors[x, y] = new(Random.Shared.Next(), Random.Shared.Next());
                 }
                 else
                 {
-                    colors[x, y] = colors[x, y] with
+                    _colors[x, y] = _colors[x, y] with
                     {
-                        f = colors[x, y].f + 1,
-                        b = colors[x, y].b + 1,
+                        f = _colors[x, y].f + 1,
+                        b = _colors[x, y].b + 1,
                     };
                 }
             }
         }
 
-        string fps = double.Round(1000 / (DateTime.Now - lastTime).TotalMilliseconds, 1).ToString("#.0");
-        Console.Title = $"Frame {frame:0000} | {fps} FPS";
+        string fps = double.Round(1000 / (DateTime.Now - _lastTime).TotalMilliseconds, 1).ToString("#.0");
+        Console.Title = $"Frame {_frame:0000} | {fps} FPS";
 
-        if ((DateTime.Now - startTime) > TimeSpan.FromSeconds(15))
+        if ((DateTime.Now - _startTime) > TimeSpan.FromSeconds(15))
         {
             consoleState.ExitView();
             return;
         }
 
-        lastTime = DateTime.Now;
-        frame++;
+        _lastTime = DateTime.Now;
+        _frame++;
     }
 
     public override void Render(IConsoleGrid grid)
@@ -154,8 +154,8 @@ public class ColorView : ConsoleView
                 grid[x, y] = new ConsoleChar
                 {
                     Character = (char)0x2580,
-                    ForegroundRgb = colors[x, y].f,
-                    BackgroundRgb = colors[x, y].b
+                    ForegroundRgb = _colors[x, y].f,
+                    BackgroundRgb = _colors[x, y].b
                 };
             }
         }

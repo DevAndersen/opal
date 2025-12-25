@@ -5,26 +5,26 @@
 /// </summary>
 public class ConsoleSubgrid : BaseConsoleGrid
 {
-    private readonly IConsoleGrid parentGrid;
-    private readonly int offsetX;
-    private readonly int offsetY;
+    private readonly IConsoleGrid _parentGrid;
+    private readonly int _offsetX;
+    private readonly int _offsetY;
 
     public override ConsoleChar this[int x, int y]
     {
-        get => IsCoordinateWithinGrid(x, y) ? parentGrid[offsetX + x, offsetY + y] : default;
+        get => IsCoordinateWithinGrid(x, y) ? _parentGrid[_offsetX + x, _offsetY + y] : default;
         set
         {
             if (IsCoordinateWithinGrid(x, y))
             {
-                parentGrid[offsetX + x, offsetY + y] = value;
+                _parentGrid[_offsetX + x, _offsetY + y] = value;
             }
         }
     }
 
     public ConsoleSubgrid(IConsoleGrid parentGrid, int offsetX, int offsetY, int width, int height) : base(width, height)
     {
-        this.parentGrid = parentGrid;
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
+        this._parentGrid = parentGrid;
+        this._offsetX = offsetX;
+        this._offsetY = offsetY;
     }
 }

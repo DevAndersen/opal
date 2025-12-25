@@ -4,7 +4,7 @@ namespace Opal.Drawing;
 
 public static class ConsolePainter
 {
-    private static readonly string[] newlineSequences = ["\n", "\r\n"];
+    private static readonly string[] _newlineSequences = ["\n", "\r\n"];
 
     #region DrawBox
 
@@ -158,7 +158,7 @@ public static class ConsolePainter
 
     public static void DrawTextArea(IConsoleGrid grid, int posX, int posY, string text, ConsoleChar template, int tabWidth)
     {
-        string[] lines = text.Split(newlineSequences, StringSplitOptions.None);
+        string[] lines = text.Split(_newlineSequences, StringSplitOptions.None);
 
         for (int lineIndex = 0; lineIndex < lines.Length; lineIndex++)
         {
@@ -173,7 +173,7 @@ public static class ConsolePainter
 
     public static void DrawTextArea(IConsoleGrid grid, int posX, int posY, int width, int height, int viewOffsetX, int viewOffsetY, int wrapWidth, string text, ConsoleChar template)
     {
-        string[] lines = text.Split(newlineSequences, StringSplitOptions.None);
+        string[] lines = text.Split(_newlineSequences, StringSplitOptions.None);
 
         for (int y = 0; y < height; y++)
         {

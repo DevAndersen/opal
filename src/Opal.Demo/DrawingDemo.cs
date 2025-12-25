@@ -15,24 +15,24 @@ internal class DrawingDemo
 
 public class DrawingView : ConsoleView, IKeyInputHandler
 {
-    int x = 0;
-    int y = 0;
+    int _x = 0;
+    int _y = 0;
 
     public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
     {
         switch (keyEvent.Key)
         {
-            case ConsoleKey.RightArrow when x < 10:
-                x++;
+            case ConsoleKey.RightArrow when _x < 10:
+                _x++;
                 break;
-            case ConsoleKey.LeftArrow when x > 0:
-                x--;
+            case ConsoleKey.LeftArrow when _x > 0:
+                _x--;
                 break;
-            case ConsoleKey.DownArrow when y < 10:
-                y++;
+            case ConsoleKey.DownArrow when _y < 10:
+                _y++;
                 break;
-            case ConsoleKey.UpArrow when y > 0:
-                y--;
+            case ConsoleKey.UpArrow when _y > 0:
+                _y--;
                 break;
             case ConsoleKey.Escape:
                 consoleState.ExitView();
@@ -44,8 +44,8 @@ public class DrawingView : ConsoleView, IKeyInputHandler
 
     public override void Render(IConsoleGrid grid)
     {
-        ConsolePainter.DrawString(grid, 2, 2, $"X: {x}");
-        ConsolePainter.DrawString(grid, 2, 4, $"Y: {y}");
+        ConsolePainter.DrawString(grid, 2, 2, $"X: {_x}");
+        ConsolePainter.DrawString(grid, 2, 4, $"Y: {_y}");
 
         int posX = 40;
         int posY = 2;
@@ -53,6 +53,6 @@ public class DrawingView : ConsoleView, IKeyInputHandler
         int height = 12;
 
         ConsolePainter.DrawBox(grid, posX, posY, width, height, DrawStyle.DoubleDrawStyle, new ConsoleChar { ForegroundSimple = ConsoleColor.Magenta });
-        ConsolePainter.DrawTextArea(grid, posX + 1, posY + 1, width - 2, height - 2, x, y, 0, "Line one\nLine two\r\nLine three\n\nLine five\nThis line is really rather long.", new ConsoleChar { ForegroundRgb = 0x3377ff });
+        ConsolePainter.DrawTextArea(grid, posX + 1, posY + 1, width - 2, height - 2, _x, _y, 0, "Line one\nLine two\r\nLine three\n\nLine five\nThis line is really rather long.", new ConsoleChar { ForegroundRgb = 0x3377ff });
     }
 }

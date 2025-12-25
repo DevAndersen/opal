@@ -8,14 +8,14 @@ namespace Opal.ConsoleHandlers.InputHandlers;
 /// </summary>
 public class WindowsInputHandler : IInputHandler
 {
-    private nint inputHandle;
+    private nint _inputHandle;
 
     public IConsoleInput? GetInput()
     {
-        PeekConsoleInput(inputHandle, out INPUT_RECORD peekedRecord, 1, out _);
+        PeekConsoleInput(_inputHandle, out INPUT_RECORD peekedRecord, 1, out _);
         if (peekedRecord.EventType == EventType.MOUSE_EVENT)
         {
-            ReadConsoleInput(inputHandle, out INPUT_RECORD record, 1, out _);
+            ReadConsoleInput(_inputHandle, out INPUT_RECORD record, 1, out _);
             MOUSE_EVENT_RECORD mouseEvent = record.MouseEvent;
 
             MouseInputType inputType = MouseInputType.None;
@@ -76,22 +76,22 @@ public class WindowsInputHandler : IInputHandler
                 KeyInfo = Console.ReadKey(true)
             };
         }
-        else if (!peekedRecord.Equals(default(INPUT_RECORD)) && GetNumberOfConsoleInputEvents(inputHandle, out uint numberOfEvents) && numberOfEvents > 0)
+        else if (!peekedRecord.Equals(default(INPUT_RECORD)) && GetNumberOfConsoleInputEvents(_inputHandle, out uint numberOfEvents) && numberOfEvents > 0)
         {
-            ReadConsoleInput(inputHandle, out _, 1, out _);
+            ReadConsoleInput(_inputHandle, out _, 1, out _);
         }
         return null;
     }
 
     public void Initialize(nint inputHandle)
     {
-        this.inputHandle = inputHandle;
+        this._inputHandle = inputHandle;
     }
 
     public void StartInputListening()
     {
         ConsoleInputModes mode = ConsoleInputModes.ENABLE_MOUSE_INPUT | ConsoleInputModes.ENABLE_INSERT_MODE | ConsoleInputModes.ENABLE_PROCESSED_INPUT;
-        SetConsoleInputMode(inputHandle, mode);
+        SetConsoleInputMode(_inputHandle, mode);
     }
 
     public void StopInputListening()

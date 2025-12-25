@@ -6,14 +6,4 @@
 /// <remarks>
 /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/coord-str"/>
 /// </remarks>
-internal struct COORD
-{
-    public short X;
-    public short Y;
-
-    public COORD(short X, short Y)
-    {
-        this.X = X;
-        this.Y = Y;
-    }
-};
+internal record struct COORD(short X, short Y);

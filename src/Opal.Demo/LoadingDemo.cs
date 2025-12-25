@@ -14,20 +14,20 @@ internal class LoadingDemo
 
 public class LoadingView : ConsoleView
 {
-    private int count;
-    private DateTime end;
+    private int _count;
+    private DateTime _end;
 
     public override void Init()
     {
         base.Init();
-        end = DateTime.Now.AddSeconds(3);
+        _end = DateTime.Now.AddSeconds(3);
     }
 
     public override void Update(IConsoleState consoleState)
     {
-        count++;
+        _count++;
 
-        if (DateTime.Now > end)
+        if (DateTime.Now > _end)
         {
             consoleState.ExitView();
             return;
@@ -44,7 +44,7 @@ public class LoadingView : ConsoleView
             }
         }
 
-        string s = count.ToString().PadLeft(5, '.');
+        string s = _count.ToString().PadLeft(5, '.');
         for (int i = 0; i < s.Length; i++)
         {
             grid[i, 1] = new ConsoleChar(s[i]);

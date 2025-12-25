@@ -14,7 +14,7 @@ internal class StringCacheDemo
 
 public class StringCacheView : ConsoleView, IKeyInputHandler
 {
-    private bool hasRenderedOnce = false;
+    private bool _hasRenderedOnce = false;
 
     public override void Render(IConsoleGrid grid)
     {
@@ -39,11 +39,11 @@ public class StringCacheView : ConsoleView, IKeyInputHandler
 
     public override void Update(IConsoleState consoleState)
     {
-        if (hasRenderedOnce)
+        if (_hasRenderedOnce)
         {
             consoleState.ExitView();
         }
-        hasRenderedOnce = true;
+        _hasRenderedOnce = true;
     }
 
     public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
