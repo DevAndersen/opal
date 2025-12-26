@@ -5,7 +5,7 @@
 /// </summary>
 public interface IMouseInputHandler
 {
-    public bool AcceptsMouseInput() => true;
+    bool AcceptsMouseInput() => true;
 
-    public void HandleMouseInput(MouseInput mouseEvent, IConsoleState consoleState);
+    void HandleMouseInput(MouseInput mouseEvent, IConsoleState consoleState);
 }

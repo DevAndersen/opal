@@ -8,12 +8,12 @@ public interface IConsoleGrid
     /// <summary>
     /// The width of the grid.
     /// </summary>
-    public int Width { get; }
+    int Width { get; }
 
     /// <summary>
     /// The height of the grid.
     /// </summary>
-    public int Height { get; }
+    int Height { get; }
 
     /// <summary>
     /// Access the <c><see cref="ConsoleChar"/></c> at coordinate <c>[<paramref name="x"/>, <paramref name="y"/>]</c>.
@@ -21,7 +21,7 @@ public interface IConsoleGrid
     /// <param name="x"></param>
     /// <param name="y"></param>
     /// <returns></returns>
-    public ConsoleChar this[int x, int y] { get; set; }
+    ConsoleChar this[int x, int y] { get; set; }
 
     /// <summary>
     /// Creates a new <see cref="ConsoleSubgrid"/> which represents the region of this grid bound by the other parameters.
@@ -31,5 +31,5 @@ public interface IConsoleGrid
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <returns></returns>
-    public ConsoleSubgrid CreateSubgrid(int x, int y, int width, int height);
+    ConsoleSubgrid CreateSubgrid(int x, int y, int width, int height);
 }

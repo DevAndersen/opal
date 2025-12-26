@@ -5,59 +5,59 @@
 /// </summary>
 public interface IConsoleHandler : IDisposable
 {
-    public event ConsoleSizeChangedEventHandler? OnConsoleSizeChanged;
+    event ConsoleSizeChangedEventHandler? OnConsoleSizeChanged;
 
-    public OpalSettings? Settings { get; }
+    OpalSettings? Settings { get; }
 
     /// <summary>
     /// Is the console handler currently running?
     /// </summary>
-    public bool Running { get; }
+    bool Running { get; }
 
     /// <summary>
     /// The visible width of the console.
     /// </summary>
     /// <returns></returns>
-    public int Width { get; }
+    int Width { get; }
 
     /// <summary>
     /// The visible height of the console.
     /// </summary>
     /// <returns></returns>
-    public int Height { get; }
+    int Height { get; }
 
-    public int BufferWidthOffset { get; }
+    int BufferWidthOffset { get; }
 
-    public int BufferHeightOffset { get; }
+    int BufferHeightOffset { get; }
 
     /// <summary>
     /// Apply changes necessary for Opal to run.
     /// </summary>
     /// <param name="settings"></param>
-    public void Start(OpalSettings settings);
+    void Start(OpalSettings settings);
 
     /// <summary>
     /// Undo the changes done by <see cref="Start"/>, restoring the console to its initial state.
     /// </summary>
-    public void Stop();
+    void Stop();
 
     /// <summary>
     /// Print <c><paramref name="str"/></c> to the console.
     /// </summary>
     /// <param name="str"></param>
-    public void Print(string str);
+    void Print(string str);
 
     /// <summary>
     /// Print <c><paramref name="stringBuilder"/></c> to the console.
     /// </summary>
     /// <param name="stringBuilder"></param>
-    public void Print(StringBuilder stringBuilder);
+    void Print(StringBuilder stringBuilder);
 
     /// <summary>
     /// Returns a user input. If the returned value is <c>null</c>, it represents a lack of new user input.
     /// </summary>
     /// <returns></returns>
-    public IConsoleInput? GetInput();
+    IConsoleInput? GetInput();
 
     /// <summary>
     /// Returns a new instance of <c><see cref="IConsoleHandler"/></c> using <c><see cref="CreateDefaultHandlerForCurrentPlatform"/></c> and set to fullscreen mode, after executing its <c><see cref="Start()"/></c> method.
@@ -65,7 +65,7 @@ public interface IConsoleHandler : IDisposable
     /// </summary>
     /// <param name="settings"></param>
     /// <returns>A new instance of <c><see cref="IConsoleHandler"/></c> for the current platform, where its <see cref="Start"/> method has been executed.</returns>
-    public static IConsoleHandler StartNewFullscreen()
+    static IConsoleHandler StartNewFullscreen()
     {
         return StartNew(OpalSettings.CreateFullscreen());
     }
@@ -76,7 +76,7 @@ public interface IConsoleHandler : IDisposable
     /// </summary>
     /// <param name="settings"></param>
     /// <returns>A new instance of <c><see cref="IConsoleHandler"/></c> for the current platform, where its <see cref="Start"/> method has been executed.</returns>
-    public static IConsoleHandler StartNew(OpalSettings settings)
+    static IConsoleHandler StartNew(OpalSettings settings)
     {
         IConsoleHandler handler = CreateDefaultHandlerForCurrentPlatform();
         handler.Start(settings);
@@ -90,7 +90,7 @@ public interface IConsoleHandler : IDisposable
     /// <typeparam name="TConsoleHandler"></typeparam>
     /// <param name="settings"></param>
     /// <returns>A new instance of <c><see cref="IConsoleHandler"/></c>, where its <see cref="Start"/> method has been executed.</returns>
-    public static IConsoleHandler StartNew<TConsoleHandler>(OpalSettings settings) where TConsoleHandler : IConsoleHandler, new()
+    static IConsoleHandler StartNew<TConsoleHandler>(OpalSettings settings) where TConsoleHandler : IConsoleHandler, new()
     {
         IConsoleHandler handler = new TConsoleHandler();
         handler.Start(settings);
@@ -101,7 +101,7 @@ public interface IConsoleHandler : IDisposable
     /// Returns a new instance of the default <c><see cref="IConsoleHandler"/></c> for the current platform.
     /// </summary>
     /// <returns></returns>
-    public static IConsoleHandler CreateDefaultHandlerForCurrentPlatform()
+    static IConsoleHandler CreateDefaultHandlerForCurrentPlatform()
     {
         return Environment.OSVersion.Platform switch
         {

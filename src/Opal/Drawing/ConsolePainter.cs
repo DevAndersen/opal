@@ -171,7 +171,7 @@ public static class ConsolePainter
         }
     }
 
-    public static void DrawTextArea(IConsoleGrid grid, int posX, int posY, int width, int height, int viewOffsetX, int viewOffsetY, int wrapWidth, string text, ConsoleChar template)
+    public static void DrawTextArea(IConsoleGrid grid, int posX, int posY, int width, int height, int viewOffsetX, int viewOffsetY, string text, ConsoleChar template)
     {
         string[] lines = text.Split(_newlineSequences, StringSplitOptions.None);
 

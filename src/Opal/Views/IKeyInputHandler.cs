@@ -5,7 +5,7 @@
 /// </summary>
 public interface IKeyInputHandler
 {
-    public bool AcceptsKeyInput() => true;
+    bool AcceptsKeyInput() => true;
 
-    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState);
+    void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState);
 }

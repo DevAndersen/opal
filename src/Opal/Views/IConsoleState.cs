@@ -2,15 +2,15 @@
 
 public interface IConsoleState
 {
-    public int Height { get; }
+    int Height { get; }
 
-    public int Width { get; }
+    int Width { get; }
 
-    public void Goto(IConsoleView view);
+    void Goto(IConsoleView view);
 
-    public void GotoChild(IConsoleView view);
+    void GotoChild(IConsoleView view);
 
-    public void ExitView();
+    void ExitView();
 
-    public void Exit();
+    void Exit();
 }

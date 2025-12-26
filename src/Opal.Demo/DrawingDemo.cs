@@ -15,8 +15,8 @@ internal class DrawingDemo
 
 public class DrawingView : ConsoleView, IKeyInputHandler
 {
-    int _x = 0;
-    int _y = 0;
+    private int _x = 0;
+    private int _y = 0;
 
     public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
     {
@@ -53,6 +53,6 @@ public class DrawingView : ConsoleView, IKeyInputHandler
         int height = 12;
 
         ConsolePainter.DrawBox(grid, posX, posY, width, height, DrawStyle.DoubleDrawStyle, new ConsoleChar { ForegroundSimple = ConsoleColor.Magenta });
-        ConsolePainter.DrawTextArea(grid, posX + 1, posY + 1, width - 2, height - 2, _x, _y, 0, "Line one\nLine two\r\nLine three\n\nLine five\nThis line is really rather long.", new ConsoleChar { ForegroundRgb = 0x3377ff });
+        ConsolePainter.DrawTextArea(grid, posX + 1, posY + 1, width - 2, height - 2, _x, _y, "Line one\nLine two\r\nLine three\n\nLine five\nThis line is really rather long.", new ConsoleChar { ForegroundRgb = 0x3377ff });
     }
 }

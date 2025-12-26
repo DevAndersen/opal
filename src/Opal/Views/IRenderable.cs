@@ -4,5 +4,5 @@ namespace Opal.Views;
 
 public interface IRenderable
 {
-    public void Render(IConsoleGrid grid);
+    void Render(IConsoleGrid grid);
 }
