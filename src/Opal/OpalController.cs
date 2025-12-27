@@ -61,7 +61,7 @@ public class OpalController : IDisposable
         _viewStack = new Stack<IBaseConsoleView>();
         _inputQueue = new ConcurrentQueue<IConsoleInput>();
         _inputThread = new Thread(InputHandlerThreadMethod);
-        this._settings = settings;
+        _settings = settings;
     }
 
     public OpalController(OpalSettings settings) : this(IConsoleHandler.CreateDefaultHandlerForCurrentPlatform(), settings)

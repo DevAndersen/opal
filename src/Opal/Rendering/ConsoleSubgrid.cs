@@ -23,8 +23,8 @@ public class ConsoleSubgrid : BaseConsoleGrid
 
     public ConsoleSubgrid(IConsoleGrid parentGrid, int offsetX, int offsetY, int width, int height) : base(width, height)
     {
-        this._parentGrid = parentGrid;
-        this._offsetX = offsetX;
-        this._offsetY = offsetY;
+        _parentGrid = parentGrid;
+        _offsetX = offsetX;
+        _offsetY = offsetY;
     }
 }

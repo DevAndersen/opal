@@ -85,7 +85,7 @@ public class WindowsInputHandler : IInputHandler
 
     public void Initialize(nint inputHandle)
     {
-        this._inputHandle = inputHandle;
+        _inputHandle = inputHandle;
     }
 
     public void StartInputListening()
