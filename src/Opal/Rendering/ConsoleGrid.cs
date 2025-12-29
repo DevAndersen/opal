@@ -77,9 +77,12 @@ public class ConsoleGrid : BaseConsoleGrid
     /// <returns></returns>
     public ConsoleGrid MakeClone()
     {
-        ConsoleGrid clone = new ConsoleGrid(Width, Height);
-        Buffer.CopyTo(clone.Buffer);
-        return clone;
+        lock (_lockObject)
+        {
+            ConsoleGrid clone = new ConsoleGrid(Width, Height);
+            Buffer.CopyTo(clone.Buffer);
+            return clone;
+        }
     }
 
     /// <summary>
