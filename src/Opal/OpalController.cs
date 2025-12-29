@@ -184,10 +184,16 @@ public class OpalController : IDisposable
     {
         while (IsRunning)
         {
-            IConsoleInput? input = _handler.GetInput();
-            if (input != null)
+            Thread.Sleep(1000 / 180); // Todo: Make the input delay adjustable (currently 180 updates/second).
+
+            IBaseConsoleView? currentView = GetCurrentView();
+            if (currentView is IKeyInputHandler or IMouseInputHandler)
             {
-                _inputQueue.Enqueue(input);
+                IConsoleInput? input = _handler.GetInput();
+                if (input != null)
+                {
+                    _inputQueue.Enqueue(input);
+                }
             }
         }
     }
