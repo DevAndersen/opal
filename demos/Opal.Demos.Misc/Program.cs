@@ -1,4 +1,4 @@
-﻿using Opal.Demo;
+﻿using Opal.Demos.Misc;
 
 Func<Task>[] actions =
 [

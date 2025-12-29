@@ -1,10 +1,12 @@
 <Solution>
+  <Folder Name="/Demos/">
+    <Project Path="demos/Opal.Demos.Misc/Opal.Demos.Misc.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
     <File Path="Directory.Build.props" />
     <File Path="README.md" />
   </Folder>
-  <Project Path="src/Opal.Demo/Opal.Demo.csproj" />
   <Project Path="src/Opal/Opal.csproj" />
 </Solution>

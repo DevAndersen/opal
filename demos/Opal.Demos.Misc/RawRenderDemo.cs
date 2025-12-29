@@ -2,7 +2,7 @@
 using Opal.Rendering;
 using System.Diagnostics;
 
-namespace Opal.Demo;
+namespace Opal.Demos.Misc;
 
 internal class RawRenderDemo
 {

@@ -1,7 +1,7 @@
 ﻿using Opal.Rendering;
 using Opal.Views;
 
-namespace Opal.Demo;
+namespace Opal.Demos.Misc;
 
 public static class ViewDemo
 {

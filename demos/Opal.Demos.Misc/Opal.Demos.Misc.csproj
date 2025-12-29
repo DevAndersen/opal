@@ -5,7 +5,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Opal\Opal.csproj" />
+		<ProjectReference Include="..\..\src\Opal\Opal.csproj" />
 	</ItemGroup>
 
 </Project>
