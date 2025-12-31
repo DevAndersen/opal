@@ -80,7 +80,7 @@ public class MatrixView : ConsoleView
 
         public MatrixParticle(int posX)
         {
-            MaxLength = Random.Shared.Next(8, 20);
+            MaxLength = Random.Shared.Next(16, 30);
             PosX = posX;
             PosY = 0;
         }
