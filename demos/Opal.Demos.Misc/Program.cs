@@ -31,7 +31,6 @@ do
 } while (!hasValidChoiceBeenMade);
 
 Console.WriteLine("Program exit.");
-Console.ReadLine();
 
 static void PrintActions(Func<Task>[] actions)
 {

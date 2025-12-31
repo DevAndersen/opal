@@ -182,6 +182,8 @@ public class OpalController : IDisposable
 
     public void InputHandlerThreadMethod()
     {
+        Console.CancelKeyPress += CancellationAction;
+
         while (IsRunning)
         {
             Thread.Sleep(1000 / 180); // Todo: Make the input delay adjustable (currently 180 updates/second).
@@ -196,6 +198,17 @@ public class OpalController : IDisposable
                 }
             }
         }
+
+        Console.CancelKeyPress -= CancellationAction;
+    }
+
+    private void CancellationAction(object? sender, ConsoleCancelEventArgs args)
+    {
+        IBaseConsoleView? currentView = GetCurrentView();
+
+        // Todo: Check if current view implements an interface that lets it handle cancellation requests.
+        Stop();
+        args.Cancel = true;
     }
 
     public IBaseConsoleView? GetCurrentView()
