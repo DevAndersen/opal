@@ -12,10 +12,12 @@ internal static class MatrixDemo
     }
 }
 
-public class MatrixView : ConsoleView
+public class MatrixView : ConsoleView, IKeyInputHandler
 {
     public int _age;
     private readonly List<MatrixParticle> _particles = [];
+    private bool _throwExceptionAfterNextRender;
+    private bool _throwExceptionAfterNextUpdate;
 
     public override void Update(IConsoleState consoleState)
     {
@@ -43,6 +45,11 @@ public class MatrixView : ConsoleView
         {
             _particles.Add(new MatrixParticle(Random.Shared.Next(consoleState.Width)));
         }
+
+        if (_throwExceptionAfterNextRender)
+        {
+            throw new Exception($"Test of throwing an exception from {nameof(Update)}");
+        }
     }
 
     public override void Render(IConsoleGrid grid)
@@ -65,6 +72,27 @@ public class MatrixView : ConsoleView
                 char c = particle.Trail.ElementAt(i);
                 grid[particle.PosX, particle.PosY - i] = new ConsoleChar(c, col);
             }
+        }
+
+        if (_throwExceptionAfterNextUpdate)
+        {
+            throw new Exception($"Test of throwing an exception from {nameof(Render)}");
+        }
+    }
+
+    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
+    {
+        if (keyEvent.Key == ConsoleKey.X)
+        {
+            throw new Exception($"Test of throwing an exception from {nameof(HandleKeyInput)}");
+        }
+        else if (keyEvent.Key == ConsoleKey.Y)
+        {
+            _throwExceptionAfterNextRender = true;
+        }
+        else if (keyEvent.Key == ConsoleKey.Z)
+        {
+            _throwExceptionAfterNextUpdate = true;
         }
     }
 

@@ -85,12 +85,21 @@ public class OpalController : IDisposable
 
         _handler.Start(_settings);
         _handler.OnConsoleSizeChanged += HandleConsoleSizeChanged;
+        Console.CancelKeyPress += CancellationAction;
 
         _inputThread.Start();
 
         IsRunning = true;
 
-        await RunAsync(view, cancellationToken);
+        try
+        {
+            await RunAsync(view, cancellationToken);
+        }
+        catch (Exception)
+        {
+            Stop();
+            throw;
+        }
     }
 
     public void Stop()
@@ -101,6 +110,7 @@ public class OpalController : IDisposable
         }
 
         IsRunning = false;
+        Console.CancelKeyPress -= CancellationAction;
         _handler.OnConsoleSizeChanged -= HandleConsoleSizeChanged;
         _handler.Stop();
     }
@@ -182,8 +192,6 @@ public class OpalController : IDisposable
 
     public void InputHandlerThreadMethod()
     {
-        Console.CancelKeyPress += CancellationAction;
-
         while (IsRunning)
         {
             Thread.Sleep(1000 / 180); // Todo: Make the input delay adjustable (currently 180 updates/second).
@@ -198,8 +206,6 @@ public class OpalController : IDisposable
                 }
             }
         }
-
-        Console.CancelKeyPress -= CancellationAction;
     }
 
     private void CancellationAction(object? sender, ConsoleCancelEventArgs args)
