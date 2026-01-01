@@ -101,14 +101,14 @@ public static class ConsolePainter
 
     #region DrawString
 
-    public static void DrawString(IConsoleGrid grid, int posX, int posY, string? text)
+    public static void DrawString(IConsoleGrid grid, int posX, int posY, ReadOnlySpan<char> text)
     {
         DrawString(grid, posX, posY, text, default);
     }
 
-    public static void DrawString(IConsoleGrid grid, int posX, int posY, string? text, ConsoleChar template)
+    public static void DrawString(IConsoleGrid grid, int posX, int posY, ReadOnlySpan<char> text, ConsoleChar template)
     {
-        if (!string.IsNullOrEmpty(text))
+        if (!text.IsEmpty)
         {
             for (int i = 0; i < text.Length; i++)
             {
