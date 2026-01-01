@@ -82,15 +82,19 @@ public class MatrixView : ConsoleView, IKeyInputHandler
 
     public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
     {
-        if (keyEvent.Key == ConsoleKey.X)
+        if (keyEvent.Key == ConsoleKey.D1)
+        {
+            consoleState.Exit();
+        }
+        if (keyEvent.Key == ConsoleKey.D2)
         {
             throw new Exception($"Test of throwing an exception from {nameof(HandleKeyInput)}");
         }
-        else if (keyEvent.Key == ConsoleKey.Y)
+        else if (keyEvent.Key == ConsoleKey.D3)
         {
             _throwExceptionAfterNextRender = true;
         }
-        else if (keyEvent.Key == ConsoleKey.Z)
+        else if (keyEvent.Key == ConsoleKey.D4)
         {
             _throwExceptionAfterNextUpdate = true;
         }
