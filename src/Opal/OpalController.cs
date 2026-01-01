@@ -95,7 +95,7 @@ public class OpalController : IDisposable
         {
             await RunAsync(view, cancellationToken);
         }
-        catch (Exception)
+        catch
         {
             Stop();
             throw;
