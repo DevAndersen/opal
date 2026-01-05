@@ -4,7 +4,7 @@ namespace Opal.Drawing;
 
 public static partial class ConsolePainter
 {
-    public static (int Width, int Height) DrawTable(IConsoleGrid grid, int columns, int rows, int cellWidth, int cellHeight, Action<ConsoleSubgrid, int, int>? cellFunc = null)
+    public static (int Width, int Height) DrawTable(IConsoleGrid grid, int columns, int rows, int cellWidth, int cellHeight, Action<ConsoleSubgrid, int, int>? cellFunc = null, ConsoleChar template = default)
     {
         int[] cellWidths = new int[columns];
         int[] cellHeights = new int[rows];
@@ -12,10 +12,10 @@ public static partial class ConsolePainter
         Array.Fill(cellWidths, cellWidth);
         Array.Fill(cellHeights, cellHeight);
 
-        return DrawTable(grid, cellWidths, cellHeights, cellFunc);
+        return DrawTable(grid, cellWidths, cellHeights, cellFunc, template);
     }
 
-    public static (int Width, int Height) DrawTable(IConsoleGrid grid, int[] columnWidths, int[] rowHeights, Action<ConsoleSubgrid, int, int>? cellFunc = null)
+    public static (int Width, int Height) DrawTable(IConsoleGrid grid, int[] columnWidths, int[] rowHeights, Action<ConsoleSubgrid, int, int>? cellFunc = null, ConsoleChar template = default)
     {
         int totalWidth = columnWidths.Sum() + columnWidths.Length + 1;
         int totalHeight = rowHeights.Sum() + rowHeights.Length + 1;
@@ -85,7 +85,7 @@ public static partial class ConsolePainter
                     c = ' ';
                 }
 
-                grid[x, y] = new ConsoleChar(c);
+                grid[x, y] = template with { Character = c };
 
                 relX++;
             }
