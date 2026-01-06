@@ -6,6 +6,8 @@ public static partial class ConsolePainter
 {
     public static (int Width, int Height) DrawTable(
         IConsoleGrid grid,
+        int posX,
+        int posY,
         int columns,
         int rows,
         int cellWidth,
@@ -13,11 +15,13 @@ public static partial class ConsolePainter
         Action<ConsoleSubgrid, int, int>? cellFunc,
         ConsoleChar template = default)
     {
-        return DrawTable(grid, columns, rows, cellWidth, cellHeight, cellFunc, DrawStyle.StandardDrawStyle, template);
+        return DrawTable(grid, posX, posY, columns, rows, cellWidth, cellHeight, cellFunc, DrawStyle.StandardDrawStyle, template);
     }
 
     public static (int Width, int Height) DrawTable(
         IConsoleGrid grid,
+        int posX,
+        int posY,
         int columns,
         int rows,
         int cellWidth,
@@ -32,21 +36,25 @@ public static partial class ConsolePainter
         Array.Fill(cellWidths, cellWidth);
         Array.Fill(cellHeights, cellHeight);
 
-        return DrawTable(grid, cellWidths, cellHeights, cellFunc, style, template);
+        return DrawTable(grid, posX, posY, cellWidths, cellHeights, cellFunc, style, template);
     }
 
     public static (int Width, int Height) DrawTable(
         IConsoleGrid grid,
+        int posX,
+        int posY,
         int[] columnWidths,
         int[] rowHeights,
         Action<ConsoleSubgrid, int, int>? cellFunc,
         ConsoleChar template = default)
     {
-        return DrawTable(grid, columnWidths, rowHeights, cellFunc, DrawStyle.StandardDrawStyle, template);
+        return DrawTable(grid, posX, posY, columnWidths, rowHeights, cellFunc, DrawStyle.StandardDrawStyle, template);
     }
 
     public static (int Width, int Height) DrawTable(
         IConsoleGrid grid,
+        int posX,
+        int posY,
         int[] columnWidths,
         int[] rowHeights,
         Action<ConsoleSubgrid, int, int>? cellFunc,
@@ -121,7 +129,7 @@ public static partial class ConsolePainter
                     c = ' ';
                 }
 
-                grid[x, y] = template with { Character = c };
+                grid[posX + x, posY + y] = template with { Character = c };
 
                 relX++;
             }
@@ -139,7 +147,7 @@ public static partial class ConsolePainter
                 {
                     if (columnWidths[x] != 0 && rowHeights[y] != 0)
                     {
-                        ConsoleSubgrid cellGrid = grid.CreateSubgrid(offsetX + 1, offsetY + 1, columnWidths[x], rowHeights[y]);
+                        ConsoleSubgrid cellGrid = grid.CreateSubgrid(posX + offsetX + 1, posY + offsetY + 1, columnWidths[x], rowHeights[y]);
                         cellFunc(cellGrid, x, y);
                     }
 
