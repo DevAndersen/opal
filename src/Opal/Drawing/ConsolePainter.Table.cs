@@ -4,7 +4,27 @@ namespace Opal.Drawing;
 
 public static partial class ConsolePainter
 {
-    public static (int Width, int Height) DrawTable(IConsoleGrid grid, int columns, int rows, int cellWidth, int cellHeight, Action<ConsoleSubgrid, int, int>? cellFunc = null, ConsoleChar template = default)
+    public static (int Width, int Height) DrawTable(
+        IConsoleGrid grid,
+        int columns,
+        int rows,
+        int cellWidth,
+        int cellHeight,
+        Action<ConsoleSubgrid, int, int>? cellFunc,
+        ConsoleChar template = default)
+    {
+        return DrawTable(grid, columns, rows, cellWidth, cellHeight, cellFunc, DrawStyle.StandardDrawStyle, template);
+    }
+
+    public static (int Width, int Height) DrawTable(
+        IConsoleGrid grid,
+        int columns,
+        int rows,
+        int cellWidth,
+        int cellHeight,
+        Action<ConsoleSubgrid, int, int>? cellFunc,
+        DrawStyle style,
+        ConsoleChar template = default)
     {
         int[] cellWidths = new int[columns];
         int[] cellHeights = new int[rows];
@@ -12,10 +32,26 @@ public static partial class ConsolePainter
         Array.Fill(cellWidths, cellWidth);
         Array.Fill(cellHeights, cellHeight);
 
-        return DrawTable(grid, cellWidths, cellHeights, cellFunc, template);
+        return DrawTable(grid, cellWidths, cellHeights, cellFunc, style, template);
     }
 
-    public static (int Width, int Height) DrawTable(IConsoleGrid grid, int[] columnWidths, int[] rowHeights, Action<ConsoleSubgrid, int, int>? cellFunc = null, ConsoleChar template = default)
+    public static (int Width, int Height) DrawTable(
+        IConsoleGrid grid,
+        int[] columnWidths,
+        int[] rowHeights,
+        Action<ConsoleSubgrid, int, int>? cellFunc,
+        ConsoleChar template = default)
+    {
+        return DrawTable(grid, columnWidths, rowHeights, cellFunc, DrawStyle.StandardDrawStyle, template);
+    }
+
+    public static (int Width, int Height) DrawTable(
+        IConsoleGrid grid,
+        int[] columnWidths,
+        int[] rowHeights,
+        Action<ConsoleSubgrid, int, int>? cellFunc,
+        DrawStyle style,
+        ConsoleChar template = default)
     {
         int totalWidth = columnWidths.Sum() + columnWidths.Length + 1;
         int totalHeight = rowHeights.Sum() + rowHeights.Length + 1;
@@ -57,28 +93,28 @@ public static partial class ConsolePainter
                     c = (isTop, isBottom, isLeft, isRight) switch
                     {
                         // Sides
-                        (true, false, false, false) => DrawStyle.StandardDrawStyle.TUp,
-                        (false, true, false, false) => DrawStyle.StandardDrawStyle.TDown,
-                        (false, false, true, false) => DrawStyle.StandardDrawStyle.TLeft,
-                        (false, false, false, true) => DrawStyle.StandardDrawStyle.TRight,
+                        (true, false, false, false) => style.TUp,
+                        (false, true, false, false) => style.TDown,
+                        (false, false, true, false) => style.TLeft,
+                        (false, false, false, true) => style.TRight,
 
                         // Corners
-                        (true, false, true, false) => DrawStyle.StandardDrawStyle.TopLeftCorner,
-                        (true, false, false, true) => DrawStyle.StandardDrawStyle.TopRightCorner,
-                        (false, true, true, false) => DrawStyle.StandardDrawStyle.BottomLeftCorner,
-                        (false, true, false, true) => DrawStyle.StandardDrawStyle.BottomRightCorner,
+                        (true, false, true, false) => style.TopLeftCorner,
+                        (true, false, false, true) => style.TopRightCorner,
+                        (false, true, true, false) => style.BottomLeftCorner,
+                        (false, true, false, true) => style.BottomRightCorner,
 
                         // Inner
-                        _ => DrawStyle.StandardDrawStyle.Plus
+                        _ => style.Plus
                     };
                 }
                 else if (relX == 0)
                 {
-                    c = DrawStyle.StandardDrawStyle.Vertical;
+                    c = style.Vertical;
                 }
                 else if (relY == 0)
                 {
-                    c = DrawStyle.StandardDrawStyle.Horizontal;
+                    c = style.Horizontal;
                 }
                 else
                 {
