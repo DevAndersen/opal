@@ -87,9 +87,8 @@ public class OpalController : IDisposable
         _handler.OnConsoleSizeChanged += HandleConsoleSizeChanged;
         Console.CancelKeyPress += CancellationAction;
 
-        _inputThread.Start();
-
         IsRunning = true;
+        _inputThread.Start();
 
         try
         {
