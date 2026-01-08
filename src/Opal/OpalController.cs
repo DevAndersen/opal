@@ -125,7 +125,8 @@ public class OpalController : IDisposable
             // Reset console state object.
             state.Reset(_handler.Height, _handler.Width);
 
-            // Todo: Call init once per view.
+            // Initialize the current view.
+            await currentView.InitializeViewAsync();
 
             // Todo: Should the input queue be cleared when changing view?
 

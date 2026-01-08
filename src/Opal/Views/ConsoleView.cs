@@ -4,7 +4,20 @@ namespace Opal.Views;
 
 public abstract class ConsoleView : IConsoleView
 {
-    public virtual void Init()
+    private bool _isInitialized;
+
+    public ValueTask InitializeViewAsync()
+    {
+        if (!_isInitialized)
+        {
+            Initialize();
+            _isInitialized = true;
+        }
+
+        return ValueTask.CompletedTask;
+    }
+
+    public virtual void Initialize()
     {
     }
 

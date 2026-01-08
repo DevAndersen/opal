@@ -17,9 +17,8 @@ public class LoadingView : ConsoleView
     private int _count;
     private DateTime _end;
 
-    public override void Init()
+    public override void Initialize()
     {
-        base.Init();
         _end = DateTime.Now.AddSeconds(3);
     }
 
