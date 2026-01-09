@@ -234,7 +234,11 @@ public class OpalController : IDisposable
     {
         if (view != null)
         {
-            _previousGrid = _grid?.MakeClone();
+            if (_grid?.TryCopyTo(_previousGrid) != true)
+            {
+                _previousGrid = _grid?.MakeClone();
+            }
+
             _grid = GetConsoleGrid(_handler, _grid);
             view.Render(_grid);
 
@@ -289,7 +293,10 @@ public class OpalController : IDisposable
             {
                 grid.SetSize(handler.Width, handler.Height);
             }
-            grid.Buffer.Span.Clear();
+            else
+            {
+                grid.Buffer.Span.Clear();
+            }
         }
         return grid;
     }

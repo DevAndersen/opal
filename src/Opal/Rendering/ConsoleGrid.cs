@@ -86,6 +86,36 @@ public class ConsoleGrid : BaseConsoleGrid
     }
 
     /// <summary>
+    /// Attempt to copy the buffer of this grid into <paramref name="grid"/>, if they have the same size.
+    /// </summary>
+    /// <returns></returns>
+    public bool TryCopyTo(ConsoleGrid? grid)
+    {
+        if (grid == null)
+        {
+            return false;
+        }
+
+        lock (_lockObject)
+        {
+            if (Width != grid.Width || Height != grid.Height)
+            {
+                return false;
+            }
+
+            try
+            {
+                Buffer.CopyTo(grid.Buffer);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    }
+
+    /// <summary>
     /// Determines if <paramref name="other"/> has a different size or content that this grid.
     /// </summary>
     /// <param name="other"></param>
