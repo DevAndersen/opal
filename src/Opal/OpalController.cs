@@ -165,8 +165,14 @@ public class OpalController : IDisposable
             // Delay.
             if (!state.HasExitViewBeenRequested && !cancellationToken.IsCancellationRequested)
             {
-                // Todo: Add mechanism for views to specify a custom delay between renders.
-                await Task.Delay(10, cancellationToken);
+                try
+                {
+                    // Todo: Add mechanism for views to specify a custom delay between renders.
+                    await Task.Delay(10, cancellationToken);
+                }
+                catch (TaskCanceledException)
+                {
+                }
             }
 
             // Handle console state.
