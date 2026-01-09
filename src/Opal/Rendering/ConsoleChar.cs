@@ -175,6 +175,9 @@ public readonly struct ConsoleChar
     /// <summary>
     /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence.
     /// </summary>
+    /// <remarks>
+    /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
+    /// </remarks>
     /// <param name="sequence"></param>
     public ConsoleChar(string sequence)
     {
@@ -184,6 +187,9 @@ public readonly struct ConsoleChar
     /// <summary>
     /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence and a simple foreground color.
     /// </summary>
+    /// <remarks>
+    /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
+    /// </remarks>
     /// <param name="sequence"></param>
     public ConsoleChar(string sequence, ConsoleColor foregroundColor) : this(sequence)
     {
@@ -193,6 +199,9 @@ public readonly struct ConsoleChar
     /// <summary>
     /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence and an RGB foreground color.
     /// </summary>
+    /// <remarks>
+    /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
+    /// </remarks>
     /// <param name="sequence"></param>
     public ConsoleChar(string sequence, int foregroundColor) : this(sequence)
     {
@@ -202,6 +211,9 @@ public readonly struct ConsoleChar
     /// <summary>
     /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence, a simple foreground color, and a simple background color.
     /// </summary>
+    /// <remarks>
+    /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
+    /// </remarks>
     /// <param name="sequence"></param>
     public ConsoleChar(string sequence, ConsoleColor foregroundColor, ConsoleColor backgroundColor) : this(sequence, foregroundColor)
     {
@@ -211,6 +223,9 @@ public readonly struct ConsoleChar
     /// <summary>
     /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence, a simple foreground color, and an RGB background color.
     /// </summary>
+    /// <remarks>
+    /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
+    /// </remarks>
     /// <param name="sequence"></param>
     public ConsoleChar(string sequence, ConsoleColor foregroundColor, int backgroundColor) : this(sequence, foregroundColor)
     {
@@ -220,6 +235,9 @@ public readonly struct ConsoleChar
     /// <summary>
     /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence, an RGB foreground color, and a simple background color.
     /// </summary>
+    /// <remarks>
+    /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
+    /// </remarks>
     /// <param name="sequence"></param>
     public ConsoleChar(string sequence, int foregroundColor, ConsoleColor backgroundColor) : this(sequence, foregroundColor)
     {
@@ -229,6 +247,9 @@ public readonly struct ConsoleChar
     /// <summary>
     /// Initializes a new instance of <see cref="ConsoleChar"/> with a character sequence, an RGB foreground color, and an RGB background color.
     /// </summary>
+    /// <remarks>
+    /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
+    /// </remarks>
     /// <param name="sequence"></param>
     public ConsoleChar(string sequence, int foregroundColor, int backgroundColor) : this(sequence, foregroundColor)
     {
