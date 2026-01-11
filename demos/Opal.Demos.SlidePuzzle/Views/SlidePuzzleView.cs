@@ -20,10 +20,10 @@ internal class SlidePuzzleView : ConsoleView, IKeyInputHandler
 
     private void RenderPuzzle(IConsoleGrid grid)
     {
-        ConsolePainter.DrawString(grid, 3, 1, $"Moves: {_puzzle.Moves}");
-        ConsolePainter.DrawString(grid, 20, 1, $"Time: {(int)_puzzle.Timer.Elapsed.TotalSeconds}");
+        DrawingHelper.DrawString(grid, 3, 1, $"Moves: {_puzzle.Moves}");
+        DrawingHelper.DrawString(grid, 20, 1, $"Time: {(int)_puzzle.Timer.Elapsed.TotalSeconds}");
 
-        (_, int tableHeight) = ConsolePainter.DrawTable(grid, 2, 2, _puzzle.Width, _puzzle.Height, 7, 3, (grid, x, y) =>
+        (_, int tableHeight) = DrawingHelper.DrawTable(grid, 2, 2, _puzzle.Width, _puzzle.Height, 7, 3, (grid, x, y) =>
         {
             int value = _puzzle[x, y];
             if (value != _puzzle.ValueToHide)
@@ -33,13 +33,13 @@ internal class SlidePuzzleView : ConsoleView, IKeyInputHandler
                     ForegroundSimple = _puzzle.CheckIsCorrect(x, y) ? ConsoleColor.Green : ConsoleColor.Red
                 };
 
-                ConsolePainter.DrawString(grid, 3, 1, value.ToString().PadRight(2), template);
+                DrawingHelper.DrawString(grid, 3, 1, value.ToString().PadRight(2), template);
             }
         }, new ConsoleChar { ForegroundSimple = ConsoleColor.DarkGray });
 
         if (_puzzle.IsSolved)
         {
-            ConsolePainter.DrawString(grid, 3, 3 + tableHeight, "Puzzle completed!", new ConsoleChar { ForegroundSimple = ConsoleColor.Green });
+            DrawingHelper.DrawString(grid, 3, 3 + tableHeight, "Puzzle completed!", new ConsoleChar { ForegroundSimple = ConsoleColor.Green });
         }
     }
 

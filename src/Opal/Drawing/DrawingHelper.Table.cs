@@ -2,10 +2,10 @@
 
 namespace Opal.Drawing;
 
-public static partial class ConsolePainter
+public static partial class DrawingHelper
 {
     public static (int Width, int Height) DrawTable(
-        IConsoleGrid grid,
+        this IConsoleGrid grid,
         int posX,
         int posY,
         int columns,
@@ -19,7 +19,7 @@ public static partial class ConsolePainter
     }
 
     public static (int Width, int Height) DrawTable(
-        IConsoleGrid grid,
+        this IConsoleGrid grid,
         int posX,
         int posY,
         int columns,
@@ -40,7 +40,7 @@ public static partial class ConsolePainter
     }
 
     public static (int Width, int Height) DrawTable(
-        IConsoleGrid grid,
+        this IConsoleGrid grid,
         int posX,
         int posY,
         int[] columnWidths,
@@ -52,7 +52,7 @@ public static partial class ConsolePainter
     }
 
     public static (int Width, int Height) DrawTable(
-        IConsoleGrid grid,
+        this IConsoleGrid grid,
         int posX,
         int posY,
         int[] columnWidths,

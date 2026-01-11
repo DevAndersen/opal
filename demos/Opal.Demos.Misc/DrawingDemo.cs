@@ -44,15 +44,15 @@ public class DrawingView : ConsoleView, IKeyInputHandler
 
     public override void Render(IConsoleGrid grid)
     {
-        ConsolePainter.DrawString(grid, 2, 2, $"X: {_x}");
-        ConsolePainter.DrawString(grid, 2, 4, $"Y: {_y}");
+        DrawingHelper.DrawString(grid, 2, 2, $"X: {_x}");
+        DrawingHelper.DrawString(grid, 2, 4, $"Y: {_y}");
 
         int posX = 40;
         int posY = 2;
         int width = 24;
         int height = 12;
 
-        ConsolePainter.DrawBox(grid, posX, posY, width, height, DrawStyle.DoubleDrawStyle, new ConsoleChar { ForegroundSimple = ConsoleColor.Magenta });
-        ConsolePainter.DrawTextArea(grid, posX + 1, posY + 1, width - 2, height - 2, _x, _y, "Line one\nLine two\r\nLine three\n\nLine five\nThis line is really rather long.", new ConsoleChar { ForegroundRgb = 0x3377ff });
+        DrawingHelper.DrawBox(grid, posX, posY, width, height, DrawStyle.DoubleDrawStyle, new ConsoleChar { ForegroundSimple = ConsoleColor.Magenta });
+        DrawingHelper.DrawTextArea(grid, posX + 1, posY + 1, width - 2, height - 2, _x, _y, "Line one\nLine two\r\nLine three\n\nLine five\nThis line is really rather long.", new ConsoleChar { ForegroundRgb = 0x3377ff });
     }
 }

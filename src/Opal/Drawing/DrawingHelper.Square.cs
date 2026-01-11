@@ -2,24 +2,24 @@
 
 namespace Opal.Drawing;
 
-public static partial class ConsolePainter
+public static partial class DrawingHelper
 {
-    public static void DrawBox(IConsoleGrid grid, int posX, int posY, int width, int height)
+    public static void DrawBox(this IConsoleGrid grid, int posX, int posY, int width, int height)
     {
         DrawBox(grid, posX, posY, width, height, DrawStyle.StandardDrawStyle, default);
     }
 
-    public static void DrawBox(IConsoleGrid grid, int posX, int posY, int width, int height, DrawStyle style)
+    public static void DrawBox(this IConsoleGrid grid, int posX, int posY, int width, int height, DrawStyle style)
     {
         DrawBox(grid, posX, posY, width, height, style, default);
     }
 
-    public static void DrawBox(IConsoleGrid grid, int posX, int posY, int width, int height, ConsoleChar template)
+    public static void DrawBox(this IConsoleGrid grid, int posX, int posY, int width, int height, ConsoleChar template)
     {
         DrawBox(grid, posX, posY, width, height, DrawStyle.StandardDrawStyle, template);
     }
 
-    public static void DrawBox(IConsoleGrid grid, int posX, int posY, int width, int height, DrawStyle style, ConsoleChar template)
+    public static void DrawBox(this IConsoleGrid grid, int posX, int posY, int width, int height, DrawStyle style, ConsoleChar template)
     {
         grid[posX, posY] = template with { Character = style.TopLeftCorner };
         grid[posX + width, posY] = template with { Character = style.TopRightCorner };
@@ -39,7 +39,7 @@ public static partial class ConsolePainter
         }
     }
 
-    public static void DrawFill(IConsoleGrid grid, int posX, int posY, int width, int height, ConsoleChar template)
+    public static void DrawFill(this IConsoleGrid grid, int posX, int posY, int width, int height, ConsoleChar template)
     {
         for (int x = 0; x < width; x++)
         {

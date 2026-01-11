@@ -2,14 +2,14 @@
 
 namespace Opal.Drawing;
 
-public static partial class ConsolePainter
+public static partial class DrawingHelper
 {
-    public static void DrawString(IConsoleGrid grid, int posX, int posY, ReadOnlySpan<char> text)
+    public static void DrawString(this IConsoleGrid grid, int posX, int posY, ReadOnlySpan<char> text)
     {
         DrawString(grid, posX, posY, text, default);
     }
 
-    public static void DrawString(IConsoleGrid grid, int posX, int posY, ReadOnlySpan<char> text, ConsoleChar template)
+    public static void DrawString(this IConsoleGrid grid, int posX, int posY, ReadOnlySpan<char> text, ConsoleChar template)
     {
         if (!text.IsEmpty)
         {
@@ -20,12 +20,12 @@ public static partial class ConsolePainter
         }
     }
 
-    public static void DrawWrappingString(IConsoleGrid grid, int posX, int posY, int width, string text)
+    public static void DrawWrappingString(this IConsoleGrid grid, int posX, int posY, int width, string text)
     {
         DrawWrappingString(grid, posX, posY, width, int.MaxValue, text, default);
     }
 
-    public static void DrawWrappingString(IConsoleGrid grid, int posX, int posY, int width, int height, string text, ConsoleChar template)
+    public static void DrawWrappingString(this IConsoleGrid grid, int posX, int posY, int width, int height, string text, ConsoleChar template)
     {
         for (int i = 0; i < text.Length; i++)
         {

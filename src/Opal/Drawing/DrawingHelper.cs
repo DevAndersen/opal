@@ -1,6 +1,6 @@
 ﻿namespace Opal.Drawing;
 
-public static partial class ConsolePainter
+public static partial class DrawingHelper
 {
     private static readonly string[] _newlineSequences = ["\n", "\r\n"];
 

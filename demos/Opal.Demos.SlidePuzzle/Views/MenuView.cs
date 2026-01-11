@@ -108,9 +108,9 @@ internal class MenuView : ConsoleView, IKeyInputHandler
 
         DrawButton(grid, centerX - 9, centerY + 5, 18, "Start", _tabIndex == 2);
 
-        ConsolePainter.DrawTextArea(grid, centerX - 6, centerY - 6, "Slide puzzle", new ConsoleChar { ForegroundSimple = ConsoleColor.Green });
+        DrawingHelper.DrawTextArea(grid, centerX - 6, centerY - 6, "Slide puzzle", new ConsoleChar { ForegroundSimple = ConsoleColor.Green });
 
-        ConsolePainter.DrawBox(grid, centerX - 13, centerY - 8, 26, 16, DrawStyle.DoubleDrawStyle, new ConsoleChar { ForegroundSimple = ConsoleColor.Blue });
+        DrawingHelper.DrawBox(grid, centerX - 13, centerY - 8, 26, 16, DrawStyle.DoubleDrawStyle, new ConsoleChar { ForegroundSimple = ConsoleColor.Blue });
     }
 
     private static void DrawTextbox(IConsoleGrid grid, int posX, int posY, int width, string label, int value, bool selected)
@@ -121,9 +121,9 @@ internal class MenuView : ConsoleView, IKeyInputHandler
             ForegroundSimple = selected ? ConsoleColor.White : ConsoleColor.DarkGray
         };
 
-        ConsolePainter.DrawString(grid, posX, posY, text.PadLeft(width));
-        ConsolePainter.DrawString(grid, posX - label.Length - 1, posY, label);
-        ConsolePainter.DrawBox(grid, posX, posY - 1, 7, 2, template);
+        DrawingHelper.DrawString(grid, posX, posY, text.PadLeft(width));
+        DrawingHelper.DrawString(grid, posX - label.Length - 1, posY, label);
+        DrawingHelper.DrawBox(grid, posX, posY - 1, 7, 2, template);
     }
 
     private static void DrawButton(IConsoleGrid grid, int posX, int posY, int width, string text, bool selected)
@@ -133,7 +133,7 @@ internal class MenuView : ConsoleView, IKeyInputHandler
             ForegroundSimple = selected ? ConsoleColor.White : ConsoleColor.Gray
         };
 
-        ConsolePainter.DrawBox(grid, posX, posY - 1, width, 2, selected ? DrawStyle.HeavyDrawStyle : DrawStyle.RoundedDrawStyle, template);
-        ConsolePainter.DrawString(grid, posX + (width / 2) - (text.Length / 2), posY, text);
+        DrawingHelper.DrawBox(grid, posX, posY - 1, width, 2, selected ? DrawStyle.HeavyDrawStyle : DrawStyle.RoundedDrawStyle, template);
+        DrawingHelper.DrawString(grid, posX + (width / 2) - (text.Length / 2), posY, text);
     }
 }

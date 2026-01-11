@@ -2,19 +2,19 @@
 
 namespace Opal.Drawing;
 
-public static partial class ConsolePainter
+public static partial class DrawingHelper
 {
-    public static void DrawTextArea(IConsoleGrid grid, int posX, int posY, string text)
+    public static void DrawTextArea(this IConsoleGrid grid, int posX, int posY, string text)
     {
         DrawTextArea(grid, posX, posY, text, default, 4);
     }
 
-    public static void DrawTextArea(IConsoleGrid grid, int posX, int posY, string text, ConsoleChar template)
+    public static void DrawTextArea(this IConsoleGrid grid, int posX, int posY, string text, ConsoleChar template)
     {
         DrawTextArea(grid, posX, posY, text, template, 4);
     }
 
-    public static void DrawTextArea(IConsoleGrid grid, int posX, int posY, string text, ConsoleChar template, int tabWidth)
+    public static void DrawTextArea(this IConsoleGrid grid, int posX, int posY, string text, ConsoleChar template, int tabWidth)
     {
         string[] lines = text.Split(_newlineSequences, StringSplitOptions.None);
 
@@ -29,7 +29,7 @@ public static partial class ConsolePainter
         }
     }
 
-    public static void DrawTextArea(IConsoleGrid grid, int posX, int posY, int width, int height, int viewOffsetX, int viewOffsetY, string text, ConsoleChar template)
+    public static void DrawTextArea(this IConsoleGrid grid, int posX, int posY, int width, int height, int viewOffsetX, int viewOffsetY, string text, ConsoleChar template)
     {
         string[] lines = text.Split(_newlineSequences, StringSplitOptions.None);
 
