@@ -23,7 +23,9 @@ internal struct INPUT_RECORD
     [FieldOffset(4)]
     public KEY_EVENT_RECORD KeyEvent;
 
+    /// <summary>
     /// The mouse event expression of the union. Should only be used if <c><see cref="EventType"/></c> is <c><see cref="EventType.MOUSE_EVENT"/></c>.
+    /// </summary>
     [FieldOffset(4)]
     public MOUSE_EVENT_RECORD MouseEvent;
 }
