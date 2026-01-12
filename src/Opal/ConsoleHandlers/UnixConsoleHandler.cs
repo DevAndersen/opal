@@ -17,6 +17,7 @@ public class UnixConsoleHandler : CommonConsoleHandler<UnixInputHandler>
 
     public override void Start(OpalSettings settings)
     {
+        base.Start(settings);
         if (Running)
         {
             throw new InvalidOperationException();

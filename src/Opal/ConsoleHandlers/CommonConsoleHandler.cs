@@ -8,6 +8,9 @@ namespace Opal.ConsoleHandlers;
 public abstract class CommonConsoleHandler<TInputHandler> : IConsoleHandler
     where TInputHandler : IInputHandler
 {
+    private int _widthOffset;
+    private int _heightOffset;
+
     protected const int consoleSizeThreadTimeout = 50;
 
     protected Thread ConsoleSizeThread { get; init; }
@@ -24,16 +27,23 @@ public abstract class CommonConsoleHandler<TInputHandler> : IConsoleHandler
 
     public int Height { get; protected set; }
 
-    public int BufferWidthOffset => Settings?.WidthOffset ?? 0;
+    public int BufferWidthOffset => _widthOffset + Settings?.WidthOffset ?? 0;
 
-    public int BufferHeightOffset => Settings?.HeightOffset ?? 0;
+    public int BufferHeightOffset => _heightOffset + Settings?.HeightOffset ?? 0;
 
     protected CommonConsoleHandler()
     {
         ConsoleSizeThread = new Thread(ConsoleSizeThreadMethod);
     }
 
-    public abstract void Start(OpalSettings settings);
+    public virtual void Start(OpalSettings settings)
+    {
+        if (!settings.UseAlternateBuffer)
+        {
+            _widthOffset = Console.CursorLeft;
+            _heightOffset = Console.CursorTop;
+        }
+    }
 
     public abstract void Stop();
 
