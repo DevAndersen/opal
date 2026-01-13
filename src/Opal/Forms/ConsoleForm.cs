@@ -23,10 +23,12 @@ public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, I
             if (keyEvent.Modifiers == ConsoleModifiers.Shift)
             {
                 SelectPrevious();
+                keyEvent.Handled = true;
             }
             else
             {
                 SelectNext();
+                keyEvent.Handled = true;
             }
         }
     }

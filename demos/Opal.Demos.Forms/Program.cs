@@ -31,6 +31,11 @@ public class TestForm : ConsoleForm
     public override void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
     {
         base.HandleKeyInput(keyEvent, consoleState);
+        if (keyEvent.Handled)
+        {
+            return;
+        }
+
         Controls.RemoveAt(0);
     }
 }

@@ -61,20 +61,18 @@ public class WindowsInputHandler : IInputHandler
                 modifiers |= ConsoleModifiers.Alt;
             }
 
-            return new MouseInput
-            {
-                InputType = inputType,
-                Modifiers = modifiers,
-                X = mouseEvent.dwMousePosition.X,
-                Y = mouseEvent.dwMousePosition.Y - Console.WindowTop
-            };
+            return new MouseInput(
+                inputType,
+                modifiers,
+                mouseEvent.dwMousePosition.X,
+                mouseEvent.dwMousePosition.Y - Console.WindowTop
+            );
         }
         else if (peekedRecord.EventType == EventType.KEY_EVENT && Console.KeyAvailable)
         {
-            return new KeyInput
-            {
-                KeyInfo = Console.ReadKey(true)
-            };
+            return new KeyInput(
+                Console.ReadKey(true)
+            );
         }
         else if (!peekedRecord.Equals(default(INPUT_RECORD)) && GetNumberOfConsoleInputEvents(_inputHandle, out uint numberOfEvents) && numberOfEvents > 0)
         {

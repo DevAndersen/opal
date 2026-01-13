@@ -118,12 +118,11 @@ public class UnixInputHandler : IInputHandler
             modifiers |= ConsoleModifiers.Alt;
         }
 
-        return new MouseInput
-        {
-            InputType = action,
-            Modifiers = modifiers,
-            X = posX - 1,
-            Y = posY - 1
-        };
+        return new MouseInput(
+            action,
+            modifiers,
+            posX - 1,
+            posY - 1
+        );
     }
 }
