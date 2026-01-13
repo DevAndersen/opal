@@ -11,6 +11,8 @@ public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, I
 
     public IList<IControl> Controls => _controls;
 
+    public ISelectable? Selected { get; protected set; }
+
     public override void Initialize()
     {
         _controls.CollectionChanged += OnControlsChange;
@@ -45,14 +47,62 @@ public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, I
 
     public virtual bool SelectNext()
     {
-        // Todo: Select the next control.
-        return false;
+        return SelectDirectional(
+            (currentIndex, length) => currentIndex == length - 1 ? 0 : currentIndex + 1,
+            x => x.FirstOrDefault());
     }
 
     public virtual bool SelectPrevious()
     {
-        // Todo: Select the previous control.
+        return SelectDirectional(
+            (currentIndex, length) => currentIndex == 0 ? length - 1 : currentIndex - 1,
+            x => x.LastOrDefault());
+    }
+
+    private bool SelectDirectional(
+        Func<int, int, int> nextIndexFunc,
+        Func<IEnumerable<(int Index, ISelectable Item)>, (int Index, ISelectable Item)> initialSelectFunc)
+    {
+        // Enumerable over all selectables, grouped with their index, ordered by [not null -> specified index -> implicit index].
+        IEnumerable<(int Index, ISelectable Item)> selectables = this.GetNestedControls()
+            .OfType<ISelectable>()
+            .Index()
+            .OrderBy(x => x.Item.Index == null)
+            .ThenBy(x => x.Item.Index)
+            .ThenBy(x => x.Index);
+
+        if (Selected != null)
+        {
+            (int Index, ISelectable Item)[] selectablesArray = selectables.ToArray();
+
+            // If the only selectable is already selected, do nothing.
+            if (selectablesArray is [(_, ISelectable onlySelectable)] && onlySelectable == Selected)
+            {
+                return false;
+            }
+
+            // Cycle to the next selectable.
+            int currentIndex = Array.FindIndex(selectablesArray, x => x.Item == Selected);
+            int nextIndex = nextIndexFunc(currentIndex, selectablesArray.Length);
+
+            SetSelected(selectablesArray[nextIndex].Item, selectablesArray[currentIndex].Item);
+
+            return true;
+        }
+        else if (initialSelectFunc(selectables).Item is { } initialSelectable)
+        {
+            // If there is no current selection, select the initial selectable.
+            SetSelected(initialSelectable, null);
+            return true;
+        }
         return false;
+    }
+
+    private void SetSelected(ISelectable newSelected, ISelectable? oldSelected)
+    {
+        oldSelected?.SelectionChange(false);
+        newSelected.SelectionChange(true);
+        Selected = newSelected;
     }
 
     public override void Render(IConsoleGrid grid)

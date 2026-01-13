@@ -12,7 +12,38 @@ form.Controls.Add(
         PosY = 3,
         Height = 2,
         Width = 10,
-        Text = "Asdf"
+        Text = "Button 1"
+    });
+
+form.Controls.Add(
+    new Button
+    {
+        PosX = 5,
+        PosY = 6,
+        Height = 2,
+        Width = 10,
+        Text = "Button 2"
+    });
+
+form.Controls.Add(
+    new Button
+    {
+        PosX = 5,
+        PosY = 9,
+        Height = 2,
+        Width = 10,
+        Text = "Button 3",
+        Index = 0
+    });
+
+form.Controls.Add(
+    new Button
+    {
+        PosX = 5,
+        PosY = 12,
+        Height = 2,
+        Width = 10,
+        Text = "Button 4",
     });
 
 form.Controls.Add(

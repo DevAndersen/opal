@@ -2,7 +2,9 @@
 
 public interface ISelectable
 {
+    int? Index { get; set; }
+
     bool IsSelected { get; }
 
-    void FocusChange(bool isFocused);
+    void SelectionChange(bool isSelected);
 }

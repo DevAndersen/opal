@@ -4,15 +4,17 @@ namespace Opal.Forms.Controls;
 
 public abstract class SelectableControl : IControl, ISelectable
 {
+    public int? Index { get; set; }
+
     public bool IsSelected { get; private set; }
 
     public int PosX { get; set; }
 
     public int PosY { get; set; }
 
-    public virtual void FocusChange(bool isFocused)
+    public virtual void SelectionChange(bool isSelected)
     {
-        IsSelected = isFocused;
+        IsSelected = isSelected;
     }
 
     public abstract void Render(IConsoleGrid grid);
