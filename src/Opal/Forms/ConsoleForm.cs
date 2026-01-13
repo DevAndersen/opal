@@ -5,13 +5,13 @@ using System.Collections.Specialized;
 
 namespace Opal.Forms;
 
-public class ConsoleForm : ConsoleView, IControlContainer, IKeyInputHandler, IMouseInputHandler, IDisposable
+public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, IMouseInputHandler, IDisposable
 {
     private readonly ObservableCollection<IControl> _controls = [];
 
     public IList<IControl> Controls => _controls;
 
-    public ConsoleForm()
+    public override void Initialize()
     {
         _controls.CollectionChanged += OnControlsChange;
     }
@@ -57,7 +57,7 @@ public class ConsoleForm : ConsoleView, IControlContainer, IKeyInputHandler, IMo
     {
         foreach (IControl control in Controls)
         {
-            IConsoleGrid controlSubgrid = grid.CreateSubgrid(control.PosX, control.PosY, 100, 100);
+            IConsoleGrid controlSubgrid = grid.CreateSubgrid(control.PosX, control.PosY, 100, 100); // Todo
             control.Render(controlSubgrid);
         }
     }

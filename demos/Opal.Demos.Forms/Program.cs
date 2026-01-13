@@ -1,6 +1,7 @@
 ﻿using Opal;
 using Opal.Forms;
 using Opal.Forms.Controls;
+using Opal.Views;
 
 TestForm form = new TestForm();
 
@@ -27,4 +28,9 @@ await controller.StartAsync(form);
 
 public class TestForm : ConsoleForm
 {
+    public override void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
+    {
+        base.HandleKeyInput(keyEvent, consoleState);
+        Controls.RemoveAt(0);
+    }
 }

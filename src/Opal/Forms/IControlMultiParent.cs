@@ -1,6 +1,6 @@
 ﻿namespace Opal.Forms;
 
-public interface IControlContainer
+public interface IControlMultiParent
 {
     IList<IControl> Controls { get; }
 }
