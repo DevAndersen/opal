@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Demos/">
+    <Project Path="demos/Opal.Demos.Forms/Opal.Demos.Forms.csproj" Id="e987e0a4-d9f4-4689-8cf6-a9d9ab7b3d54" />
     <Project Path="demos/Opal.Demos.InlineProgressBar/Opal.Demos.InlineProgressBar.csproj" Id="9330305a-a6cd-490f-bfe0-dbd0c7092c7d" />
     <Project Path="demos/Opal.Demos.Misc/Opal.Demos.Misc.csproj" />
     <Project Path="demos/Opal.Demos.SlidePuzzle/Opal.Demos.SlidePuzzle.csproj" Id="1591f7ab-a1c8-4933-aca3-ae490d4122ec" />
