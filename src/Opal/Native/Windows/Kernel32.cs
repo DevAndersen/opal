@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace Opal.Native.Windows;
 
@@ -126,6 +127,25 @@ internal static partial class Kernel32
     public static partial bool ReadConsoleInput(nint hConsoleInput, out INPUT_RECORD lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
 
     /// <summary>
+    /// Read an input from the console input stream.
+    /// </summary>
+    /// <remarks>
+    /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/readconsoleinput"/>
+    /// </remarks>
+    /// <param name="hConsoleInput">The console input handle.</param>
+    /// <param name="lpBuffer">The buffer containing the read data.</param>
+    /// <param name="nLength">The number of inputs to read.</param>
+    /// <param name="lpNumberOfEventsRead">The number of inputs read from the console input stream.</param>
+    /// <returns></returns>
+    [LibraryImport(_kernel32, EntryPoint = _readConsoleInput)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool ReadConsoleInputArray(
+        nint hConsoleInput,
+        [In, Out, MarshalUsing(CountElementName = nameof(nLength))] INPUT_RECORD[] lpBuffer,
+        uint nLength,
+        out uint lpNumberOfEventsRead);
+
+    /// <summary>
     /// Peak an input from the console input stream, without removing the input from the stream.
     /// </summary>
     /// <remarks>
@@ -139,6 +159,25 @@ internal static partial class Kernel32
     [LibraryImport(_kernel32, EntryPoint = _peekConsoleInput)]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool PeekConsoleInput(nint hConsoleInput, out INPUT_RECORD lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
+
+    /// <summary>
+    /// Peak an input from the console input stream, without removing the input from the stream.
+    /// </summary>
+    /// <remarks>
+    /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/peekconsoleinput"/>
+    /// </remarks>
+    /// <param name="hConsoleInput">The console input handle.</param>
+    /// <param name="lpBuffer">The buffer containing the read data.</param>
+    /// <param name="nLength">The number of inputs to read.</param>
+    /// <param name="lpNumberOfEventsRead">The number of inputs read from the console input stream.</param>
+    /// <returns></returns>
+    [LibraryImport(_kernel32, EntryPoint = _peekConsoleInput)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool PeekConsoleInputArray(
+        nint hConsoleInput,
+        [In, Out, MarshalUsing(CountElementName = nameof(nLength))] INPUT_RECORD[] lpBuffer,
+        uint nLength,
+        out uint lpNumberOfEventsRead);
 
     /// <summary>
     /// Gets the number of available input events.
