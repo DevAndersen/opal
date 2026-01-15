@@ -10,6 +10,10 @@ public class UnixInputHandler : IInputHandler
 {
     private readonly IConsoleHandler _consoleHandler;
 
+    private const char _pressSequenceEnding = 'M';
+    private const char _releaseSequenceEnding = 'm';
+    private const string _inputSequencePrefix = "[<";
+
     public UnixInputHandler(IConsoleHandler consoleHandler)
     {
         _consoleHandler = consoleHandler;
@@ -31,17 +35,16 @@ public class UnixInputHandler : IInputHandler
             while (Console.KeyAvailable && offset < bufferSize)
             {
                 ConsoleKeyInfo read = Console.ReadKey(true);
-                if (read.KeyChar == 'm' || read.KeyChar == 'M')
+                buffer[offset++] = read.KeyChar;
+                if (read.KeyChar is _pressSequenceEnding or _releaseSequenceEnding)
                 {
                     break;
                 }
-                buffer[offset] = read.KeyChar;
-                offset++;
             }
 
-            if (buffer[0..2].SequenceEqual("[<"))
+            if (buffer.StartsWith(_inputSequencePrefix))
             {
-                return ReadSequence(buffer[2..]);
+                return ReadSequence(buffer[2..offset]);
             }
         }
         return null;
@@ -57,10 +60,11 @@ public class UnixInputHandler : IInputHandler
         _consoleHandler.Print(SequenceProvider.DisableMouseReporting());
     }
 
-    private IConsoleInput? ReadSequence(ReadOnlySpan<char> buffer)
+    private MouseInput ReadSequence(ReadOnlySpan<char> buffer)
     {
         Span<int> segments = stackalloc int[3];
         int offset = 0;
+        bool release = buffer[^1] == _releaseSequenceEnding;
 
         for (int i = 0; i < 3; i++)
         {
@@ -73,11 +77,10 @@ public class UnixInputHandler : IInputHandler
             buffer = buffer[(offset + 1)..];
             offset = 0;
         }
-
-        return CreateMouseInput((XTermMouseInput)segments[0], segments[1], segments[2]);
+        return CreateMouseInput((XTermMouseInput)segments[0], segments[1], segments[2], release);
     }
 
-    private static MouseInput CreateMouseInput(XTermMouseInput mouseEvent, int posX, int posY)
+    private static MouseInput CreateMouseInput(XTermMouseInput mouseEvent, int posX, int posY, bool release)
     {
         const XTermMouseInput mouseButtonMask = XTermMouseInput.LeftButton
             | XTermMouseInput.MiddleButton
@@ -89,6 +92,10 @@ public class UnixInputHandler : IInputHandler
         if (mouseEvent.HasFlag(XTermMouseInput.Move))
         {
             action = MouseInputType.Move;
+        }
+        else if (release)
+        {
+            action = MouseInputType.None;
         }
         else
         {
