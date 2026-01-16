@@ -27,7 +27,8 @@ internal static partial class Kernel32
     /// <param name="nStdHandle">A standard console device.</param>
     /// <returns>A handle for the specified standard console device.</returns>
     [LibraryImport(_kernel32, EntryPoint = _getStdHandle, SetLastError = false)]
-    public static partial nint GetStdHandle(StandardDevice nStdHandle);
+    public static partial nint GetStdHandle(
+        StandardDevice nStdHandle);
 
     /// <summary>
     /// Gets the console input mode.
@@ -40,7 +41,9 @@ internal static partial class Kernel32
     /// <returns><c>true</c> if successful, <c>false</c> if not successful.</returns>
     [LibraryImport(_kernel32, EntryPoint = _getConsoleMode, SetLastError = false)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool GetConsoleInputMode(nint hConsoleHandle, out ConsoleInputModes lpMode);
+    public static partial bool GetConsoleInputMode(
+        nint hConsoleHandle,
+        out ConsoleInputModes lpMode);
 
     /// <summary>
     /// Gets the console output mode.
@@ -53,7 +56,9 @@ internal static partial class Kernel32
     /// <returns>Returns <c>true</c> if successful, or <c>false</c> if not successful.</returns>
     [LibraryImport(_kernel32, EntryPoint = _getConsoleMode, SetLastError = false)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool GetConsoleOutputMode(nint hConsoleHandle, out ConsoleOutputModes lpMode);
+    public static partial bool GetConsoleOutputMode(
+        nint hConsoleHandle,
+        out ConsoleOutputModes lpMode);
 
     /// <summary>
     /// Sets the console input mode.
@@ -66,7 +71,9 @@ internal static partial class Kernel32
     /// <returns><c>true</c> if successful, <c>false</c> if not successful.</returns>
     [LibraryImport(_kernel32, EntryPoint = _setConsoleMode, SetLastError = false)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool SetConsoleInputMode(nint hConsoleHandle, ConsoleInputModes dwMode);
+    public static partial bool SetConsoleInputMode(
+        nint hConsoleHandle,
+        ConsoleInputModes dwMode);
 
     /// <summary>
     /// Sets the console output mode.
@@ -79,7 +86,9 @@ internal static partial class Kernel32
     /// <returns><c>true</c> if successful, <c>false</c> if not successful.</returns>
     [LibraryImport(_kernel32, EntryPoint = _setConsoleMode, SetLastError = false)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool SetConsoleOutputMode(nint hConsoleHandle, ConsoleOutputModes dwMode);
+    public static partial bool SetConsoleOutputMode(
+        nint hConsoleHandle,
+        ConsoleOutputModes dwMode);
 
     /// <summary>
     /// Prints <c><paramref name="lpBuffer"/></c> to the console.
@@ -94,7 +103,11 @@ internal static partial class Kernel32
     /// <returns><c>true</c> if successful, <c>false</c> if not successful.</returns>
     [LibraryImport(_kernel32, EntryPoint = _writeConsole, StringMarshalling = StringMarshalling.Utf16, SetLastError = false)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool WriteConsole(nint hConsoleOutput, string lpBuffer, int nNumberOfCharsToWrite, out nint lpNumberOfCharsWritten);
+    public static partial bool WriteConsole(
+        nint hConsoleOutput,
+        string lpBuffer,
+        int nNumberOfCharsToWrite,
+        out nint lpNumberOfCharsWritten);
 
     /// <summary>
     /// Prints <c><paramref name="lpBuffer"/></c> to the console.
@@ -109,7 +122,11 @@ internal static partial class Kernel32
     /// <returns><c>true</c> if successful, <c>false</c> if not successful.</returns>
     [LibraryImport(_kernel32, EntryPoint = _writeConsole, StringMarshalling = StringMarshalling.Utf16, SetLastError = false)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static unsafe partial bool WriteConsole(nint hConsoleOutput, char* lpBuffer, int nNumberOfCharsToWrite, out nint lpNumberOfCharsWritten);
+    public static unsafe partial bool WriteConsole(
+        nint hConsoleOutput,
+        char* lpBuffer,
+        int nNumberOfCharsToWrite,
+        out nint lpNumberOfCharsWritten);
 
     /// <summary>
     /// Read an input from the console input stream.
@@ -124,7 +141,11 @@ internal static partial class Kernel32
     /// <returns></returns>
     [LibraryImport(_kernel32, EntryPoint = _readConsoleInput)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool ReadConsoleInput(nint hConsoleInput, out INPUT_RECORD lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
+    public static partial bool ReadConsoleInput(
+        nint hConsoleInput,
+        out INPUT_RECORD lpBuffer,
+        uint nLength,
+        out uint lpNumberOfEventsRead);
 
     /// <summary>
     /// Read an input from the console input stream.
@@ -158,7 +179,11 @@ internal static partial class Kernel32
     /// <returns></returns>
     [LibraryImport(_kernel32, EntryPoint = _peekConsoleInput)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool PeekConsoleInput(nint hConsoleInput, out INPUT_RECORD lpBuffer, uint nLength, out uint lpNumberOfEventsRead);
+    public static partial bool PeekConsoleInput(
+        nint hConsoleInput,
+        out INPUT_RECORD lpBuffer,
+        uint nLength,
+        out uint lpNumberOfEventsRead);
 
     /// <summary>
     /// Peak an input from the console input stream, without removing the input from the stream.
@@ -190,5 +215,7 @@ internal static partial class Kernel32
     /// <returns></returns>
     [LibraryImport(_kernel32, EntryPoint = _getNumberOfConsoleInputEvents)]
     [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool GetNumberOfConsoleInputEvents(nint hConsoleInput, out uint lpcNumberOfEvents);
+    public static partial bool GetNumberOfConsoleInputEvents(
+        nint hConsoleInput,
+        out uint lpcNumberOfEvents);
 }

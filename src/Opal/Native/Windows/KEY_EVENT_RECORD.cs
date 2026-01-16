@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace Opal.Native.Windows;
+﻿namespace Opal.Native.Windows;
 
 /// <summary>
 /// Represents a keyboard input event.
@@ -8,24 +6,31 @@ namespace Opal.Native.Windows;
 /// <remarks>
 /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/key-event-record-str"/>
 /// </remarks>
-[StructLayout(LayoutKind.Explicit, CharSet = CharSet.Unicode)]
-internal struct KEY_EVENT_RECORD
+internal readonly record struct KEY_EVENT_RECORD
 {
-    [FieldOffset(0)]
-    public int bKeyDown;
+    /// <summary>
+    /// The boolean state of the key.
+    /// <c>1</c> = key down, <c>0</c> = key up.
+    /// </summary>
+    /// <remarks>
+    /// The native type is a 4-byte <c>BOOL</c>, but because .NET <see cref="bool"/> is a single byte and not blittable, <see cref="int"/> is used instead.
+    /// </remarks>
+    public readonly int bKeyDown;
 
-    [FieldOffset(4)]
-    public ushort wRepeatCount;
+    public readonly ushort wRepeatCount;
 
-    [FieldOffset(6)]
-    public ushort wVirtualKeyCode;
+    public readonly ushort wVirtualKeyCode;
 
-    [FieldOffset(8)]
-    public ushort wVirtualScanCode;
+    public readonly ushort wVirtualScanCode;
 
-    [FieldOffset(10)]
-    public ushort UnicodeChar;
+    /// <summary>
+    /// The UTF-16 character represented by the keypress.
+    /// </summary>
+    /// <remarks>
+    /// The native type is a union of a 16-bit Unicode and 8-bit ASCII character, but since ASCII is not of interest, it has been simplified to its 16-bit value.
+    /// This field is a <see cref="ushort"/> instead of <see cref="char"/>, because the latter is not blittable.
+    /// </remarks>
+    public readonly ushort UnicodeChar;
 
-    [FieldOffset(12)]
-    public ControlKeyStates dwControlKeyState;
+    public readonly ControlKeyStates dwControlKeyState;
 }

@@ -6,10 +6,13 @@
 /// <remarks>
 /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/mouse-event-record-str"/>
 /// </remarks>
-internal struct MOUSE_EVENT_RECORD
+internal readonly record struct MOUSE_EVENT_RECORD
 {
-    public COORD dwMousePosition;
-    public MouseButtonState dwButtonState;
-    public ControlKeyStates dwControlKeyState;
-    public MouseEventFlag dwEventFlags;
+    public readonly COORD dwMousePosition;
+
+    public readonly MouseButtonState dwButtonState;
+
+    public readonly ControlKeyStates dwControlKeyState;
+
+    public readonly MouseEventFlag dwEventFlags;
 }
