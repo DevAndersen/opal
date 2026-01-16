@@ -6,4 +6,4 @@
 /// <remarks>
 /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/coord-str"/>
 /// </remarks>
-internal record struct COORD(short X, short Y);
+internal readonly record struct COORD(short X, short Y);
