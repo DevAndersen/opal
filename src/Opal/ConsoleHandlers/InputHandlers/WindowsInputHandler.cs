@@ -24,9 +24,9 @@ public class WindowsInputHandler : IInputHandler
                 case MouseEventFlag.None:
                     inputType = mouseEvent.dwButtonState switch
                     {
-                        MouseButtonState.FROM_LEFT_1ST_BUTTON_PRESSED => MouseInputType.LeftButton,
-                        MouseButtonState.FROM_LEFT_2ND_BUTTON_PRESSED => MouseInputType.MiddleButton,
-                        MouseButtonState.RIGHTMOST_BUTTON_PRESSED => MouseInputType.RightButton,
+                        MouseButtonStates.FROM_LEFT_1ST_BUTTON_PRESSED => MouseInputType.LeftButton,
+                        MouseButtonStates.FROM_LEFT_2ND_BUTTON_PRESSED => MouseInputType.MiddleButton,
+                        MouseButtonStates.RIGHTMOST_BUTTON_PRESSED => MouseInputType.RightButton,
                         _ => MouseInputType.None
                     };
                     break;

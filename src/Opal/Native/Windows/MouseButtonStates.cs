@@ -6,7 +6,8 @@
 /// <remarks>
 /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/mouse-event-record-str"/>
 /// </remarks>
-internal enum MouseButtonState
+[Flags]
+internal enum MouseButtonStates
 {
     None = 0,
     FROM_LEFT_1ST_BUTTON_PRESSED = 0x0001,

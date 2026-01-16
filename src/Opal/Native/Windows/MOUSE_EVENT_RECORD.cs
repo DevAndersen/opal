@@ -10,7 +10,7 @@ internal readonly record struct MOUSE_EVENT_RECORD
 {
     public readonly COORD dwMousePosition;
 
-    public readonly MouseButtonState dwButtonState;
+    public readonly MouseButtonStates dwButtonState;
 
     public readonly ControlKeyStates dwControlKeyState;
 
