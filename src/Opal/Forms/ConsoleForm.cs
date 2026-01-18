@@ -25,13 +25,16 @@ public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, I
             if (keyEvent.Modifiers == ConsoleModifiers.Shift)
             {
                 SelectPrevious();
-                keyEvent.Handled = true;
             }
             else
             {
                 SelectNext();
-                keyEvent.Handled = true;
             }
+            keyEvent.Handled = true;
+        }
+        else if (Selected is IKeyInputHandler selectedKeyInputHandler)
+        {
+            selectedKeyInputHandler.HandleKeyInput(keyEvent, consoleState);
         }
     }
 
@@ -39,10 +42,11 @@ public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, I
     {
     }
 
-    public virtual bool SelectControl(IControl control)
+    public void SelectControl(ISelectable newSelected)
     {
-        // Todo: Select the specified control.
-        return false;
+        Selected?.SelectionChange(false);
+        newSelected.SelectionChange(true);
+        Selected = newSelected;
     }
 
     public virtual bool SelectNext()
@@ -85,24 +89,17 @@ public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, I
             int currentIndex = Array.FindIndex(selectablesArray, x => x.Item == Selected);
             int nextIndex = nextIndexFunc(currentIndex, selectablesArray.Length);
 
-            SetSelected(selectablesArray[nextIndex].Item, selectablesArray[currentIndex].Item);
+            SelectControl(selectablesArray[nextIndex].Item);
 
             return true;
         }
         else if (initialSelectFunc(selectables).Item is { } initialSelectable)
         {
             // If there is no current selection, select the initial selectable.
-            SetSelected(initialSelectable, null);
+            SelectControl(initialSelectable);
             return true;
         }
         return false;
-    }
-
-    private void SetSelected(ISelectable newSelected, ISelectable? oldSelected)
-    {
-        oldSelected?.SelectionChange(false);
-        newSelected.SelectionChange(true);
-        Selected = newSelected;
     }
 
     public override void Render(IConsoleGrid grid)

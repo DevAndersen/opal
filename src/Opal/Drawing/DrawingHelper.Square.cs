@@ -22,20 +22,20 @@ public static partial class DrawingHelper
     public static void DrawBox(this IConsoleGrid grid, int posX, int posY, int width, int height, DrawStyle style, ConsoleChar template)
     {
         grid[posX, posY] = template with { Character = style.TopLeftCorner };
-        grid[posX + width, posY] = template with { Character = style.TopRightCorner };
-        grid[posX, posY + height] = template with { Character = style.BottomLeftCorner };
-        grid[posX + width, posY + height] = template with { Character = style.BottomRightCorner };
+        grid[posX + width - 1, posY] = template with { Character = style.TopRightCorner };
+        grid[posX, posY + height - 1] = template with { Character = style.BottomLeftCorner };
+        grid[posX + width - 1, posY + height - 1] = template with { Character = style.BottomRightCorner };
 
-        for (int x = 1; x < width; x++)
+        for (int x = 1; x < width - 1; x++)
         {
             grid[posX + x, posY] = template with { Character = style.Horizontal };
-            grid[posX + x, posY + height] = template with { Character = style.Horizontal };
+            grid[posX + x, posY + height - 1] = template with { Character = style.Horizontal };
         }
 
-        for (int y = 1; y < height; y++)
+        for (int y = 1; y < height - 1; y++)
         {
             grid[posX, posY + y] = template with { Character = style.Vertical };
-            grid[posX + width, posY + y] = template with { Character = style.Vertical };
+            grid[posX + width - 1, posY + y] = template with { Character = style.Vertical };
         }
     }
 

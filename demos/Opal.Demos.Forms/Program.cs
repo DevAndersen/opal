@@ -12,7 +12,7 @@ form.Controls.Add(
     {
         PosX = 5,
         PosY = 3,
-        Height = 2,
+        Height = 3,
         Width = 10,
         Text = "Button 1"
     });
@@ -22,7 +22,7 @@ form.Controls.Add(
     {
         PosX = 5,
         PosY = 6,
-        Height = 2,
+        Height = 3,
         Width = 10,
         Text = "Button 2"
     });
@@ -32,7 +32,7 @@ form.Controls.Add(
     {
         PosX = 5,
         PosY = 9,
-        Height = 2,
+        Height = 3,
         Width = 10,
         Text = "Button 3",
         Index = 0
@@ -43,9 +43,18 @@ form.Controls.Add(
     {
         PosX = 5,
         PosY = 12,
-        Height = 2,
+        Height = 3,
         Width = 10,
         Text = "Button 4",
+    });
+
+form.Controls.Add(
+    new TextBox
+    {
+        PosX = 5,
+        PosY = 15,
+        Height = 3,
+        Width = 10
     });
 
 form.Controls.Add(
@@ -69,7 +78,7 @@ public class TestForm : ConsoleForm
             return;
         }
 
-        Controls.RemoveAt(0);
+        //Controls.RemoveAt(0);
     }
 
     public override void Render(IConsoleGrid grid)

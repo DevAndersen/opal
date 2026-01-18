@@ -123,7 +123,7 @@ internal class MenuView : ConsoleView, IKeyInputHandler
 
         DrawingHelper.DrawString(grid, posX, posY, text.PadLeft(width));
         DrawingHelper.DrawString(grid, posX - label.Length - 1, posY, label);
-        DrawingHelper.DrawBox(grid, posX, posY - 1, 7, 2, template);
+        DrawingHelper.DrawBox(grid, posX, posY - 1, 8, 3, template);
     }
 
     private static void DrawButton(IConsoleGrid grid, int posX, int posY, int width, string text, bool selected)
@@ -133,7 +133,7 @@ internal class MenuView : ConsoleView, IKeyInputHandler
             ForegroundSimple = selected ? ConsoleColor.White : ConsoleColor.Gray
         };
 
-        DrawingHelper.DrawBox(grid, posX, posY - 1, width, 2, selected ? DrawStyle.HeavyDrawStyle : DrawStyle.RoundedDrawStyle, template);
+        DrawingHelper.DrawBox(grid, posX, posY - 1, width, 3, selected ? DrawStyle.HeavyDrawStyle : DrawStyle.RoundedDrawStyle, template);
         DrawingHelper.DrawString(grid, posX + (width / 2) - (text.Length / 2), posY, text);
     }
 }

@@ -25,7 +25,7 @@ internal class ProgressBarView : ConsoleView
 
     public override void Render(IConsoleGrid grid)
     {
-        grid.DrawBox(0, 0, grid.Width - 1, grid.Height - 1, DrawStyle.RoundedDrawStyle);
+        grid.DrawBox(0, 0, grid.Width, grid.Height, DrawStyle.RoundedDrawStyle);
 
         float ratio = float.Clamp((float)(_stopwatch.Elapsed / _target), 0, 1);
 
