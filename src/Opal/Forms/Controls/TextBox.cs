@@ -88,7 +88,7 @@ public class TextBox : SelectableControl, IKeyInputHandler
 
         // Draw the text cursor.
         int visibleCursorPos = _cursor - _offset;
-        if (visibleCursorPos < Width - 2)
+        if (IsSelected && visibleCursorPos < Width - 2)
         {
             grid[PosX + 1 + visibleCursorPos, PosY + 1] = grid[PosX + 1 + visibleCursorPos, PosY + 1] with
             {
