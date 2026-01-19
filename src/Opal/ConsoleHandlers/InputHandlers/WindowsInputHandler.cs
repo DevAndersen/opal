@@ -1,4 +1,5 @@
-﻿using Opal.Native.Windows;
+﻿using Opal.Events;
+using Opal.Native.Windows;
 using static Opal.Native.Windows.Kernel32;
 
 namespace Opal.ConsoleHandlers.InputHandlers;

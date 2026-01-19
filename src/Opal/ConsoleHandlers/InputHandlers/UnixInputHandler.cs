@@ -1,4 +1,5 @@
-﻿using Opal.Native.Unix;
+﻿using Opal.Events;
+using Opal.Native.Unix;
 using Opal.Rendering;
 
 namespace Opal.ConsoleHandlers.InputHandlers;

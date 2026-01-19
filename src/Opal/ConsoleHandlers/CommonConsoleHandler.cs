@@ -1,4 +1,5 @@
 ﻿using Opal.ConsoleHandlers.InputHandlers;
+using Opal.Events;
 
 namespace Opal.ConsoleHandlers;
 

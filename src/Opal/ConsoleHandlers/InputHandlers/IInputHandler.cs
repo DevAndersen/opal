@@ -1,4 +1,6 @@
-﻿namespace Opal.ConsoleHandlers.InputHandlers;
+﻿using Opal.Events;
+
+namespace Opal.ConsoleHandlers.InputHandlers;
 
 /// <summary>
 /// Defines a type that can retrieve user input.

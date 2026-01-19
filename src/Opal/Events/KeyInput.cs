@@ -1,4 +1,4 @@
-﻿namespace Opal;
+﻿namespace Opal.Events;
 
 /// <summary>
 /// Represents a keyboard input.

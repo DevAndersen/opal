@@ -1,4 +1,5 @@
 ﻿using Opal.ConsoleHandlers;
+using Opal.Events;
 using Opal.Rendering;
 using Opal.Views;
 using System.Collections.Concurrent;

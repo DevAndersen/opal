@@ -1,4 +1,4 @@
-﻿namespace Opal;
+﻿namespace Opal.Events;
 
 public enum MouseInputType : byte
 {

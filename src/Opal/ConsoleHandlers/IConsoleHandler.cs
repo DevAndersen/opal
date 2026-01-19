@@ -1,4 +1,6 @@
-﻿namespace Opal.ConsoleHandlers;
+﻿using Opal.Events;
+
+namespace Opal.ConsoleHandlers;
 
 /// <summary>
 /// Defines a handler that supports console interactions.

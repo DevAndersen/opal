@@ -1,4 +1,6 @@
-﻿namespace Opal.Views;
+﻿using Opal.Events;
+
+namespace Opal.Views;
 
 /// <summary>
 /// Defines a type that can accept keyboard input.

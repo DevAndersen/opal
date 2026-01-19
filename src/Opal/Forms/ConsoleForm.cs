@@ -1,4 +1,5 @@
-﻿using Opal.Rendering;
+﻿using Opal.Events;
+using Opal.Rendering;
 using Opal.Views;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;

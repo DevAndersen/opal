@@ -1,5 +1,6 @@
 ﻿using Opal;
 using Opal.Drawing;
+using Opal.Events;
 using Opal.Forms;
 using Opal.Forms.Controls;
 using Opal.Rendering;

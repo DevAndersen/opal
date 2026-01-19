@@ -1,4 +1,4 @@
-﻿namespace Opal;
+﻿namespace Opal.Events;
 
 /// <summary>
 /// Base interface for types representing a user input.
