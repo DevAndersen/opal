@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 
-	<!-- Native AoT -->
+	<!-- Native AOT -->
 	<PropertyGroup>
 		<IsAotCompatible>true</IsAotCompatible>
 		<VerifyReferenceAotCompatibility>true</VerifyReferenceAotCompatibility>
