@@ -120,6 +120,15 @@ public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, I
     public virtual void Dispose()
     {
         _controls.CollectionChanged -= OnControlsChange;
+
+        foreach (IControl control in this.GetNestedControls())
+        {
+            if (control is IDisposable disposableControl)
+            {
+                disposableControl.Dispose();
+            }
+        }
+
         GC.SuppressFinalize(this);
     }
 }
