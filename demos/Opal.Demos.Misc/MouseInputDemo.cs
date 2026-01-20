@@ -13,7 +13,7 @@ internal class MouseInputDemo
     }
 }
 
-public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseInputHandler
+public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseMoveInputHandler
 {
     private readonly List<Particle> _particles = [];
 
@@ -49,7 +49,7 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseInputHand
         }
     }
 
-    public void HandleMouseInput(MouseInput mouseEvent, IConsoleState consoleState)
+    public void HandleMouseMoveInput(MouseMoveInput mouseEvent, IConsoleState consoleState)
     {
         _posX = mouseEvent.X;
         _posY = mouseEvent.Y;

@@ -6,7 +6,7 @@ using System.Collections.Specialized;
 
 namespace Opal.Forms;
 
-public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, IMouseInputHandler, IDisposable
+public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, IMouseButtonInputHandler, IMouseMoveInputHandler, IDisposable
 {
     private readonly ObservableCollection<IControl> _controls = [];
 
@@ -39,7 +39,11 @@ public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, I
         }
     }
 
-    public virtual void HandleMouseInput(MouseInput mouseEvent, IConsoleState consoleState)
+    public virtual void HandleMouseButtonInput(MouseButtonInput mouseEvent, IConsoleState consoleState)
+    {
+    }
+
+    public virtual void HandleMouseMoveInput(MouseMoveInput mouseEvent, IConsoleState consoleState)
     {
     }
 

@@ -71,6 +71,8 @@ await controller.StartAsync(form);
 
 public class TestForm : ConsoleForm
 {
+    private readonly LinkedList<IConsoleInput> _inputs = [];
+
     public override void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
     {
         base.HandleKeyInput(keyEvent, consoleState);
@@ -79,13 +81,38 @@ public class TestForm : ConsoleForm
             return;
         }
 
-        //Controls.RemoveAt(0);
+        AddInput(keyEvent);
+    }
+
+    public override void HandleMouseButtonInput(MouseButtonInput mouseEvent, IConsoleState consoleState)
+    {
+        AddInput(mouseEvent);
+    }
+
+    public override void HandleMouseMoveInput(MouseMoveInput mouseEvent, IConsoleState consoleState)
+    {
+        AddInput(mouseEvent);
+    }
+
+    private void AddInput(IConsoleInput input)
+    {
+        _inputs.AddFirst(input);
+        while (_inputs.Count > 20)
+        {
+            _inputs.RemoveLast();
+        }
     }
 
     public override void Render(IConsoleGrid grid)
     {
         base.Render(grid);
         RenderTextAlignmentTest(grid);
+
+        int i = 0;
+        foreach (IConsoleInput input in _inputs)
+        {
+            grid.DrawString(30, 10 + i++, input.ToString());
+        }
     }
 
     private static void RenderTextAlignmentTest(IConsoleGrid grid)

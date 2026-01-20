@@ -19,6 +19,7 @@ public class WindowsInputHandler : IInputHandler
             ReadConsoleInput(_inputHandle, out INPUT_RECORD record, 1, out _);
             MOUSE_EVENT_RECORD mouseEvent = record.MouseEvent;
 
+            bool isMoveEvent = mouseEvent.dwEventFlags == MouseEventFlag.MOUSE_MOVED;
             MouseInputType inputType = MouseInputType.None;
             switch (mouseEvent.dwEventFlags)
             {
@@ -30,10 +31,6 @@ public class WindowsInputHandler : IInputHandler
                         MouseButtonStates.RIGHTMOST_BUTTON_PRESSED => MouseInputType.RightButton,
                         _ => MouseInputType.None
                     };
-                    break;
-
-                case MouseEventFlag.MOUSE_MOVED:
-                    inputType = MouseInputType.Move;
                     break;
 
                 case MouseEventFlag.MOUSE_WHEELED:
@@ -62,12 +59,25 @@ public class WindowsInputHandler : IInputHandler
                 modifiers |= ConsoleModifiers.Alt;
             }
 
-            return new MouseInput(
-                inputType,
-                modifiers,
-                mouseEvent.dwMousePosition.X,
-                mouseEvent.dwMousePosition.Y - Console.WindowTop
-            );
+            if (isMoveEvent)
+            {
+                return new MouseMoveInput(
+                    inputType, // Todo: All pressed buttons.
+                    modifiers,
+                    mouseEvent.dwMousePosition.X,
+                    mouseEvent.dwMousePosition.Y - Console.WindowTop
+                );
+            }
+            else
+            {
+                return new MouseButtonInput(
+                    inputType, // Todo: Only the triggering buttons.
+                    inputType, // Todo: All pressed buttons.
+                    modifiers,
+                    mouseEvent.dwMousePosition.X,
+                    mouseEvent.dwMousePosition.Y - Console.WindowTop
+                );
+            }
         }
         else if (peekedRecord.EventType == EventType.KEY_EVENT && Console.KeyAvailable)
         {
@@ -75,7 +85,7 @@ public class WindowsInputHandler : IInputHandler
                 Console.ReadKey(true)
             );
         }
-        else if (!peekedRecord.Equals(default(INPUT_RECORD)) && GetNumberOfConsoleInputEvents(_inputHandle, out uint numberOfEvents) && numberOfEvents > 0)
+        else if (!peekedRecord.Equals(default) && GetNumberOfConsoleInputEvents(_inputHandle, out uint numberOfEvents) && numberOfEvents > 0)
         {
             ReadConsoleInput(_inputHandle, out _, 1, out _);
         }

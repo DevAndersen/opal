@@ -61,7 +61,7 @@ public class UnixInputHandler : IInputHandler
         _consoleHandler.Print(SequenceProvider.DisableMouseReporting());
     }
 
-    private MouseInput ReadSequence(ReadOnlySpan<char> buffer)
+    private IConsoleInput ReadSequence(ReadOnlySpan<char> buffer)
     {
         Span<int> segments = stackalloc int[3];
         int offset = 0;
@@ -81,7 +81,7 @@ public class UnixInputHandler : IInputHandler
         return CreateMouseInput((XTermMouseInput)segments[0], segments[1], segments[2], release);
     }
 
-    private static MouseInput CreateMouseInput(XTermMouseInput mouseEvent, int posX, int posY, bool release)
+    private static IConsoleInput CreateMouseInput(XTermMouseInput mouseEvent, int posX, int posY, bool release)
     {
         const XTermMouseInput mouseButtonMask = XTermMouseInput.LeftButton
             | XTermMouseInput.MiddleButton
@@ -89,16 +89,10 @@ public class UnixInputHandler : IInputHandler
             | XTermMouseInput.ScrollUp
             | XTermMouseInput.ScrollDown;
 
-        MouseInputType action;
-        if (mouseEvent.HasFlag(XTermMouseInput.Move))
-        {
-            action = MouseInputType.Move;
-        }
-        else if (release)
-        {
-            action = MouseInputType.None;
-        }
-        else
+        MouseInputType action = MouseInputType.None;
+        bool isMoveEvent = mouseEvent.HasFlag(XTermMouseInput.Move);
+
+        if (!release)
         {
             XTermMouseInput maskedButtonEvent = mouseEvent & mouseButtonMask;
             action = maskedButtonEvent switch
@@ -126,11 +120,24 @@ public class UnixInputHandler : IInputHandler
             modifiers |= ConsoleModifiers.Alt;
         }
 
-        return new MouseInput(
-            action,
-            modifiers,
-            posX - 1,
-            posY - 1
-        );
+        if (isMoveEvent)
+        {
+            return new MouseMoveInput(
+                action, // Todo: All pressed buttons.
+                modifiers,
+                posX - 1,
+                posY - 1
+            );
+        }
+        else
+        {
+            return new MouseButtonInput(
+                action, // Todo: Only the triggering buttons.
+                action, // Todo: All pressed buttons.
+                modifiers,
+                posX - 1,
+                posY - 1
+            );
+        }
     }
 }

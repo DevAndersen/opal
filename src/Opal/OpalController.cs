@@ -138,9 +138,13 @@ public class OpalController : IDisposable
                 {
                     keyHandler.HandleKeyInput(keyInput, state);
                 }
-                else if (currentView is IMouseInputHandler mouseHandler && mouseHandler.AcceptsMouseInput() && input is MouseInput mouseInput)
+                else if (currentView is IMouseButtonInputHandler mouseButtonHandler && mouseButtonHandler.AcceptsMouseButtonInput() && input is MouseButtonInput mouseButtonInput)
                 {
-                    mouseHandler.HandleMouseInput(mouseInput, state);
+                    mouseButtonHandler.HandleMouseButtonInput(mouseButtonInput, state);
+                }
+                else if (currentView is IMouseMoveInputHandler mouseMoveHandler && mouseMoveHandler.AcceptsMouseMoveInput() && input is MouseMoveInput mouseMoveInput)
+                {
+                    mouseMoveHandler.HandleMouseMoveInput(mouseMoveInput, state);
                 }
             }
 
@@ -204,7 +208,7 @@ public class OpalController : IDisposable
             Thread.Sleep(1000 / 180); // Todo: Make the input delay adjustable (currently 180 updates/second).
 
             IBaseConsoleView? currentView = GetCurrentView();
-            if (currentView is IKeyInputHandler or IMouseInputHandler)
+            if (currentView is IKeyInputHandler or IMouseButtonInputHandler or IMouseMoveInputHandler)
             {
                 IConsoleInput? input = _handler.GetInput();
                 if (input != null)
