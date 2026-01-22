@@ -10,6 +10,10 @@
 	<!-- Code quality -->
 	<PropertyGroup>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+	<!-- Release code quality -->
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 	</PropertyGroup>
 
