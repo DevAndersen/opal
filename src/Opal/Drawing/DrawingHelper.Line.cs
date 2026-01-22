@@ -49,4 +49,17 @@ public static partial class DrawingHelper
             grid[posX, posY + y] = template with { Character = style.Vertical };
         }
     }
+
+    public static void DrawLine(this IConsoleGrid grid, int posX1, int posY1, int posX2, int posY2, ConsoleChar template)
+    {
+        float length = float.Sqrt(float.Pow(posX2 - posX1, 2) + float.Pow(posY2 - posY1, 2));
+
+        for (int i = 0; i < length + 1; i++)
+        {
+            int x = (int)(float.Lerp(posX1, posX2, i / length) + 0.5F);
+            int y = (int)(float.Lerp(posY1, posY2, i / length) + 0.5F);
+
+            grid[x, y] = template;
+        }
+    }
 }
