@@ -9,7 +9,6 @@ public class ConsoleRenderer
     private readonly IConsoleHandler _consoleHandler;
     private readonly StringBuilder _stringBuilder;
     private readonly Lock _lockObject;
-    private int _sbCap;
     private int _charsToSkip;
     private bool _firstEdit;
 
@@ -72,12 +71,6 @@ public class ConsoleRenderer
                 .AppendSGREnding();
 
             _consoleHandler.Print(_stringBuilder);
-
-            if (_stringBuilder.Length > _sbCap)
-            {
-                _sbCap = (int)(_stringBuilder.Length * 1.1F);
-                _stringBuilder.Capacity = _sbCap;
-            }
         }
     }
 
