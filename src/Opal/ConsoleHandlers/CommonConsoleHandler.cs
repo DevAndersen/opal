@@ -75,10 +75,10 @@ public abstract class CommonConsoleHandler<TInputHandler> : IConsoleHandler
     /// Returns the width and height of the console, clamped according to the settings.
     /// </summary>
     /// <returns></returns>
-    protected static (int width, int height) GetClampedConsoleSize(OpalSettings? Settings)
+    protected static (int width, int height) GetClampedConsoleSize(OpalSettings? settings)
     {
-        int width = int.Clamp(Console.WindowWidth, Settings?.MinWidth ?? 1, Settings?.MaxWidth ?? int.MaxValue);
-        int height = int.Clamp(Console.WindowHeight, Settings?.MinHeight ?? 1, Settings?.MaxHeight ?? int.MaxValue);
+        int width = int.Clamp(Console.WindowWidth, settings?.MinWidth ?? 1, settings?.MaxWidth ?? int.MaxValue);
+        int height = int.Clamp(Console.WindowHeight, settings?.MinHeight ?? 1, settings?.MaxHeight ?? int.MaxValue);
         return (width, height);
     }
 

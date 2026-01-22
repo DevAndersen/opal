@@ -225,6 +225,10 @@ dotnet_naming_rule.private_or_internal_field_should_be_begins_with__.severity = 
 dotnet_naming_rule.private_or_internal_field_should_be_begins_with__.symbols = private_or_internal_field
 dotnet_naming_rule.private_or_internal_field_should_be_begins_with__.style = begins_with__
 
+dotnet_naming_rule.locals_and_parameters_should_be_camel_case.severity = warning
+dotnet_naming_rule.locals_and_parameters_should_be_camel_case.symbols = locals_and_parameters
+dotnet_naming_rule.locals_and_parameters_should_be_camel_case.style = camel_case
+
 # Symbol specifications
 
 dotnet_naming_symbols.interface.applicable_kinds = interface
@@ -243,6 +247,8 @@ dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, meth
 dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.non_field_members.required_modifiers =
 
+dotnet_naming_symbols.locals_and_parameters.applicable_kinds = parameter, local
+
 # Naming styles
 
 dotnet_naming_style.pascal_case.required_prefix =
@@ -259,6 +265,11 @@ dotnet_naming_style.begins_with__.required_prefix = _
 dotnet_naming_style.begins_with__.required_suffix =
 dotnet_naming_style.begins_with__.word_separator =
 dotnet_naming_style.begins_with__.capitalization = camel_case
+
+dotnet_naming_style.camel_case.required_prefix =
+dotnet_naming_style.camel_case.required_suffix =
+dotnet_naming_style.camel_case.word_separator =
+dotnet_naming_style.camel_case.capitalization = camel_case
 
 # IDE0040: Add accessibility modifiers
 dotnet_diagnostic.IDE0040.severity = warning
