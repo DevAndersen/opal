@@ -2,5 +2,5 @@
 
 public interface IBaseConsoleView : IRenderable
 {
-    ValueTask InitializeViewAsync();
+    Task InitializeViewAsync();
 }

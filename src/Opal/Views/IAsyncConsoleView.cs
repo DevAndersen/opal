@@ -2,5 +2,5 @@
 
 public interface IAsyncConsoleView : IBaseConsoleView
 {
-    ValueTask UpdateAsync(IConsoleState state, CancellationToken cancellationToken);
+    Task UpdateAsync(IConsoleState state, CancellationToken cancellationToken);
 }

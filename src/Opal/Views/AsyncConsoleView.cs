@@ -6,7 +6,7 @@ public abstract class AsyncConsoleView : IAsyncConsoleView
 {
     private bool _isInitialized;
 
-    public async ValueTask InitializeViewAsync()
+    public async Task InitializeViewAsync()
     {
         if (!_isInitialized)
         {
@@ -15,15 +15,15 @@ public abstract class AsyncConsoleView : IAsyncConsoleView
         }
     }
 
-    public virtual ValueTask Initialize()
+    public virtual Task Initialize()
     {
-        return ValueTask.CompletedTask;
+        return Task.CompletedTask;
     }
 
     public abstract void Render(IConsoleGrid grid);
 
-    public virtual ValueTask UpdateAsync(IConsoleState state, CancellationToken cancellationToken)
+    public virtual Task UpdateAsync(IConsoleState state, CancellationToken cancellationToken)
     {
-        return ValueTask.CompletedTask;
+        return Task.CompletedTask;
     }
 }

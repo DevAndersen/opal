@@ -6,7 +6,7 @@ public abstract class ConsoleView : IConsoleView
 {
     private bool _isInitialized;
 
-    public ValueTask InitializeViewAsync()
+    public Task InitializeViewAsync()
     {
         if (!_isInitialized)
         {
@@ -14,7 +14,7 @@ public abstract class ConsoleView : IConsoleView
             _isInitialized = true;
         }
 
-        return ValueTask.CompletedTask;
+        return Task.CompletedTask;
     }
 
     public virtual void Initialize()
