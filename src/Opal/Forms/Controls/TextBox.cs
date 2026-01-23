@@ -74,7 +74,7 @@ public class TextBox : SelectableControl, IKeyInputHandler
     public override void Render(IConsoleGrid grid)
     {
         // Draw the box.
-        grid.DrawBox(PosX, PosY, Width, Height, DrawStyle.StandardDrawStyle, new ConsoleChar
+        grid.DrawBox(0, 0, Width, Height, DrawStyle.StandardDrawStyle, new ConsoleChar
         {
             ForegroundSimple = IsSelected ? ConsoleColor.White : ConsoleColor.DarkGray
         });
@@ -82,7 +82,7 @@ public class TextBox : SelectableControl, IKeyInputHandler
         // Draw the text.
         int spanLength = int.Min(Text.Length - _offset, Width - 2);
         ReadOnlySpan<char> span = Text.AsSpan().Slice(_offset, spanLength);
-        grid.DrawString(PosX + 1, PosY + 1, span, new ConsoleChar
+        grid.DrawString(1, 1, span, new ConsoleChar
         {
             ForegroundRgb = 0x9edaff
         });
@@ -91,7 +91,7 @@ public class TextBox : SelectableControl, IKeyInputHandler
         int visibleCursorPos = _cursor - _offset;
         if (IsSelected && visibleCursorPos < Width - 2)
         {
-            grid[PosX + 1 + visibleCursorPos, PosY + 1] = grid[PosX + 1 + visibleCursorPos, PosY + 1] with
+            grid[visibleCursorPos + 1, 1] = grid[visibleCursorPos + 1, 1] with
             {
                 ForegroundRgb = 0x9edaff,
                 Modes = ConsoleCharModes.Underscore

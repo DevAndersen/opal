@@ -13,11 +13,11 @@ public class Button : SelectableControl
 
     public override void Render(IConsoleGrid grid)
     {
-        grid.DrawBox(PosX, PosY, Width, Height, DrawStyle.RoundedDrawStyle, new ConsoleChar
+        grid.DrawBox(0, 0, Width, Height, DrawStyle.RoundedDrawStyle, new ConsoleChar
         {
             ForegroundSimple = IsSelected ? ConsoleColor.White : ConsoleColor.DarkGray
         });
 
-        grid.DrawString(PosX + 1, PosY + 1, Text);
+        grid.DrawString(1, 1, Text);
     }
 }

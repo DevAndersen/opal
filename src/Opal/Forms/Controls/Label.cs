@@ -13,6 +13,6 @@ public class Label : IControl
 
     public virtual void Render(IConsoleGrid grid)
     {
-        grid.DrawString(PosX, PosY, Text);
+        grid.DrawString(0, 0, Text);
     }
 }
