@@ -5,19 +5,24 @@ namespace Opal.Forms.Controls;
 
 public class Button : SelectableControl
 {
-    public int Width { get; set; }
+    public int? Width { get; set; }
 
-    public int Height { get; set; }
+    public int? Height { get; set; }
 
     public string? Text { get; set; }
 
     public override void Render(IConsoleGrid grid)
     {
-        grid.DrawBox(0, 0, Width, Height, DrawStyle.RoundedDrawStyle, new ConsoleChar
+        grid.DrawBox(0, 0, Width ?? grid.Width, Height ?? grid.Height, DrawStyle.RoundedDrawStyle, new ConsoleChar
         {
             ForegroundSimple = IsSelected ? ConsoleColor.White : ConsoleColor.DarkGray
         });
 
         grid.DrawString(1, 1, Text);
+    }
+
+    public Rect GetDesiredSize(IConsoleGrid grid)
+    {
+        return new Rect(PosX, PosY, Width ?? grid.Width, Height ?? grid.Height);
     }
 }

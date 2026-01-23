@@ -1,4 +1,5 @@
 ﻿using Opal.Events;
+using Opal.Forms.Controls;
 using Opal.Rendering;
 using Opal.Views;
 using System.Collections.ObjectModel;
@@ -111,7 +112,11 @@ public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, I
     {
         foreach (IControl control in Controls)
         {
-            IConsoleGrid controlSubgrid = grid.CreateSubgrid(control.PosX, control.PosY, 100, 100); // Todo
+            Rect rect = control is Button button
+                ? button.GetDesiredSize(grid)
+                : new Rect(0, 0, grid.Width, grid.Height);
+
+            IConsoleGrid controlSubgrid = grid.CreateSubgrid(rect.PosX, rect.PosY, rect.Width, rect.Height); // Todo
             control.Render(controlSubgrid);
         }
     }
