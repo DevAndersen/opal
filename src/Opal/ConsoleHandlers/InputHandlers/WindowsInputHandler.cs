@@ -10,6 +10,7 @@ namespace Opal.ConsoleHandlers.InputHandlers;
 public class WindowsInputHandler : IInputHandler
 {
     private nint _inputHandle;
+    private MouseInputType _previousPressedButtons;
 
     public IConsoleInput? GetInput()
     {
@@ -21,48 +22,12 @@ public class WindowsInputHandler : IInputHandler
 
             bool isMoveEvent = mouseEvent.dwEventFlags == MouseEventFlag.MOUSE_MOVED;
             MouseInputType inputType = MouseInputType.None;
-            switch (mouseEvent.dwEventFlags)
-            {
-                case MouseEventFlag.None:
-                    inputType = mouseEvent.dwButtonState switch
-                    {
-                        MouseButtonStates.FROM_LEFT_1ST_BUTTON_PRESSED => MouseInputType.LeftButton,
-                        MouseButtonStates.FROM_LEFT_2ND_BUTTON_PRESSED => MouseInputType.MiddleButton,
-                        MouseButtonStates.RIGHTMOST_BUTTON_PRESSED => MouseInputType.RightButton,
-                        _ => MouseInputType.None
-                    };
-                    break;
-
-                case MouseEventFlag.MOUSE_WHEELED:
-                    if (mouseEvent.dwButtonState > 0)
-                    {
-                        inputType = MouseInputType.ScrollUp;
-                    }
-                    else if (mouseEvent.dwButtonState < 0)
-                    {
-                        inputType = MouseInputType.ScrollDown;
-                    }
-                    break;
-            }
-
-            ConsoleModifiers modifiers = default;
-            if (mouseEvent.dwControlKeyState.HasFlag(ControlKeyStates.SHIFT_PRESSED))
-            {
-                modifiers |= ConsoleModifiers.Shift;
-            }
-            if (mouseEvent.dwControlKeyState.HasFlag(ControlKeyStates.LEFT_CTRL_PRESSED) || mouseEvent.dwControlKeyState.HasFlag(ControlKeyStates.RIGHT_CTRL_PRESSED))
-            {
-                modifiers |= ConsoleModifiers.Control;
-            }
-            if (mouseEvent.dwControlKeyState.HasFlag(ControlKeyStates.LEFT_ALT_PRESSED) || mouseEvent.dwControlKeyState.HasFlag(ControlKeyStates.RIGHT_ALT_PRESSED))
-            {
-                modifiers |= ConsoleModifiers.Alt;
-            }
+            ConsoleModifiers modifiers = ConvertModifiers(mouseEvent.dwControlKeyState);
 
             if (isMoveEvent)
             {
                 return new MouseMoveInput(
-                    inputType, // Todo: All pressed buttons.
+                    inputType,
                     modifiers,
                     mouseEvent.dwMousePosition.X,
                     mouseEvent.dwMousePosition.Y - Console.WindowTop
@@ -70,9 +35,36 @@ public class WindowsInputHandler : IInputHandler
             }
             else
             {
+                MouseInputType allPressedButtons = ConvertButton(mouseEvent.dwButtonState);
+                bool isPressed = true;
+                if (mouseEvent.dwEventFlags == MouseEventFlag.MOUSE_WHEELED)
+                {
+                    inputType = mouseEvent.dwButtonState > 0
+                        ? MouseInputType.ScrollUp
+                        : MouseInputType.ScrollDown;
+                }
+                else
+                {
+                    MouseInputType pressedButtons = (_previousPressedButtons & allPressedButtons) ^ allPressedButtons;
+                    MouseInputType releasedButtons = (_previousPressedButtons & allPressedButtons) ^ _previousPressedButtons;
+
+                    _previousPressedButtons = allPressedButtons;
+
+                    if (pressedButtons == MouseInputType.None)
+                    {
+                        isPressed = false;
+                        inputType = releasedButtons;
+                    }
+                    else
+                    {
+                        inputType = pressedButtons;
+                    }
+                }
+
                 return new MouseButtonInput(
-                    inputType, // Todo: Only the triggering buttons.
-                    inputType, // Todo: All pressed buttons.
+                    inputType,
+                    isPressed,
+                    allPressedButtons,
                     modifiers,
                     mouseEvent.dwMousePosition.X,
                     mouseEvent.dwMousePosition.Y - Console.WindowTop
@@ -105,5 +97,50 @@ public class WindowsInputHandler : IInputHandler
 
     public void StopInputListening()
     {
+        // Todo: Restore previous console mode, so it works as normal after Opal is stopped.
+    }
+
+    private static ConsoleModifiers ConvertModifiers(ControlKeyStates input)
+    {
+        ConsoleModifiers result = default;
+
+        if (input.HasFlag(ControlKeyStates.SHIFT_PRESSED))
+        {
+            result |= ConsoleModifiers.Shift;
+        }
+
+        if (input.HasFlag(ControlKeyStates.LEFT_CTRL_PRESSED) || input.HasFlag(ControlKeyStates.RIGHT_CTRL_PRESSED))
+        {
+            result |= ConsoleModifiers.Control;
+        }
+
+        if (input.HasFlag(ControlKeyStates.LEFT_ALT_PRESSED) || input.HasFlag(ControlKeyStates.RIGHT_ALT_PRESSED))
+        {
+            result |= ConsoleModifiers.Alt;
+        }
+
+        return result;
+    }
+
+    private static MouseInputType ConvertButton(MouseButtonStates nput)
+    {
+        MouseInputType result = MouseInputType.None;
+
+        if (nput.HasFlag(MouseButtonStates.FROM_LEFT_1ST_BUTTON_PRESSED))
+        {
+            result |= MouseInputType.LeftButton;
+        }
+
+        if (nput.HasFlag(MouseButtonStates.FROM_LEFT_2ND_BUTTON_PRESSED))
+        {
+            result |= MouseInputType.MiddleButton;
+        }
+
+        if (nput.HasFlag(MouseButtonStates.RIGHTMOST_BUTTON_PRESSED))
+        {
+            result |= MouseInputType.RightButton;
+        }
+
+        return result;
     }
 }

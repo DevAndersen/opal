@@ -133,6 +133,7 @@ public class UnixInputHandler : IInputHandler
         {
             return new MouseButtonInput(
                 action, // Todo: Only the triggering buttons.
+                false, // Todo: Is pressed.
                 action, // Todo: All pressed buttons.
                 modifiers,
                 posX - 1,
