@@ -69,7 +69,7 @@ form.Controls.Add(
 OpalController controller = new OpalController();
 await controller.StartAsync(form);
 
-public class TestForm : ConsoleForm
+public class TestForm : ConsoleForm, ICancellationRequestHandler
 {
     private readonly LinkedList<IConsoleInput> _inputs = [];
 
@@ -122,5 +122,10 @@ public class TestForm : ConsoleForm
             string text = y == 0 ? "Hello" : "Hello, World!";
             cellGrid.DrawString(0, 0, cellGrid.Width, text, (HorizontalAlignment)x);
         });
+    }
+
+    public bool PreventCancellationRequest()
+    {
+        return true;
     }
 }

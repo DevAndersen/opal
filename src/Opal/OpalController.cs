@@ -221,11 +221,16 @@ public class OpalController : IDisposable
 
     private void CancellationAction(object? sender, ConsoleCancelEventArgs args)
     {
-        IBaseConsoleView? currentView = GetCurrentView();
-
-        // Todo: Check if current view implements an interface that lets it handle cancellation requests.
-        Stop();
         args.Cancel = true;
+
+        if ((GetCurrentView() as ICancellationRequestHandler)?.PreventCancellationRequest() == true)
+        {
+            // Todo: Send Ctrl+C key input.
+        }
+        else
+        {
+            Stop();
+        }
     }
 
     public IBaseConsoleView? GetCurrentView()
