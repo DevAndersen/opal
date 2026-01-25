@@ -21,13 +21,12 @@ public class WindowsInputHandler : IInputHandler
             MOUSE_EVENT_RECORD mouseEvent = record.MouseEvent;
 
             bool isMoveEvent = mouseEvent.dwEventFlags == MouseEventFlag.MOUSE_MOVED;
-            MouseButtons button = MouseButtons.None;
             ConsoleModifiers modifiers = ConvertModifiers(mouseEvent.dwControlKeyState);
 
             if (isMoveEvent)
             {
                 return new MouseMoveInput(
-                    button,
+                    _previousPressedButtons,
                     modifiers,
                     mouseEvent.dwMousePosition.X,
                     mouseEvent.dwMousePosition.Y - Console.WindowTop
@@ -35,6 +34,7 @@ public class WindowsInputHandler : IInputHandler
             }
             else
             {
+                MouseButtons button = MouseButtons.None;
                 MouseButtons allPressedButtons = ConvertButton(mouseEvent.dwButtonState);
                 bool isPressed = true;
                 if (mouseEvent.dwEventFlags == MouseEventFlag.MOUSE_WHEELED)
