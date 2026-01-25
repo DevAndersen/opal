@@ -7,8 +7,8 @@ public static class LinesTestDemo
 {
     public static async Task RunAsync()
     {
-        OpalController controller = new OpalController();
-        await controller.StartAsync(new LinesTestView());
+        OpalManager manager = new OpalManager();
+        await manager.StartAsync(new LinesTestView());
         Console.WriteLine($"GC: {GC.CollectionCount(0)} | {GC.CollectionCount(1)} | {GC.CollectionCount(2)} | {GC.CollectionCount(3)}");
     }
 }

@@ -7,7 +7,7 @@ using System.Runtime.ExceptionServices;
 
 namespace Opal;
 
-public class OpalController : IDisposable
+public class OpalManager : IDisposable
 {
     /// <summary>
     /// The console handler.
@@ -65,12 +65,12 @@ public class OpalController : IDisposable
     private readonly CancellationTokenSource _stopExceptionCancellationTokenSource;
 
     /// <summary>
-    /// Returns <c>true</c> if an instance of <see cref="OpalController"/> currently running.
+    /// Returns <c>true</c> if an instance of <see cref="OpalManager"/> currently running.
     /// This property be checked before invoking <see cref="StartAsync"/>.
     /// </summary>
     public static bool IsRunning { get; private set; }
 
-    public OpalController(IConsoleHandler consoleHandler, OpalSettings settings)
+    public OpalManager(IConsoleHandler consoleHandler, OpalSettings settings)
     {
         _handler = consoleHandler;
         _renderer = new ConsoleRenderer(consoleHandler);
@@ -81,15 +81,15 @@ public class OpalController : IDisposable
         _stopExceptionCancellationTokenSource = new CancellationTokenSource();
     }
 
-    public OpalController(OpalSettings settings) : this(IConsoleHandler.CreateDefaultHandlerForCurrentPlatform(), settings)
+    public OpalManager(OpalSettings settings) : this(IConsoleHandler.CreateDefaultHandlerForCurrentPlatform(), settings)
     {
     }
 
-    public OpalController(IConsoleHandler consoleHandler) : this(consoleHandler, OpalSettings.CreateFullscreen())
+    public OpalManager(IConsoleHandler consoleHandler) : this(consoleHandler, OpalSettings.CreateFullscreen())
     {
     }
 
-    public OpalController() : this(IConsoleHandler.CreateDefaultHandlerForCurrentPlatform(), OpalSettings.CreateFullscreen())
+    public OpalManager() : this(IConsoleHandler.CreateDefaultHandlerForCurrentPlatform(), OpalSettings.CreateFullscreen())
     {
     }
 
@@ -102,7 +102,7 @@ public class OpalController : IDisposable
 
         if (!_stopExceptionCancellationTokenSource.TryReset())
         {
-            throw new InvalidOperationException($"Unable to reset stop exception cancellation token source, use a new instance of {nameof(OpalController)}");
+            throw new InvalidOperationException($"Unable to reset stop exception cancellation token source, use a new instance of {nameof(OpalManager)}");
         }
 
         _handler.Start(_settings);

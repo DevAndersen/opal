@@ -66,8 +66,8 @@ form.Controls.Add(
         Text = "This is a label"
     });
 
-OpalController controller = new OpalController();
-await controller.StartAsync(form);
+OpalManager manager = new OpalManager();
+await manager.StartAsync(form);
 
 public class TestForm : ConsoleForm
 {

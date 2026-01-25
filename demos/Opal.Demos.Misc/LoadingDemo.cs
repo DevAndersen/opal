@@ -7,8 +7,8 @@ internal class LoadingDemo
 {
     public static async Task RunAsync()
     {
-        OpalController controller = new OpalController(OpalSettings.CreateFixedInline(32, 16, 5, 5));
-        await controller.StartAsync(new LoadingView());
+        OpalManager manager = new OpalManager(OpalSettings.CreateFixedInline(32, 16, 5, 5));
+        await manager.StartAsync(new LoadingView());
     }
 }
 

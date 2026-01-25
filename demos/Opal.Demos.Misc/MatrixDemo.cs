@@ -8,8 +8,8 @@ internal static class MatrixDemo
 {
     public static async Task RunAsync()
     {
-        OpalController controller = new OpalController();
-        await controller.StartAsync(new MatrixView());
+        OpalManager manager = new OpalManager();
+        await manager.StartAsync(new MatrixView());
     }
 }
 

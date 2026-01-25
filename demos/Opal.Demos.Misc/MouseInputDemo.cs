@@ -8,8 +8,8 @@ internal class MouseInputDemo
 {
     public static async Task RunAsync()
     {
-        OpalController controller = new OpalController();
-        await controller.StartAsync(new MouseInputDemoView());
+        OpalManager manager = new OpalManager();
+        await manager.StartAsync(new MouseInputDemoView());
     }
 }
 
