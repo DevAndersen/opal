@@ -10,7 +10,7 @@ namespace Opal.ConsoleHandlers.InputHandlers;
 public class WindowsInputHandler : IInputHandler
 {
     private nint _inputHandle;
-    private MouseInputType _previousPressedButtons;
+    private MouseButtons _previousPressedButtons;
 
     public IConsoleInput? GetInput()
     {
@@ -21,13 +21,13 @@ public class WindowsInputHandler : IInputHandler
             MOUSE_EVENT_RECORD mouseEvent = record.MouseEvent;
 
             bool isMoveEvent = mouseEvent.dwEventFlags == MouseEventFlag.MOUSE_MOVED;
-            MouseInputType inputType = MouseInputType.None;
+            MouseButtons button = MouseButtons.None;
             ConsoleModifiers modifiers = ConvertModifiers(mouseEvent.dwControlKeyState);
 
             if (isMoveEvent)
             {
                 return new MouseMoveInput(
-                    inputType,
+                    button,
                     modifiers,
                     mouseEvent.dwMousePosition.X,
                     mouseEvent.dwMousePosition.Y - Console.WindowTop
@@ -35,34 +35,34 @@ public class WindowsInputHandler : IInputHandler
             }
             else
             {
-                MouseInputType allPressedButtons = ConvertButton(mouseEvent.dwButtonState);
+                MouseButtons allPressedButtons = ConvertButton(mouseEvent.dwButtonState);
                 bool isPressed = true;
                 if (mouseEvent.dwEventFlags == MouseEventFlag.MOUSE_WHEELED)
                 {
-                    inputType = mouseEvent.dwButtonState > 0
-                        ? MouseInputType.ScrollUp
-                        : MouseInputType.ScrollDown;
+                    button = mouseEvent.dwButtonState > 0
+                        ? MouseButtons.ScrollUp
+                        : MouseButtons.ScrollDown;
                 }
                 else
                 {
-                    MouseInputType pressedButtons = (_previousPressedButtons & allPressedButtons) ^ allPressedButtons;
-                    MouseInputType releasedButtons = (_previousPressedButtons & allPressedButtons) ^ _previousPressedButtons;
+                    MouseButtons pressedButtons = (_previousPressedButtons & allPressedButtons) ^ allPressedButtons;
+                    MouseButtons releasedButtons = (_previousPressedButtons & allPressedButtons) ^ _previousPressedButtons;
 
                     _previousPressedButtons = allPressedButtons;
 
-                    if (pressedButtons == MouseInputType.None)
+                    if (pressedButtons == MouseButtons.None)
                     {
                         isPressed = false;
-                        inputType = releasedButtons;
+                        button = releasedButtons;
                     }
                     else
                     {
-                        inputType = pressedButtons;
+                        button = pressedButtons;
                     }
                 }
 
                 return new MouseButtonInput(
-                    inputType,
+                    button,
                     isPressed,
                     allPressedButtons,
                     modifiers,
@@ -122,23 +122,23 @@ public class WindowsInputHandler : IInputHandler
         return result;
     }
 
-    private static MouseInputType ConvertButton(MouseButtonStates nput)
+    private static MouseButtons ConvertButton(MouseButtonStates nput)
     {
-        MouseInputType result = MouseInputType.None;
+        MouseButtons result = MouseButtons.None;
 
         if (nput.HasFlag(MouseButtonStates.FROM_LEFT_1ST_BUTTON_PRESSED))
         {
-            result |= MouseInputType.LeftButton;
+            result |= MouseButtons.LeftButton;
         }
 
         if (nput.HasFlag(MouseButtonStates.FROM_LEFT_2ND_BUTTON_PRESSED))
         {
-            result |= MouseInputType.MiddleButton;
+            result |= MouseButtons.MiddleButton;
         }
 
         if (nput.HasFlag(MouseButtonStates.RIGHTMOST_BUTTON_PRESSED))
         {
-            result |= MouseInputType.RightButton;
+            result |= MouseButtons.RightButton;
         }
 
         return result;

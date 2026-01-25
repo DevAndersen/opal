@@ -89,20 +89,20 @@ public class UnixInputHandler : IInputHandler
             | XTermMouseInput.ScrollUp
             | XTermMouseInput.ScrollDown;
 
-        MouseInputType action = MouseInputType.None;
+        MouseButtons button = MouseButtons.None;
         bool isMoveEvent = mouseEvent.HasFlag(XTermMouseInput.Move);
 
         if (!release)
         {
             XTermMouseInput maskedButtonEvent = mouseEvent & mouseButtonMask;
-            action = maskedButtonEvent switch
+            button = maskedButtonEvent switch
             {
-                XTermMouseInput.LeftButton => MouseInputType.LeftButton,
-                XTermMouseInput.MiddleButton => MouseInputType.MiddleButton,
-                XTermMouseInput.RightButton => MouseInputType.RightButton,
-                XTermMouseInput.ScrollUp => MouseInputType.ScrollUp,
-                XTermMouseInput.ScrollDown => MouseInputType.ScrollDown,
-                _ => MouseInputType.None
+                XTermMouseInput.LeftButton => MouseButtons.LeftButton,
+                XTermMouseInput.MiddleButton => MouseButtons.MiddleButton,
+                XTermMouseInput.RightButton => MouseButtons.RightButton,
+                XTermMouseInput.ScrollUp => MouseButtons.ScrollUp,
+                XTermMouseInput.ScrollDown => MouseButtons.ScrollDown,
+                _ => MouseButtons.None
             };
         }
 
@@ -123,7 +123,7 @@ public class UnixInputHandler : IInputHandler
         if (isMoveEvent)
         {
             return new MouseMoveInput(
-                action, // Todo: All pressed buttons.
+                button, // Todo: All pressed buttons.
                 modifiers,
                 posX - 1,
                 posY - 1
@@ -132,9 +132,9 @@ public class UnixInputHandler : IInputHandler
         else
         {
             return new MouseButtonInput(
-                action, // Todo: Only the triggering buttons.
+                button, // Todo: Only the triggering buttons.
                 false, // Todo: Is pressed.
-                action, // Todo: All pressed buttons.
+                button, // Todo: All pressed buttons.
                 modifiers,
                 posX - 1,
                 posY - 1

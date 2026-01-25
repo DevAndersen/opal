@@ -1,7 +1,7 @@
 ﻿namespace Opal.Events;
 
 [Flags]
-public enum MouseInputType : byte // Todo: Rename to "MouseInputButtons" or something similar.
+public enum MouseButtons : byte
 {
     None = 0,
     LeftButton = 0b_00001,

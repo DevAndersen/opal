@@ -7,7 +7,7 @@
 /// <param name="Modifiers"></param>
 /// <param name="X">The X coordinate of the input.</param>
 /// <param name="Y">The Y coordinate of the input.</param>
-public record MouseMoveInput(MouseInputType PressedButtons, ConsoleModifiers Modifiers, int X, int Y) : IConsoleInput
+public record MouseMoveInput(MouseButtons PressedButtons, ConsoleModifiers Modifiers, int X, int Y) : IConsoleInput
 {
     public bool Handled { get; set; }
 }
