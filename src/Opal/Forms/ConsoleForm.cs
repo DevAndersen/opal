@@ -7,7 +7,13 @@ using System.Collections.Specialized;
 
 namespace Opal.Forms;
 
-public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, IMouseButtonInputHandler, IMouseMoveInputHandler, IDisposable
+public class ConsoleForm : ConsoleView,
+    IControlMultiParent,
+    IKeyInputHandler,
+    IMouseButtonInputHandler,
+    IMouseMoveInputHandler,
+    ICancellationRequestHandler,
+    IDisposable
 {
     private readonly ObservableCollection<IControl> _controls = [];
 
@@ -121,6 +127,16 @@ public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, I
     private void OnControlsChange(object? sender, NotifyCollectionChangedEventArgs args)
     {
         // Todo: Change selected control if the current control is no longer contained in the form (or its children).
+    }
+
+    public virtual bool PreventCancellationRequest()
+    {
+        if (Selected is ICancellationRequestHandler cancellationRequestHandler)
+        {
+            return cancellationRequestHandler.PreventCancellationRequest();
+        }
+
+        return false;
     }
 
     public virtual void Dispose()

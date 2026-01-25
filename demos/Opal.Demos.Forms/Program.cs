@@ -69,7 +69,7 @@ form.Controls.Add(
 OpalController controller = new OpalController();
 await controller.StartAsync(form);
 
-public class TestForm : ConsoleForm, ICancellationRequestHandler
+public class TestForm : ConsoleForm
 {
     private readonly LinkedList<IConsoleInput> _inputs = [];
 
@@ -124,7 +124,7 @@ public class TestForm : ConsoleForm, ICancellationRequestHandler
         });
     }
 
-    public bool PreventCancellationRequest()
+    public override bool PreventCancellationRequest()
     {
         return true;
     }
