@@ -3,6 +3,7 @@ using Opal.Events;
 using Opal.Rendering;
 using Opal.Views;
 using System.Collections.Concurrent;
+using System.Runtime.ExceptionServices;
 
 namespace Opal;
 
@@ -50,6 +51,20 @@ public class OpalController : IDisposable
     private ConsoleGrid? _previousGrid;
 
     /// <summary>
+    /// Captures the exception which was set via <see cref="Stop(Exception)"/>, which will then be thrown once gracefully stopped.
+    /// </summary>
+    /// <remarks>
+    /// This is primarily intended to handle exceptions throw from separate threads,
+    /// as these could otherwise cause an ungraceful stop, leaving the console in a non-vanilla state.
+    /// </remarks>
+    private ExceptionDispatchInfo? _stopExceptionDispatchInfo;
+
+    /// <summary>
+    /// Will be cancelled when <see cref="Stop(Exception)"/> is invoked, requesting a graceful stop.
+    /// </summary>
+    private readonly CancellationTokenSource _stopExceptionCancellationTokenSource;
+
+    /// <summary>
     /// Returns <c>true</c> if an instance of <see cref="OpalController"/> currently running.
     /// This property be checked before invoking <see cref="StartAsync"/>.
     /// </summary>
@@ -63,6 +78,7 @@ public class OpalController : IDisposable
         _inputQueue = new ConcurrentQueue<IConsoleInput>();
         _inputThread = new Thread(InputHandlerThreadMethod);
         _settings = settings;
+        _stopExceptionCancellationTokenSource = new CancellationTokenSource();
     }
 
     public OpalController(OpalSettings settings) : this(IConsoleHandler.CreateDefaultHandlerForCurrentPlatform(), settings)
@@ -84,6 +100,11 @@ public class OpalController : IDisposable
             throw new InvalidOperationException("Opal is already running.");
         }
 
+        if (!_stopExceptionCancellationTokenSource.TryReset())
+        {
+            throw new InvalidOperationException($"Unable to reset stop exception cancellation token source, use a new instance of {nameof(OpalController)}");
+        }
+
         _handler.Start(_settings);
         _handler.OnConsoleSizeChanged += HandleConsoleSizeChanged;
         Console.CancelKeyPress += CancellationAction;
@@ -93,13 +114,30 @@ public class OpalController : IDisposable
 
         try
         {
-            await RunAsync(view, cancellationToken);
+            // Linked cancellation token source, allowing multiple sources to request a graceful stop.
+            CancellationTokenSource runCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
+                cancellationToken,
+                _stopExceptionCancellationTokenSource.Token);
+
+            await RunAsync(view, runCancellationTokenSource.Token);
         }
         catch
         {
-            Stop();
             throw;
         }
+        finally
+        {
+            Stop();
+        }
+
+        // If a stop exception was captured, throw it.
+        _stopExceptionDispatchInfo?.Throw();
+    }
+
+    public void Stop(Exception e)
+    {
+        _stopExceptionDispatchInfo = ExceptionDispatchInfo.Capture(e);
+        _stopExceptionCancellationTokenSource.Cancel();
     }
 
     public void Stop()
@@ -223,13 +261,20 @@ public class OpalController : IDisposable
     {
         args.Cancel = true;
 
-        if ((GetCurrentView() as ICancellationRequestHandler)?.PreventCancellationRequest() == true)
+        try
         {
-            // Todo: Send Ctrl+C key input.
+            if ((GetCurrentView() as ICancellationRequestHandler)?.PreventCancellationRequest() == true)
+            {
+                // Todo: Send Ctrl+C key input.
+            }
+            else
+            {
+                Stop();
+            }
         }
-        else
+        catch (Exception e)
         {
-            Stop();
+            Stop(e);
         }
     }
 
