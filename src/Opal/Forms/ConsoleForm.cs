@@ -112,11 +112,8 @@ public class ConsoleForm : ConsoleView, IControlMultiParent, IKeyInputHandler, I
     {
         foreach (IControl control in Controls)
         {
-            Rect rect = control is Button button
-                ? button.GetDesiredSize(grid)
-                : new Rect(0, 0, grid.Width, grid.Height);
-
-            IConsoleGrid controlSubgrid = grid.CreateSubgrid(rect.PosX, rect.PosY, rect.Width, rect.Height); // Todo
+            Rect rect = control.GetDesiredSize(grid);
+            IConsoleGrid controlSubgrid = grid.CreateSubgrid(rect.PosX, rect.PosY, rect.Width, rect.Height);
             control.Render(controlSubgrid);
         }
     }

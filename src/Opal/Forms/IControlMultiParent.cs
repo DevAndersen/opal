@@ -1,4 +1,6 @@
-﻿namespace Opal.Forms;
+﻿using Opal.Forms.Controls;
+
+namespace Opal.Forms;
 
 public interface IControlMultiParent
 {

@@ -63,7 +63,7 @@ form.Controls.Add(
     {
         PosX = 2,
         PosY = 1,
-        Text = "This is a test"
+        Text = "This is a label"
     });
 
 OpalController controller = new OpalController();

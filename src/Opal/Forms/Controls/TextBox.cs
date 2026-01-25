@@ -98,4 +98,9 @@ public class TextBox : SelectableControl, IKeyInputHandler
             };
         }
     }
+
+    public override Rect GetDesiredSize(IConsoleGrid grid)
+    {
+        return new Rect(PosX, PosY, Width + 2, Height + 2);
+    }
 }

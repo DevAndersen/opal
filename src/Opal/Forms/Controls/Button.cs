@@ -21,7 +21,7 @@ public class Button : SelectableControl
         grid.DrawString(1, 1, Text);
     }
 
-    public Rect GetDesiredSize(IConsoleGrid grid)
+    public override Rect GetDesiredSize(IConsoleGrid grid)
     {
         return new Rect(PosX, PosY, Width ?? grid.Width, Height ?? grid.Height);
     }

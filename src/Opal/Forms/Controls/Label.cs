@@ -11,6 +11,16 @@ public class Label : IControl
 
     public string? Text { get; set; }
 
+    public Rect GetDesiredSize(IConsoleGrid grid)
+    {
+        if (string.IsNullOrWhiteSpace(Text))
+        {
+            return default;
+        }
+
+        return new Rect(PosX, PosY, Text.Length, 1);
+    }
+
     public virtual void Render(IConsoleGrid grid)
     {
         grid.DrawString(0, 0, Text);
