@@ -94,7 +94,7 @@ public class TextBox : SelectableControl, IKeyInputHandler
             grid[visibleCursorPos + 1, 1] = grid[visibleCursorPos + 1, 1] with
             {
                 ForegroundRgb = 0x9edaff,
-                Modes = ConsoleCharModes.Underscore
+                Modes = ConsoleCharModes.Underscore | ConsoleCharModes.Blinking
             };
         }
     }
