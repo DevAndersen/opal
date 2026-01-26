@@ -126,4 +126,9 @@ public class ConsoleGrid : BaseConsoleGrid
             || Height != other.Height
             || !Buffer.Span.SequenceEqual(other.Buffer.Span);
     }
+
+    public override (int PosX, int PosY) GetAbsolutePosition()
+    {
+        return (0, 0);
+    }
 }

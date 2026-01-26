@@ -32,4 +32,6 @@ public interface IConsoleGrid
     /// <param name="height"></param>
     /// <returns></returns>
     IConsoleGrid CreateSubgrid(int x, int y, int width, int height);
+
+    (int PosX, int PosY) GetAbsolutePosition();
 }

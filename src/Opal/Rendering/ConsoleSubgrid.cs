@@ -27,4 +27,10 @@ public class ConsoleSubgrid : BaseConsoleGrid
         _offsetX = offsetX;
         _offsetY = offsetY;
     }
+
+    public override (int PosX, int PosY) GetAbsolutePosition()
+    {
+        (int parentPosX, int parentPosY) = _parentGrid.GetAbsolutePosition();
+        return (parentPosX + _offsetX, parentPosY + _offsetY);
+    }
 }

@@ -33,4 +33,6 @@ public abstract class BaseConsoleGrid : IConsoleGrid
         && x < Width
         && y >= 0
         && y < Height;
+
+    public abstract (int PosX, int PosY) GetAbsolutePosition();
 }
