@@ -65,6 +65,11 @@ public class OpalManager : IDisposable
     private readonly CancellationTokenSource _stopExceptionCancellationTokenSource;
 
     /// <summary>
+    /// Stores the previous key input.
+    /// </summary>
+    private KeyInput? _previousKeyInput;
+
+    /// <summary>
     /// Returns <c>true</c> if an instance of <see cref="OpalManager"/> currently running.
     /// This property be checked before invoking <see cref="StartAsync"/>.
     /// </summary>
@@ -175,6 +180,7 @@ public class OpalManager : IDisposable
                 if (currentView is IKeyInputHandler keyHandler && keyHandler.AcceptsKeyInput() && input is KeyInput keyInput)
                 {
                     keyHandler.HandleKeyInput(keyInput, state);
+                    _previousKeyInput = keyInput;
                 }
                 else if (currentView is IMouseButtonInputHandler mouseButtonHandler && mouseButtonHandler.AcceptsMouseButtonInput() && input is MouseButtonInput mouseButtonInput)
                 {
@@ -265,7 +271,14 @@ public class OpalManager : IDisposable
         {
             if ((GetCurrentView() as ICancellationRequestHandler)?.PreventCancellationRequest() == true)
             {
-                // Todo: Send Ctrl+C key input.
+                KeyInput keyInput = _previousKeyInput ?? new KeyInput(default);
+
+                _inputQueue.Enqueue(keyInput with
+                {
+                    Key = ConsoleKey.C,
+                    KeyChar = default,
+                    Modifiers = keyInput.Modifiers | ConsoleModifiers.Control
+                });
             }
             else
             {
