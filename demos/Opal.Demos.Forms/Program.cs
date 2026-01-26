@@ -66,6 +66,19 @@ form.ChildControls.Add(
         Text = "This is a label"
     });
 
+form.ChildControls.Add(new GroupBox
+{
+    PosX = 80,
+    PosY = 2,
+    Width = 20,
+    Height = 8,
+    Text = "GroupBox",
+    ChildControl = new Button
+    {
+        Text = "Btn"
+    }
+});
+
 OpalManager manager = new OpalManager();
 await manager.StartAsync(form);
 
