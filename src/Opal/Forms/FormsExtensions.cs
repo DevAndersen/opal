@@ -20,9 +20,9 @@ public static class FormsExtensions
         }
     }
 
-    private static IEnumerable<IControl> GetNestedControlsRecursively(params IEnumerable<IControl> controls)
+    private static IEnumerable<IControl> GetNestedControlsRecursively(params IEnumerable<IControl?> controls)
     {
-        foreach (IControl control in controls)
+        foreach (IControl? control in controls)
         {
             if (control == null)
             {
