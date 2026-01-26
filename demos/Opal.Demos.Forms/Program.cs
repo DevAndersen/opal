@@ -8,7 +8,7 @@ using Opal.Views;
 
 TestForm form = new TestForm();
 
-form.Controls.Add(
+form.ChildControls.Add(
     new Button
     {
         PosX = 5,
@@ -18,7 +18,7 @@ form.Controls.Add(
         Text = "Button 1"
     });
 
-form.Controls.Add(
+form.ChildControls.Add(
     new Button
     {
         PosX = 5,
@@ -28,7 +28,7 @@ form.Controls.Add(
         Text = "Button 2"
     });
 
-form.Controls.Add(
+form.ChildControls.Add(
     new Button
     {
         PosX = 5,
@@ -39,7 +39,7 @@ form.Controls.Add(
         Index = 0
     });
 
-form.Controls.Add(
+form.ChildControls.Add(
     new Button
     {
         PosX = 5,
@@ -49,7 +49,7 @@ form.Controls.Add(
         Text = "Button 4",
     });
 
-form.Controls.Add(
+form.ChildControls.Add(
     new TextBox
     {
         PosX = 5,
@@ -58,7 +58,7 @@ form.Controls.Add(
         Width = 10
     });
 
-form.Controls.Add(
+form.ChildControls.Add(
     new Label
     {
         PosX = 2,

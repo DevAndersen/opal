@@ -8,7 +8,7 @@ public static class FormsExtensions
     {
         public IEnumerable<IControl> GetNestedControls()
         {
-            return GetNestedControlsRecursively(singleParent.Control);
+            return GetNestedControlsRecursively(singleParent.ChildControl);
         }
     }
 
@@ -16,7 +16,7 @@ public static class FormsExtensions
     {
         public IEnumerable<IControl> GetNestedControls()
         {
-            return GetNestedControlsRecursively(multiParent.Controls);
+            return GetNestedControlsRecursively(multiParent.ChildControls);
         }
     }
 

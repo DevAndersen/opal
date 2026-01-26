@@ -4,5 +4,5 @@ namespace Opal.Forms;
 
 public interface IControlSingleParent
 {
-    IControl Control { get; }
+    IControl ChildControl { get; }
 }

@@ -17,7 +17,7 @@ public class ConsoleForm : ConsoleView,
 {
     private readonly ObservableCollection<IControl> _controls = [];
 
-    public IList<IControl> Controls => _controls;
+    public IList<IControl> ChildControls => _controls;
 
     public ISelectable? Selected { get; protected set; }
 
@@ -116,7 +116,7 @@ public class ConsoleForm : ConsoleView,
 
     public override void Render(IConsoleGrid grid)
     {
-        foreach (IControl control in Controls)
+        foreach (IControl control in ChildControls)
         {
             Rect rect = control.GetDesiredSize(grid);
             IConsoleGrid controlSubgrid = grid.CreateSubgrid(rect.PosX, rect.PosY, rect.Width, rect.Height);
