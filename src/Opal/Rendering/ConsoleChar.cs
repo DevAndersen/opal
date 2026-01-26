@@ -95,6 +95,48 @@ public readonly struct ConsoleChar
         get => (BackgroundRed << 16) + (BackgroundGreen << 8) + BackgroundBlue;
     }
 
+    public Color ForegroundColor
+    {
+        init
+        {
+            if (value.IsRgb)
+            {
+                ForegroundRgb = value.RgbValue;
+            }
+            else
+            {
+                ForegroundSimple = value.ConsoleColorValue;
+            }
+        }
+        get
+        {
+            return Metadata.HasFlag(ConsoleCharMetadata.ForegroundRgb)
+                ? new Color(ForegroundRgb)
+                : new Color(ForegroundSimple);
+        }
+    }
+
+    public Color BackgroundColor
+    {
+        init
+        {
+            if (value.IsRgb)
+            {
+                BackgroundRgb = value.RgbValue;
+            }
+            else
+            {
+                BackgroundSimple = value.ConsoleColorValue;
+            }
+        }
+        get
+        {
+            return Metadata.HasFlag(ConsoleCharMetadata.BackgroundRgb)
+                ? new Color(BackgroundRgb)
+                : new Color(BackgroundSimple);
+        }
+    }
+
     internal readonly ConsoleCharMetadata Metadata { get; private init; }
 
     public ConsoleCharModes Modes { get; init; }
@@ -170,6 +212,27 @@ public readonly struct ConsoleChar
     public ConsoleChar(char character, int foregroundColor, int backgroundColor) : this(character, foregroundColor)
     {
         BackgroundRgb = backgroundColor;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a foreground color.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="foregroundColor"></param>
+    public ConsoleChar(char character, Color foregroundColor) : this(character)
+    {
+        ForegroundColor = foregroundColor;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a foreground color and a background color.
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="foregroundColor"></param>
+    /// <param name="backgroundColor"></param>
+    public ConsoleChar(char character, Color foregroundColor, Color backgroundColor) : this(character, foregroundColor)
+    {
+        BackgroundColor = backgroundColor;
     }
 
     /// <summary>
@@ -254,6 +317,33 @@ public readonly struct ConsoleChar
     public ConsoleChar(string sequence, int foregroundColor, int backgroundColor) : this(sequence, foregroundColor)
     {
         BackgroundRgb = backgroundColor;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a foreground color.
+    /// </summary>
+    /// <remarks>
+    /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
+    /// </remarks>
+    /// <param name="sequence"></param>
+    /// <param name="foregroundColor"></param>
+    public ConsoleChar(string sequence, Color foregroundColor) : this(sequence)
+    {
+        ForegroundColor = foregroundColor;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of <see cref="ConsoleChar"/> with a foreground color and a background color.
+    /// </summary>
+    /// <remarks>
+    /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
+    /// </remarks>
+    /// <param name="sequence"></param>
+    /// <param name="foregroundColor"></param>
+    /// <param name="backgroundColor"></param>
+    public ConsoleChar(string sequence, Color foregroundColor, Color backgroundColor) : this(sequence, foregroundColor)
+    {
+        BackgroundColor = backgroundColor;
     }
 
     /// <summary>
