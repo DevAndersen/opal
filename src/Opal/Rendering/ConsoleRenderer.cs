@@ -34,11 +34,10 @@ public class ConsoleRenderer
 
             ConsoleChar previousConsoleChar = default;
             int start = 0;
-            int end = 0;
 
             while (start < grid.Buffer.Length)
             {
-                end = 0;
+                int end = 0;
 
                 while (CanCharsBeGroupedTogether(grid, start, start + end))
                 {
