@@ -118,7 +118,7 @@ public class ConsoleForm : ConsoleView,
     {
         foreach (IControl control in ChildControls)
         {
-            Rect rect = control.GetDesiredSize(grid);
+            Rect rect = control.GetDesiredSize(grid.Width, grid.Height);
             IConsoleGrid controlSubgrid = grid.CreateSubgrid(rect.PosX, rect.PosY, rect.Width, rect.Height);
             control.Render(controlSubgrid);
         }

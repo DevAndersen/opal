@@ -17,9 +17,9 @@ public class GroupBox : IControl, IControlSingleParent
 
     public string? Text { get; set; }
 
-    public Rect GetDesiredSize(IConsoleGrid grid)
+    public Rect GetDesiredSize(int width, int height)
     {
-        return new Rect(PosX, PosY, Width ?? grid.Width, Height ?? grid.Height);
+        return new Rect(PosX, PosY, Width ?? width, Height ?? height);
     }
 
     public void Render(IConsoleGrid grid)

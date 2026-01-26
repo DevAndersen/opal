@@ -99,6 +99,12 @@ public class TestForm : ConsoleForm
 
     public override void HandleMouseButtonInput(MouseButtonInput mouseEvent, IConsoleState consoleState)
     {
+        base.HandleMouseButtonInput(mouseEvent, consoleState);
+        if (mouseEvent.Handled)
+        {
+            return;
+        }
+
         AddInput(mouseEvent);
     }
 
@@ -139,6 +145,6 @@ public class TestForm : ConsoleForm
 
     public override bool PreventCancellationRequest()
     {
-        return true;
+        return false;
     }
 }

@@ -19,5 +19,5 @@ public abstract class SelectableControl : IControl, ISelectable
 
     public abstract void Render(IConsoleGrid grid);
 
-    public abstract Rect GetDesiredSize(IConsoleGrid grid);
+    public abstract Rect GetDesiredSize(int width, int height);
 }

@@ -24,7 +24,8 @@ public interface IControl : IRenderable
     /// <summary>
     /// Return the desired control size for rendering and mouse input.
     /// </summary>
-    /// <param name="grid"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
     /// <returns></returns>
-    Rect GetDesiredSize(IConsoleGrid grid);
+    Rect GetDesiredSize(int width, int height);
 }

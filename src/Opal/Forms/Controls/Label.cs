@@ -11,7 +11,7 @@ public class Label : IControl
 
     public string? Text { get; set; }
 
-    public Rect GetDesiredSize(IConsoleGrid grid)
+    public Rect GetDesiredSize(int width, int height)
     {
         if (string.IsNullOrWhiteSpace(Text))
         {

@@ -7,4 +7,11 @@
 /// <param name="PosY"></param>
 /// <param name="Width"></param>
 /// <param name="Height"></param>
-public record struct Rect(int PosX, int PosY, int Width, int Height);
+public record struct Rect(int PosX, int PosY, int Width, int Height)
+{
+    public readonly bool IsCoordinateWithinRect(int x, int y)
+        => x >= PosX
+        && x < PosX + Width
+        && y >= PosY
+        && y < PosY + Height;
+}
