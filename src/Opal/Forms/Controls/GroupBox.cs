@@ -32,7 +32,7 @@ public class GroupBox : IControl, IControlSingleParent
             ForegroundSimple = ConsoleColor.DarkGray
         });
 
-        grid.DrawString(2, 0, width - 2, Text, HorizontalAlignment.Left, new ConsoleChar
+        grid.DrawString(2, 0, width - 4, Text, HorizontalAlignment.Left, new ConsoleChar
         {
             ForegroundSimple = ConsoleColor.Gray
         });
