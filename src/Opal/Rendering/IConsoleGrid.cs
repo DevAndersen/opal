@@ -31,5 +31,5 @@ public interface IConsoleGrid
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <returns></returns>
-    ConsoleSubgrid CreateSubgrid(int x, int y, int width, int height);
+    IConsoleGrid CreateSubgrid(int x, int y, int width, int height);
 }

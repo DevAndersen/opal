@@ -12,7 +12,7 @@ public static partial class DrawingHelper
         int rows,
         int cellWidth,
         int cellHeight,
-        Action<ConsoleSubgrid, int, int>? cellFunc,
+        Action<IConsoleGrid, int, int>? cellFunc,
         ConsoleChar template = default)
     {
         return DrawTable(grid, posX, posY, columns, rows, cellWidth, cellHeight, cellFunc, DrawStyle.StandardDrawStyle, template);
@@ -26,7 +26,7 @@ public static partial class DrawingHelper
         int rows,
         int cellWidth,
         int cellHeight,
-        Action<ConsoleSubgrid, int, int>? cellFunc,
+        Action<IConsoleGrid, int, int>? cellFunc,
         DrawStyle style,
         ConsoleChar template = default)
     {
@@ -45,7 +45,7 @@ public static partial class DrawingHelper
         int posY,
         int[] columnWidths,
         int[] rowHeights,
-        Action<ConsoleSubgrid, int, int>? cellFunc,
+        Action<IConsoleGrid, int, int>? cellFunc,
         ConsoleChar template = default)
     {
         return DrawTable(grid, posX, posY, columnWidths, rowHeights, cellFunc, DrawStyle.StandardDrawStyle, template);
@@ -57,7 +57,7 @@ public static partial class DrawingHelper
         int posY,
         int[] columnWidths,
         int[] rowHeights,
-        Action<ConsoleSubgrid, int, int>? cellFunc,
+        Action<IConsoleGrid, int, int>? cellFunc,
         DrawStyle style,
         ConsoleChar template = default)
     {
@@ -147,7 +147,7 @@ public static partial class DrawingHelper
                 {
                     if (columnWidths[x] != 0 && rowHeights[y] != 0)
                     {
-                        ConsoleSubgrid cellGrid = grid.CreateSubgrid(posX + offsetX + 1, posY + offsetY + 1, columnWidths[x], rowHeights[y]);
+                        IConsoleGrid cellGrid = grid.CreateSubgrid(posX + offsetX + 1, posY + offsetY + 1, columnWidths[x], rowHeights[y]);
                         cellFunc(cellGrid, x, y);
                     }
 

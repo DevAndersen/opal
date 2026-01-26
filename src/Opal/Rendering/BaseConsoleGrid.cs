@@ -17,7 +17,7 @@ public abstract class BaseConsoleGrid : IConsoleGrid
         Height = height;
     }
 
-    public ConsoleSubgrid CreateSubgrid(int x, int y, int width, int height)
+    public IConsoleGrid CreateSubgrid(int x, int y, int width, int height)
     {
         return new ConsoleSubgrid(this, x, y, int.Min(width, Width - x), int.Min(height, Height - y));
     }
