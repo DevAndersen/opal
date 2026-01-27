@@ -48,6 +48,13 @@ public class ConsoleForm : ConsoleView,
 
     public virtual void HandleMouseButtonInput(MouseButtonInput mouseEvent, IConsoleState consoleState)
     {
+        foreach ((IControl control, Rect rect) in this.GetNestedChildControlAreas(consoleState.Width, consoleState.Height))
+        {
+            if (control is IMouseButtonInputHandler mouseButtonInputHandler && rect.IsCoordinateWithinRect(mouseEvent.X, mouseEvent.Y))
+            {
+                mouseButtonInputHandler.HandleMouseButtonInput(mouseEvent, consoleState);
+            }
+        }
     }
 
     public virtual void HandleMouseMoveInput(MouseMoveInput mouseEvent, IConsoleState consoleState)
@@ -116,11 +123,18 @@ public class ConsoleForm : ConsoleView,
 
     public override void Render(IConsoleGrid grid)
     {
-        foreach (IControl control in ChildControls)
+        foreach ((IControl control, Rect rect) in GetChildControlAreas(grid.Width, grid.Height))
         {
-            Rect rect = control.GetDesiredSize(grid.Width, grid.Height);
             IConsoleGrid controlSubgrid = grid.CreateSubgrid(rect.PosX, rect.PosY, rect.Width, rect.Height);
             control.Render(controlSubgrid);
+        }
+    }
+
+    public virtual IEnumerable<(IControl, Rect)> GetChildControlAreas(int width, int height)
+    {
+        foreach (IControl control in ChildControls)
+        {
+            yield return (control, control.GetDesiredSize(width, height));
         }
     }
 

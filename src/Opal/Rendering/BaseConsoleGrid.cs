@@ -1,4 +1,6 @@
-﻿namespace Opal.Rendering;
+﻿using Opal.Forms.Controls;
+
+namespace Opal.Rendering;
 
 /// <summary>
 /// Contains shared logic for console grids.
@@ -20,6 +22,11 @@ public abstract class BaseConsoleGrid : IConsoleGrid
     public IConsoleGrid CreateSubgrid(int x, int y, int width, int height)
     {
         return new ConsoleSubgrid(this, x, y, int.Min(width, Width - x), int.Min(height, Height - y));
+    }
+
+    public IConsoleGrid CreateSubgrid(Rect rect)
+    {
+        return CreateSubgrid(rect.PosX, rect.PosY, rect.Width, rect.Height);
     }
 
     /// <summary>

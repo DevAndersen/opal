@@ -1,9 +1,11 @@
 ﻿using Opal.Drawing;
+using Opal.Events;
 using Opal.Rendering;
+using Opal.Views;
 
 namespace Opal.Forms.Controls;
 
-public class Button : SelectableControl
+public class Button : SelectableControl, IMouseButtonInputHandler
 {
     public int? Width { get; set; }
 
@@ -24,5 +26,9 @@ public class Button : SelectableControl
     public override Rect GetDesiredSize(int width, int height)
     {
         return new Rect(PosX, PosY, Width ?? width, Height ?? height);
+    }
+
+    public void HandleMouseButtonInput(MouseButtonInput mouseEvent, IConsoleState consoleState)
+    {
     }
 }

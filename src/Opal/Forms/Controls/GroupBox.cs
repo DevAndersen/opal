@@ -37,10 +37,20 @@ public class GroupBox : IControl, IControlSingleParent
             ForegroundSimple = ConsoleColor.Gray
         });
 
-        if (ChildControl != null)
+        if (GetChildControlArea(width, height) is (IControl control, Rect rect))
         {
-            IConsoleGrid subgrid = grid.CreateSubgrid(2, 1, width - 4, height - 2);
-            ChildControl.Render(subgrid);
+            IConsoleGrid subgrid = grid.CreateSubgrid(rect);
+            control.Render(subgrid);
         }
+    }
+
+    public (IControl, Rect)? GetChildControlArea(int width, int height)
+    {
+        if (ChildControl == null)
+        {
+            return null;
+        }
+
+        return (ChildControl, new Rect(2, 1, width - 4, height - 2));
     }
 }

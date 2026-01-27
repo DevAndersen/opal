@@ -1,4 +1,6 @@
-﻿namespace Opal.Rendering;
+﻿using Opal.Forms.Controls;
+
+namespace Opal.Rendering;
 
 /// <summary>
 /// Represents a grid of <c><see cref="ConsoleChar"/></c>.
@@ -24,7 +26,7 @@ public interface IConsoleGrid
     ConsoleChar this[int x, int y] { get; set; }
 
     /// <summary>
-    /// Creates a new <see cref="ConsoleSubgrid"/> which represents the region of this grid bound by the other parameters.
+    /// Creates a new <see cref="IConsoleGrid"/> which represents the requested region within this grid.
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -32,6 +34,13 @@ public interface IConsoleGrid
     /// <param name="height"></param>
     /// <returns></returns>
     IConsoleGrid CreateSubgrid(int x, int y, int width, int height);
+
+    /// <summary>
+    /// Creates a new <see cref="IConsoleGrid"/> which represents the requested region within this grid.
+    /// </summary>
+    /// <param name="rect"></param>
+    /// <returns></returns>
+    IConsoleGrid CreateSubgrid(Rect rect);
 
     (int PosX, int PosY) GetAbsolutePosition();
 }
