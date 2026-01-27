@@ -254,6 +254,7 @@ public readonly struct ConsoleChar
     /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
     /// </remarks>
     /// <param name="sequence"></param>
+    /// <param name="foregroundColor"></param>
     public ConsoleChar(string sequence, ConsoleColor foregroundColor) : this(sequence)
     {
         ForegroundSimple = foregroundColor;
@@ -266,6 +267,7 @@ public readonly struct ConsoleChar
     /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
     /// </remarks>
     /// <param name="sequence"></param>
+    /// <param name="foregroundColor"></param>
     public ConsoleChar(string sequence, int foregroundColor) : this(sequence)
     {
         ForegroundRgb = foregroundColor;
@@ -278,6 +280,8 @@ public readonly struct ConsoleChar
     /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
     /// </remarks>
     /// <param name="sequence"></param>
+    /// <param name="foregroundColor"></param>
+    /// <param name="backgroundColor"></param>
     public ConsoleChar(string sequence, ConsoleColor foregroundColor, ConsoleColor backgroundColor) : this(sequence, foregroundColor)
     {
         BackgroundSimple = backgroundColor;
@@ -290,6 +294,8 @@ public readonly struct ConsoleChar
     /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
     /// </remarks>
     /// <param name="sequence"></param>
+    /// <param name="foregroundColor"></param>
+    /// <param name="backgroundColor"></param>
     public ConsoleChar(string sequence, ConsoleColor foregroundColor, int backgroundColor) : this(sequence, foregroundColor)
     {
         BackgroundRgb = backgroundColor;
@@ -302,6 +308,8 @@ public readonly struct ConsoleChar
     /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
     /// </remarks>
     /// <param name="sequence"></param>
+    /// <param name="foregroundColor"></param>
+    /// <param name="backgroundColor"></param>
     public ConsoleChar(string sequence, int foregroundColor, ConsoleColor backgroundColor) : this(sequence, foregroundColor)
     {
         BackgroundSimple = backgroundColor;
@@ -314,6 +322,8 @@ public readonly struct ConsoleChar
     /// Note: This overload is intended to be used to express Unicode characters that require multiple 16-bit <c>char</c>s, e.g. certain emoji.
     /// </remarks>
     /// <param name="sequence"></param>
+    /// <param name="foregroundColor"></param>
+    /// <param name="backgroundColor"></param>
     public ConsoleChar(string sequence, int foregroundColor, int backgroundColor) : this(sequence, foregroundColor)
     {
         BackgroundRgb = backgroundColor;
