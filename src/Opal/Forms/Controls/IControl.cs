@@ -1,5 +1,4 @@
-﻿using Opal.Rendering;
-using Opal.Views;
+﻿using Opal.Views;
 
 namespace Opal.Forms.Controls;
 
