@@ -1,7 +1,7 @@
 ﻿namespace Opal.Rendering;
 
 /// <summary>
-/// Represents either a <see cref="ConsoleColor"/> or a 24-bit RGB color.
+/// Represents either a <see cref="ConsoleColor"/> or an RGB color.
 /// </summary>
 public readonly struct Color
 {
@@ -11,10 +11,19 @@ public readonly struct Color
 
     private readonly int _value;
 
+    /// <summary>
+    /// Determines if the held value is a <see cref="ConsoleColor"/> or an RGB color.
+    /// </summary>
     public bool IsRgb => (_value & _rgbFlagMask) == _rgbFlagMask;
 
+    /// <summary>
+    /// Get the held value as a <see cref="ConsoleColor"/>.
+    /// </summary>
     public ConsoleColor ConsoleColorValue => (ConsoleColor)(_value & _consoleColorMask);
 
+    /// <summary>
+    /// Get the held value as an RGB color.
+    /// </summary>
     public int RgbValue => _value & _rgbMask;
 
     public Color(ConsoleColor value)

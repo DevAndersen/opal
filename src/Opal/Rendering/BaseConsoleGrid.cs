@@ -29,17 +29,11 @@ public abstract class BaseConsoleGrid : IConsoleGrid
         return CreateSubgrid(rect.PosX, rect.PosY, rect.Width, rect.Height);
     }
 
-    /// <summary>
-    /// Returns <c>true</c> if the coordinate (<paramref name="x"/>, <paramref name="y"/>) is a valid location within the grid. Otherwise, returns <c>false</c>.
-    /// </summary>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <returns></returns>
-    protected bool IsCoordinateWithinGrid(int x, int y)
+    public abstract (int PosX, int PosY) GetAbsolutePosition();
+
+    public bool IsCoordinateWithinGrid(int x, int y)
         => x >= 0
         && x < Width
         && y >= 0
         && y < Height;
-
-    public abstract (int PosX, int PosY) GetAbsolutePosition();
 }

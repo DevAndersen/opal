@@ -26,7 +26,7 @@ public interface IConsoleGrid
     ConsoleChar this[int x, int y] { get; set; }
 
     /// <summary>
-    /// Creates a new <see cref="IConsoleGrid"/> which represents the requested region within this grid.
+    /// Creates a new <see cref="IConsoleGrid"/> which represents the requested region within the grid.
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -36,11 +36,23 @@ public interface IConsoleGrid
     IConsoleGrid CreateSubgrid(int x, int y, int width, int height);
 
     /// <summary>
-    /// Creates a new <see cref="IConsoleGrid"/> which represents the requested region within this grid.
+    /// Creates a new <see cref="IConsoleGrid"/> which represents the requested region within the grid.
     /// </summary>
     /// <param name="rect"></param>
     /// <returns></returns>
     IConsoleGrid CreateSubgrid(Rect rect);
 
+    /// <summary>
+    /// Returns the absolute position of the grid.
+    /// </summary>
+    /// <returns></returns>
     (int PosX, int PosY) GetAbsolutePosition();
+
+    /// <summary>
+    /// Returns <c>true</c> if the coordinate (<paramref name="x"/>, <paramref name="y"/>) is a valid location within the grid. Otherwise, returns <c>false</c>.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    bool IsCoordinateWithinGrid(int x, int y);
 }
