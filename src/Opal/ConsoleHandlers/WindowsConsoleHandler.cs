@@ -10,7 +10,7 @@ namespace Opal.ConsoleHandlers;
 /// <summary>
 /// A console handler for Windows systems.
 /// </summary>
-public class WindowsConsoleHandler : CommonConsoleHandler<WindowsInputHandler>, IDisposable
+public class WindowsConsoleHandler : CommonConsoleHandler<WindowsInputHandler>
 {
     /// <summary>
     /// The console input handle.
