@@ -47,7 +47,7 @@ public class StringCacheView : ConsoleView, IKeyInputHandler
         _hasRenderedOnce = true;
     }
 
-    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
+    public async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
     }
 }

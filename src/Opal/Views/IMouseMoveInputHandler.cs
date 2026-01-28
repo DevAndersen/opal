@@ -6,5 +6,5 @@ public interface IMouseMoveInputHandler
 {
     bool AcceptsMouseMoveInput() => true;
 
-    void HandleMouseMoveInput(MouseMoveInput mouseEvent, IConsoleState consoleState);
+    Task HandleMouseMoveInputAsync(MouseMoveInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken);
 }

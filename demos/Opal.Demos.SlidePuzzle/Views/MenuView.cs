@@ -20,7 +20,7 @@ internal class MenuView : ConsoleView, IKeyInputHandler
 
     private int _tabIndex = 0;
 
-    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
+    public async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         if (keyEvent.Key is ConsoleKey.D or ConsoleKey.RightArrow)
         {

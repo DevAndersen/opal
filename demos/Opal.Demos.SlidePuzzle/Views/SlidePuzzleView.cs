@@ -44,7 +44,7 @@ internal class SlidePuzzleView : ConsoleView, IKeyInputHandler
         }
     }
 
-    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
+    public async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         switch (keyEvent.Key)
         {

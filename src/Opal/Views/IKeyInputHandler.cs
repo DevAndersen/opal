@@ -9,5 +9,5 @@ public interface IKeyInputHandler
 {
     bool AcceptsKeyInput() => true;
 
-    void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState);
+    Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken);
 }

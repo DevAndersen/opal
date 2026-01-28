@@ -19,7 +19,7 @@ public class DrawingView : ConsoleView, IKeyInputHandler
     private int _x = 0;
     private int _y = 0;
 
-    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
+    public async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         switch (keyEvent.Key)
         {

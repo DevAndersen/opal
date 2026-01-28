@@ -86,9 +86,9 @@ public class TestForm : ConsoleForm
 {
     private readonly LinkedList<IConsoleInput> _inputs = [];
 
-    public override void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
+    public override async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
-        base.HandleKeyInput(keyEvent, consoleState);
+        await base.HandleKeyInputAsync(keyEvent, consoleState, cancellationToken);
         if (keyEvent.Handled)
         {
             return;
@@ -97,9 +97,9 @@ public class TestForm : ConsoleForm
         AddInput(keyEvent);
     }
 
-    public override void HandleMouseButtonInput(MouseButtonInput mouseEvent, IConsoleState consoleState)
+    public override async Task HandleMouseButtonInputAsync(MouseButtonInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
-        base.HandleMouseButtonInput(mouseEvent, consoleState);
+        await base.HandleMouseButtonInputAsync(mouseEvent, consoleState, cancellationToken);
         if (mouseEvent.Handled)
         {
             return;
@@ -108,7 +108,7 @@ public class TestForm : ConsoleForm
         AddInput(mouseEvent);
     }
 
-    public override void HandleMouseMoveInput(MouseMoveInput mouseEvent, IConsoleState consoleState)
+    public override async Task HandleMouseMoveInputAsync(MouseMoveInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         AddInput(mouseEvent);
     }

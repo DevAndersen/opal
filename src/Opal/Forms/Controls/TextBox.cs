@@ -16,7 +16,7 @@ public class TextBox : SelectableControl, IKeyInputHandler
 
     public string Text { get; set; } = string.Empty;
 
-    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
+    public async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         if (keyEvent.Key == ConsoleKey.LeftArrow && _cursor > 0)
         {

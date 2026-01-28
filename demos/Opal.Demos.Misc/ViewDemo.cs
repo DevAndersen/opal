@@ -48,7 +48,7 @@ public class WriteView : ConsoleView, IKeyInputHandler
 {
     private string _s = string.Empty;
 
-    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
+    public async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         if (keyEvent.Key == ConsoleKey.Enter)
         {

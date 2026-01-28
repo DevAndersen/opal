@@ -6,5 +6,5 @@ public interface IMouseButtonInputHandler
 {
     bool AcceptsMouseButtonInput() => true;
 
-    void HandleMouseButtonInput(MouseButtonInput mouseEvent, IConsoleState consoleState);
+    Task HandleMouseButtonInputAsync(MouseButtonInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken);
 }

@@ -81,7 +81,7 @@ public class MatrixView : ConsoleView, IKeyInputHandler
         }
     }
 
-    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
+    public async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         if (keyEvent.Key == ConsoleKey.D1)
         {
@@ -89,7 +89,7 @@ public class MatrixView : ConsoleView, IKeyInputHandler
         }
         if (keyEvent.Key == ConsoleKey.D2)
         {
-            throw new Exception($"Test of throwing an exception from {nameof(HandleKeyInput)}");
+            throw new Exception($"Test of throwing an exception from {nameof(HandleKeyInputAsync)}");
         }
         else if (keyEvent.Key == ConsoleKey.D3)
         {

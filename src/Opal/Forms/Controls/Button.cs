@@ -28,7 +28,7 @@ public class Button : SelectableControl, IMouseButtonInputHandler
         return new Rect(PosX, PosY, Width ?? width, Height ?? height);
     }
 
-    public void HandleMouseButtonInput(MouseButtonInput mouseEvent, IConsoleState consoleState)
+    public async Task HandleMouseButtonInputAsync(MouseButtonInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
     }
 }

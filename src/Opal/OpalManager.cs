@@ -173,18 +173,18 @@ public class OpalManager : IDisposable
             // Handle input
             while (_inputQueue.TryDequeue(out IConsoleInput? input) && !state.HaltViewExecution)
             {
-                if (currentView is IKeyInputHandler keyHandler && keyHandler.AcceptsKeyInput() && input is KeyInput keyInput)
+                if (input is KeyInput keyInput && currentView is IKeyInputHandler keyHandler && keyHandler.AcceptsKeyInput())
                 {
-                    keyHandler.HandleKeyInput(keyInput, state);
+                    await keyHandler.HandleKeyInputAsync(keyInput, state, cancellationToken);
                     _previousKeyInput = keyInput;
                 }
-                else if (currentView is IMouseButtonInputHandler mouseButtonHandler && mouseButtonHandler.AcceptsMouseButtonInput() && input is MouseButtonInput mouseButtonInput)
+                else if (input is MouseButtonInput mouseButtonInput && currentView is IMouseButtonInputHandler mouseButtonHandler && mouseButtonHandler.AcceptsMouseButtonInput())
                 {
-                    mouseButtonHandler.HandleMouseButtonInput(mouseButtonInput, state);
+                    await mouseButtonHandler.HandleMouseButtonInputAsync(mouseButtonInput, state, cancellationToken);
                 }
-                else if (currentView is IMouseMoveInputHandler mouseMoveHandler && mouseMoveHandler.AcceptsMouseMoveInput() && input is MouseMoveInput mouseMoveInput)
+                else if (input is MouseMoveInput mouseMoveInput && currentView is IMouseMoveInputHandler mouseMoveHandler && mouseMoveHandler.AcceptsMouseMoveInput())
                 {
-                    mouseMoveHandler.HandleMouseMoveInput(mouseMoveInput, state);
+                    await mouseMoveHandler.HandleMouseMoveInputAsync(mouseMoveInput, state, cancellationToken);
                 }
             }
 

@@ -26,7 +26,7 @@ public class ConsoleForm : ConsoleView,
         _controls.CollectionChanged += OnControlsChange;
     }
 
-    public virtual void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
+    public virtual async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         if (keyEvent.Key == ConsoleKey.Tab)
         {
@@ -42,22 +42,22 @@ public class ConsoleForm : ConsoleView,
         }
         else if (Selected is IKeyInputHandler selectedKeyInputHandler)
         {
-            selectedKeyInputHandler.HandleKeyInput(keyEvent, consoleState);
+            await selectedKeyInputHandler.HandleKeyInputAsync(keyEvent, consoleState, cancellationToken);
         }
     }
 
-    public virtual void HandleMouseButtonInput(MouseButtonInput mouseEvent, IConsoleState consoleState)
+    public virtual async Task HandleMouseButtonInputAsync(MouseButtonInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         foreach ((IControl control, Rect rect) in this.GetNestedChildControlAreas(consoleState.Width, consoleState.Height))
         {
             if (control is IMouseButtonInputHandler mouseButtonInputHandler && rect.IsCoordinateWithinRect(mouseEvent.X, mouseEvent.Y))
             {
-                mouseButtonInputHandler.HandleMouseButtonInput(mouseEvent, consoleState);
+                await mouseButtonInputHandler.HandleMouseButtonInputAsync(mouseEvent, consoleState, cancellationToken);
             }
         }
     }
 
-    public virtual void HandleMouseMoveInput(MouseMoveInput mouseEvent, IConsoleState consoleState)
+    public virtual async Task HandleMouseMoveInputAsync(MouseMoveInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
     }
 

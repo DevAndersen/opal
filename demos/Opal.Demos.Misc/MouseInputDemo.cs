@@ -41,7 +41,7 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseMoveInput
         }
     }
 
-    public void HandleKeyInput(KeyInput keyEvent, IConsoleState consoleState)
+    public async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         if (keyEvent.Key == ConsoleKey.Escape)
         {
@@ -49,7 +49,7 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseMoveInput
         }
     }
 
-    public void HandleMouseMoveInput(MouseMoveInput mouseEvent, IConsoleState consoleState)
+    public async Task HandleMouseMoveInputAsync(MouseMoveInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         _posX = mouseEvent.X;
         _posY = mouseEvent.Y;
