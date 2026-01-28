@@ -50,9 +50,36 @@ public class ConsoleForm : ConsoleView,
     {
         foreach ((IControl control, Rect rect) in this.GetNestedChildControlAreas(consoleState.Width, consoleState.Height))
         {
-            if (control is IMouseButtonInputHandler mouseButtonInputHandler && rect.IsCoordinateWithinRect(mouseEvent.X, mouseEvent.Y))
+            if (!rect.IsCoordinateWithinRect(mouseEvent.X, mouseEvent.Y))
+            {
+                continue;
+            }
+
+            if (control is IMouseButtonInputHandler mouseButtonInputHandler)
             {
                 await mouseButtonInputHandler.HandleMouseButtonInputAsync(mouseEvent, consoleState, cancellationToken);
+            }
+            
+            if (control is IMouseButtonControl mouseButtonControl)
+            {
+                if (mouseEvent.IsPressed)
+                {
+                    mouseButtonControl.OnMouseDown?.Invoke(mouseEvent);
+
+                    if (mouseButtonControl.OnMouseDownAsync != null)
+                    {
+                        await mouseButtonControl.OnMouseDownAsync.Invoke(mouseEvent, cancellationToken);
+                    }
+                }
+                else
+                {
+                    mouseButtonControl.OnMouseUp?.Invoke(mouseEvent);
+
+                    if (mouseButtonControl.OnMouseUpAsync != null)
+                    {
+                        await mouseButtonControl.OnMouseUpAsync.Invoke(mouseEvent, cancellationToken);
+                    }
+                }
             }
         }
     }

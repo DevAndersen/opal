@@ -75,7 +75,11 @@ form.ChildControls.Add(new GroupBox
     Text = "GroupBox",
     ChildControl = new Button
     {
-        Text = "Btn"
+        Text = "Btn",
+        OnMouseDown = _ =>
+        {
+            
+        }
     }
 });
 
