@@ -22,6 +22,11 @@ public class UnixInputHandler : IInputHandler
 
     public IConsoleInput? GetInput()
     {
+        if (!Console.KeyAvailable)
+        {
+            return null;
+        }
+        
         ConsoleKeyInfo input = Console.ReadKey(true);
         if (input.KeyChar != '\e')
         {
