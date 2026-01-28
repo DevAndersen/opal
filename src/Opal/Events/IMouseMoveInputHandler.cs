@@ -1,6 +1,6 @@
-﻿using Opal.Events;
+﻿using Opal.Views;
 
-namespace Opal.Views;
+namespace Opal.Events;
 
 public interface IMouseMoveInputHandler
 {
