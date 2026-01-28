@@ -126,10 +126,6 @@ public class OpalManager : IDisposable
 
             await RunAsync(view, runCancellationTokenSource.Token);
         }
-        catch
-        {
-            throw;
-        }
         finally
         {
             Stop();
