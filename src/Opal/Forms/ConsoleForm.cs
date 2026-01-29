@@ -55,31 +55,45 @@ public class ConsoleForm : ConsoleView,
                 continue;
             }
 
+            // Create a copy of the event, with coordinates relative to the clicked control.
+            MouseButtonInput relativeEvent = mouseEvent with
+            {
+                X = mouseEvent.X - rect.PosX,
+                Y = mouseEvent.Y - rect.PosY
+            };
+
             if (control is IMouseButtonInputHandler mouseButtonInputHandler)
             {
-                await mouseButtonInputHandler.HandleMouseButtonInputAsync(mouseEvent, consoleState, cancellationToken);
+                await mouseButtonInputHandler.HandleMouseButtonInputAsync(relativeEvent, consoleState, cancellationToken);
             }
 
-            if (control is IMouseButtonControl mouseButtonControl)
+            if (!relativeEvent.Handled && control is IMouseButtonControl mouseButtonControl)
             {
-                if (mouseEvent.IsPressed)
+                if (relativeEvent.IsPressed)
                 {
-                    mouseButtonControl.OnMouseDown?.Invoke(mouseEvent);
+                    mouseButtonControl.OnMouseDown?.Invoke(relativeEvent);
 
-                    if (mouseButtonControl.OnMouseDownAsync != null)
+                    if (!relativeEvent.Handled && mouseButtonControl.OnMouseDownAsync != null)
                     {
-                        await mouseButtonControl.OnMouseDownAsync.Invoke(mouseEvent, cancellationToken);
+                        await mouseButtonControl.OnMouseDownAsync.Invoke(relativeEvent, cancellationToken);
                     }
                 }
                 else
                 {
-                    mouseButtonControl.OnMouseUp?.Invoke(mouseEvent);
+                    mouseButtonControl.OnMouseUp?.Invoke(relativeEvent);
 
-                    if (mouseButtonControl.OnMouseUpAsync != null)
+                    if (!relativeEvent.Handled && mouseButtonControl.OnMouseUpAsync != null)
                     {
-                        await mouseButtonControl.OnMouseUpAsync.Invoke(mouseEvent, cancellationToken);
+                        await mouseButtonControl.OnMouseUpAsync.Invoke(relativeEvent, cancellationToken);
                     }
                 }
+            }
+
+            // If the relative event has been mark as handled, mark the input event as handled and return.
+            if (relativeEvent.Handled)
+            {
+                mouseEvent.Handled = true;
+                return;
             }
         }
     }
