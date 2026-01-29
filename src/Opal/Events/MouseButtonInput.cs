@@ -1,9 +1,10 @@
 ﻿namespace Opal.Events;
 
 /// <summary>
-///Represents a mouse button input.
+/// Represents a mouse button input.
 /// </summary>
 /// <param name="Button">The mouse button being pressed or released.</param>
+/// <param name="IsPressed">The state of <paramref name="Button"/>.</param>
 /// <param name="PressedButtons">All mouse buttons currently pressed down.</param>
 /// <param name="Modifiers"></param>
 /// <param name="X">The X coordinate of the input.</param>
