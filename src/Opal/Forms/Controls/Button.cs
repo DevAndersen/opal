@@ -13,13 +13,13 @@ public class Button : SelectableControl, IMouseButtonControl
     public string? Text { get; set; }
 
     public Action<MouseButtonInput>? OnMouseDown { get; set; }
-    
+
     public Func<MouseButtonInput, CancellationToken, Task>? OnMouseDownAsync { get; set; }
-    
+
     public Action<MouseButtonInput>? OnMouseUp { get; set; }
-    
+
     public Func<MouseButtonInput, CancellationToken, Task>? OnMouseUpAsync { get; set; }
-    
+
     public override void Render(IConsoleGrid grid)
     {
         grid.DrawBox(0, 0, Width ?? grid.Width, Height ?? grid.Height, DrawStyle.RoundedDrawStyle, new ConsoleChar

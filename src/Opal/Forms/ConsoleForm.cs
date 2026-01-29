@@ -59,7 +59,7 @@ public class ConsoleForm : ConsoleView,
             {
                 await mouseButtonInputHandler.HandleMouseButtonInputAsync(mouseEvent, consoleState, cancellationToken);
             }
-            
+
             if (control is IMouseButtonControl mouseButtonControl)
             {
                 if (mouseEvent.IsPressed)

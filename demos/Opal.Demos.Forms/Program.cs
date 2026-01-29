@@ -78,7 +78,7 @@ form.ChildControls.Add(new GroupBox
         Text = "Btn",
         OnMouseDown = _ =>
         {
-            
+
         }
     }
 });
