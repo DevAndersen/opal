@@ -16,7 +16,7 @@ public class Button : SelectableControl, IMouseButtonControl, IKeyControl
 
     public ConsoleEventHandler<MouseButtonInput> OnMouseUp => OnClick;
 
-    public ConsoleEventHandler<KeyInput> OnKeyDown => OnClick;
+    public ConsoleEventHandler<KeyInput> OnKeyDown => (OnClick, keyInput => keyInput.Key == ConsoleKey.Enter);
 
     public ConsoleEventHandler OnClick { get; set; }
 

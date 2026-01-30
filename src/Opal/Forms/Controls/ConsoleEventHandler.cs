@@ -188,7 +188,7 @@ public struct ConsoleEventHandler<T>
     }
 
     /// <summary>
-    /// Returns a new <see cref="ConsoleEventHandler{T}"/> that wraps <paramref name="handler"/>.
+    /// Returns a new <see cref="ConsoleEventHandler{T}"/> that invokes <paramref name="handler"/> when invoked.
     /// </summary>
     /// <remarks>
     /// When invoked, the <typeparamref name="T"/> argument will not be passed to <paramref name="handler"/>.
@@ -199,6 +199,25 @@ public struct ConsoleEventHandler<T>
         return new ConsoleEventHandler<T>(async (_, cancellationToken) =>
         {
             await handler.InvokeAsync(cancellationToken);
+        });
+    }
+
+    /// <summary>
+    /// Returns a new <see cref="ConsoleEventHandler{T}"/> that invokes <paramref name="input.Handler"/> when invoked
+    /// if <paramref name="input.Predicate"/> is <c>true</c>.
+    /// </summary>
+    /// <remarks>
+    /// When invoked, the <typeparamref name="T"/> argument will not be passed to <paramref name="handler"/>.
+    /// </remarks>
+    /// <param name="input"></param>
+    public static implicit operator ConsoleEventHandler<T>((ConsoleEventHandler<T> Handler, Predicate<T> Predicate) input)
+    {
+        return new ConsoleEventHandler<T>(async (value, cancellationToken) =>
+        {
+            if (input.Predicate(value))
+            {
+                await input.Handler.InvokeAsync(value, cancellationToken);
+            }
         });
     }
 }
