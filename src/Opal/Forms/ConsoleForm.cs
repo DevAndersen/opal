@@ -119,6 +119,53 @@ public class ConsoleForm : ConsoleView,
 
     public virtual async Task HandleMouseMoveInputAsync(MouseMoveInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        foreach ((IControl control, Rect rect) in this.GetNestedChildControlAreas(consoleState.Width, consoleState.Height))
+        {
+            bool isHovering = rect.IsCoordinateWithinRect(mouseEvent.X, mouseEvent.Y);
+
+            // Create a copy of the event, with coordinates relative to the hovered control.
+            MouseMoveInput relativeEvent = mouseEvent with
+            {
+                X = mouseEvent.X - rect.PosX,
+                Y = mouseEvent.Y - rect.PosY
+            };
+
+            if (isHovering && control is IMouseMoveInputHandler mouseMoveInputHandler)
+            {
+                await mouseMoveInputHandler.HandleMouseMoveInputAsync(relativeEvent, consoleState, cancellationToken);
+            }
+
+            if (!relativeEvent.Handled && control is IMouseHoverControl mouseHoverControl)
+            {
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        if (isHovering && !mouseHoverControl.IsHovered)
+                        {
+                            mouseHoverControl.IsHovered = true;
+                            await mouseHoverControl.OnMouseEnter.InvokeAsync(relativeEvent, cancellationToken);
+                        }
+                        else if (!isHovering && mouseHoverControl.IsHovered)
+                        {
+                            mouseHoverControl.IsHovered = false;
+                            await mouseHoverControl.OnMouseLeave.InvokeAsync(relativeEvent, cancellationToken);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        consoleState.Exit(e);
+                    }
+                }, cancellationToken);
+            }
+
+            // If the relative event has been mark as handled, mark the input event as handled and return.
+            if (relativeEvent.Handled)
+            {
+                mouseEvent.Handled = true;
+                return;
+            }
+        }
     }
 
     public void SelectControl(ISelectable newSelected)

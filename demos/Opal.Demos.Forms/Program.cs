@@ -116,6 +116,12 @@ public class TestForm : ConsoleForm
 
     public override async Task HandleMouseMoveInputAsync(MouseMoveInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        await base.HandleMouseMoveInputAsync(mouseEvent, consoleState, cancellationToken);
+        if (mouseEvent.Handled)
+        {
+            return;
+        }
+
         AddInput(mouseEvent);
     }
 
