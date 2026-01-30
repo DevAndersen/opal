@@ -158,7 +158,10 @@ public class OpalManager : IDisposable
     {
         _viewStack.Push(initialView);
 
-        ConsoleState state = new ConsoleState();
+        ConsoleState state = new ConsoleState
+        {
+            CrashAction = Stop
+        };
 
         while (IsRunning && !cancellationToken.IsCancellationRequested && _viewStack.TryPeek(out IBaseConsoleView? currentView))
         {

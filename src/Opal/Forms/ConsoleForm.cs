@@ -71,21 +71,31 @@ public class ConsoleForm : ConsoleView,
             {
                 if (relativeEvent.IsPressed)
                 {
-                    mouseButtonControl.OnMouseDown?.Invoke(relativeEvent);
-
-                    if (!relativeEvent.Handled && mouseButtonControl.OnMouseDownAsync != null)
+                    _ = Task.Run(async () =>
                     {
-                        await mouseButtonControl.OnMouseDownAsync.Invoke(relativeEvent, cancellationToken);
-                    }
+                        try
+                        {
+                            await mouseButtonControl.OnMouseDown.InvokeAsync(relativeEvent, cancellationToken);
+                        }
+                        catch (Exception e)
+                        {
+                            consoleState.Exit(e);
+                        }
+                    }, cancellationToken);
                 }
                 else
                 {
-                    mouseButtonControl.OnMouseUp?.Invoke(relativeEvent);
-
-                    if (!relativeEvent.Handled && mouseButtonControl.OnMouseUpAsync != null)
+                    _ = Task.Run(async () =>
                     {
-                        await mouseButtonControl.OnMouseUpAsync.Invoke(relativeEvent, cancellationToken);
-                    }
+                        try
+                        {
+                            await mouseButtonControl.OnMouseUp.InvokeAsync(relativeEvent, cancellationToken);
+                        }
+                        catch (Exception e)
+                        {
+                            consoleState.Exit(e);
+                        }
+                    }, cancellationToken);
                 }
             }
 

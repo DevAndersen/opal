@@ -16,6 +16,8 @@ internal class ConsoleState : IConsoleState
              || HasExitViewBeenRequested
              || HasExitBeenRequested;
 
+    internal required Action<Exception> CrashAction { get; init; }
+
     internal void Reset(int height, int width)
     {
         Height = height;
@@ -42,5 +44,10 @@ internal class ConsoleState : IConsoleState
     public void Exit()
     {
         HasExitBeenRequested = true;
+    }
+
+    public void Exit(Exception e)
+    {
+        CrashAction(e);
     }
 }

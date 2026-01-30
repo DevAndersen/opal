@@ -33,4 +33,10 @@ public interface IConsoleState
     /// Exit Opal.
     /// </summary>
     void Exit();
+
+    /// <summary>
+    /// Exit Opal gracefully, and then rethrow <paramref name="e"/>.
+    /// </summary>
+    /// <param name="e"></param>
+    void Exit(Exception e);
 }

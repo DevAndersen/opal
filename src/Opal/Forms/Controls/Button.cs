@@ -12,13 +12,11 @@ public class Button : SelectableControl, IMouseButtonControl
 
     public string? Text { get; set; }
 
-    public Action<MouseButtonInput>? OnMouseDown { get; set; }
+    public ConsoleEventHandler<MouseButtonInput> OnMouseDown => OnClick;
 
-    public Func<MouseButtonInput, CancellationToken, Task>? OnMouseDownAsync { get; set; }
+    public ConsoleEventHandler<MouseButtonInput> OnMouseUp { get; }
 
-    public Action<MouseButtonInput>? OnMouseUp { get; set; }
-
-    public Func<MouseButtonInput, CancellationToken, Task>? OnMouseUpAsync { get; set; }
+    public ConsoleEventHandler<MouseButtonInput> OnClick { get; set; }
 
     public override void Render(IConsoleGrid grid)
     {

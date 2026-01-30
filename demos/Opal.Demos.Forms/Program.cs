@@ -76,10 +76,10 @@ form.ChildControls.Add(new GroupBox
     ChildControl = new Button
     {
         Text = "Btn",
-        OnMouseDown = _ =>
+        OnClick = new(async (a, c) =>
         {
-
-        }
+            throw new Exception("This is a test");
+        })
     }
 });
 
