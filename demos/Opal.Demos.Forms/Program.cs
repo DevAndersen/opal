@@ -76,7 +76,7 @@ form.ChildControls.Add(new GroupBox
     ChildControl = new Button
     {
         Text = "Btn",
-        OnClick = new(async (a, c) =>
+        OnClick = new(async cancellationToken =>
         {
             throw new Exception("This is a test");
         })

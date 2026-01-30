@@ -4,7 +4,7 @@ using Opal.Rendering;
 
 namespace Opal.Forms.Controls;
 
-public class Button : SelectableControl, IMouseButtonControl
+public class Button : SelectableControl, IMouseButtonControl, IKeyControl
 {
     public int? Width { get; set; }
 
@@ -14,9 +14,11 @@ public class Button : SelectableControl, IMouseButtonControl
 
     public ConsoleEventHandler<MouseButtonInput> OnMouseDown => OnClick;
 
-    public ConsoleEventHandler<MouseButtonInput> OnMouseUp { get; }
+    public ConsoleEventHandler<MouseButtonInput> OnMouseUp => OnClick;
 
-    public ConsoleEventHandler<MouseButtonInput> OnClick { get; set; }
+    public ConsoleEventHandler<KeyInput> OnKeyDown => OnClick;
+
+    public ConsoleEventHandler OnClick { get; set; }
 
     public override void Render(IConsoleGrid grid)
     {

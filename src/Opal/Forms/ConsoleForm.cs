@@ -39,10 +39,27 @@ public class ConsoleForm : ConsoleView,
                 SelectNext();
             }
             keyEvent.Handled = true;
+            return;
         }
-        else if (Selected is IKeyInputHandler selectedKeyInputHandler)
+
+        if (Selected is IKeyInputHandler selectedKeyInputHandler)
         {
             await selectedKeyInputHandler.HandleKeyInputAsync(keyEvent, consoleState, cancellationToken);
+        }
+
+        if (Selected is IKeyControl keyControl)
+        {
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await keyControl.OnKeyDown.InvokeAsync(keyEvent, cancellationToken);
+                }
+                catch (Exception e)
+                {
+                    consoleState.Exit(e);
+                }
+            }, cancellationToken);
         }
     }
 

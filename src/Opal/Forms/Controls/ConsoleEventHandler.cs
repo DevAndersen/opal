@@ -1,4 +1,6 @@
-﻿namespace Opal.Forms.Controls;
+﻿using Opal.Events;
+
+namespace Opal.Forms.Controls;
 
 /// <summary>
 /// Stores synchronous and asynchronous event listeners for an event with no arguments.
@@ -14,6 +16,16 @@ public struct ConsoleEventHandler
     /// The registered asynchronous event listeners.
     /// </summary>
     private Func<CancellationToken, Task>? _func;
+
+    public ConsoleEventHandler(Action action)
+    {
+        _action += action;
+    }
+
+    public ConsoleEventHandler(Func<CancellationToken, Task> func)
+    {
+        _func += func;
+    }
 
     /// <summary>
     /// Invoke the registered event listeners.
@@ -173,5 +185,20 @@ public struct ConsoleEventHandler<T>
     {
         handler._func -= func;
         return handler;
+    }
+
+    /// <summary>
+    /// Returns a new <see cref="ConsoleEventHandler{T}"/> that wraps <paramref name="handler"/>.
+    /// </summary>
+    /// <remarks>
+    /// When invoked, the <typeparamref name="T"/> argument will not be passed to <paramref name="handler"/>.
+    /// </remarks>
+    /// <param name="handler"></param>
+    public static implicit operator ConsoleEventHandler<T>(ConsoleEventHandler handler)
+    {
+        return new ConsoleEventHandler<T>(async (_, cancellationToken) =>
+        {
+            await handler.InvokeAsync(cancellationToken);
+        });
     }
 }
