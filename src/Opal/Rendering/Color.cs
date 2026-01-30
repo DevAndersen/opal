@@ -45,4 +45,8 @@ public readonly struct Color
     {
         return new Color(color);
     }
+
+    public static implicit operator Color(ConsoleColor consoleColor) => new Color(consoleColor);
+
+    public static implicit operator Color(int rgb) => new Color(rgb);
 }
