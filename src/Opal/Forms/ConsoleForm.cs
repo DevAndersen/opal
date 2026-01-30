@@ -86,34 +86,24 @@ public class ConsoleForm : ConsoleView,
 
             if (!relativeEvent.Handled && control is IMouseButtonControl mouseButtonControl)
             {
-                if (relativeEvent.IsPressed)
+                _ = Task.Run(async () =>
                 {
-                    _ = Task.Run(async () =>
+                    try
                     {
-                        try
+                        if (relativeEvent.IsPressed)
                         {
                             await mouseButtonControl.OnMouseDown.InvokeAsync(relativeEvent, cancellationToken);
                         }
-                        catch (Exception e)
-                        {
-                            consoleState.Exit(e);
-                        }
-                    }, cancellationToken);
-                }
-                else
-                {
-                    _ = Task.Run(async () =>
-                    {
-                        try
+                        else
                         {
                             await mouseButtonControl.OnMouseUp.InvokeAsync(relativeEvent, cancellationToken);
                         }
-                        catch (Exception e)
-                        {
-                            consoleState.Exit(e);
-                        }
-                    }, cancellationToken);
-                }
+                    }
+                    catch (Exception e)
+                    {
+                        consoleState.Exit(e);
+                    }
+                }, cancellationToken);
 
                 relativeEvent.Handled = true;
             }
