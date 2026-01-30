@@ -114,6 +114,8 @@ public class ConsoleForm : ConsoleView,
                         }
                     }, cancellationToken);
                 }
+
+                relativeEvent.Handled = true;
             }
 
             // If the relative event has been mark as handled, mark the input event as handled and return.
