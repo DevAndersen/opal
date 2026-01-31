@@ -4,7 +4,7 @@ using Opal.Rendering;
 
 namespace Opal.Forms.Controls;
 
-public class Button : SelectableControl, IMouseButtonControl, IKeyControl
+public class Button : SelectableControl, IMouseButtonControl, IKeyControl, IMouseHoverControl
 {
     public int? Width { get; set; }
 
@@ -18,26 +18,32 @@ public class Button : SelectableControl, IMouseButtonControl, IKeyControl
 
     public ConsoleEventHandler<KeyInput> OnKeyDown => (OnClick, keyInput => keyInput.Key == ConsoleKey.Enter);
 
+    public ConsoleEventHandler<MouseMoveInput> OnMouseEnter { get; set; }
+
+    public ConsoleEventHandler<MouseMoveInput> OnMouseLeave { get; set; }
+
     public ConsoleEventHandler OnClick { get; set; }
 
-    public Color BorderColorUnselected { get; set; } = ConsoleColor.DarkGray;
+    public bool IsHovered { get; set; }
 
-    public Color BorderColorSelected { get; set; } = ConsoleColor.White;
+    public Color BorderColor { get; set; } = ConsoleColor.DarkGray;
 
-    public Color TextColorSelected { get; set; } = ConsoleColor.White;
+    public Color BorderColorHighlight { get; set; } = ConsoleColor.White;
 
-    public Color TextColorUnselected { get; set; } = ConsoleColor.White;
+    public Color TextColor { get; set; } = ConsoleColor.White;
+
+    public Color TextColorHighlight { get; set; } = ConsoleColor.White;
 
     public override void Render(IConsoleGrid grid)
     {
         grid.DrawBox(0, 0, Width ?? grid.Width, Height ?? grid.Height, DrawStyle.RoundedDrawStyle, new ConsoleChar
         {
-            ForegroundColor = IsSelected ? BorderColorSelected : BorderColorUnselected
+            ForegroundColor = IsSelected || IsHovered ? BorderColorHighlight : BorderColor
         });
 
         grid.DrawString(1, 1, Text, new ConsoleChar
         {
-            ForegroundColor = IsSelected ? TextColorSelected : TextColorUnselected
+            ForegroundColor = IsSelected || IsHovered? TextColorHighlight : TextColor
         });
     }
 

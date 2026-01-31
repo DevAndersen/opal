@@ -76,8 +76,8 @@ form.ChildControls.Add(new GroupBox
     ChildControl = new Button
     {
         Text = "Btn",
-        BorderColorUnselected = ConsoleColor.DarkRed,
-        BorderColorSelected = ConsoleColor.Red,
+        BorderColor = ConsoleColor.DarkRed,
+        BorderColorHighlight = ConsoleColor.Red,
         OnClick = new(async cancellationToken =>
         {
             throw new Exception("This is a test");
