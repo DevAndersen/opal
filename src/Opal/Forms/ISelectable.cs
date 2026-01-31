@@ -1,10 +1,15 @@
-﻿namespace Opal.Forms;
+﻿using Opal.Events;
+using Opal.Forms.Controls;
+
+namespace Opal.Forms;
 
 public interface ISelectable
 {
     int? Index { get; set; }
 
-    bool IsSelected { get; }
+    bool IsSelected { get; set; }
 
-    void SelectionChange(bool isSelected);
+    ConsoleEventHandler OnSelect { get; }
+
+    ConsoleEventHandler OnUnselect { get; }
 }

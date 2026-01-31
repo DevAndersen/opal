@@ -1,6 +1,4 @@
-﻿using Opal.Events;
-
-namespace Opal.Forms.Controls;
+﻿namespace Opal.Forms.Controls;
 
 /// <summary>
 /// Stores synchronous and asynchronous event listeners for an event with no arguments.

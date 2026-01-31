@@ -32,11 +32,11 @@ public class ConsoleForm : ConsoleView,
         {
             if (keyEvent.Modifiers == ConsoleModifiers.Shift)
             {
-                SelectPrevious();
+                await SelectPreviousAsync(cancellationToken);
             }
             else
             {
-                SelectNext();
+                await SelectNextAsync(cancellationToken);
             }
             keyEvent.Handled = true;
             return;
@@ -82,6 +82,11 @@ public class ConsoleForm : ConsoleView,
             if (control is IMouseButtonInputHandler mouseButtonInputHandler)
             {
                 await mouseButtonInputHandler.HandleMouseButtonInputAsync(relativeEvent, consoleState, cancellationToken);
+            }
+
+            if (!relativeEvent.Handled && control is ISelectable selectable)
+            {
+                await SelectControlAsync(selectable, cancellationToken);
             }
 
             if (!relativeEvent.Handled && control is IMouseButtonControl mouseButtonControl)
@@ -168,30 +173,40 @@ public class ConsoleForm : ConsoleView,
         }
     }
 
-    public void SelectControl(ISelectable newSelected)
+    public async Task SelectControlAsync(ISelectable newSelected, CancellationToken cancellationToken)
     {
-        Selected?.SelectionChange(false);
-        newSelected.SelectionChange(true);
+        if (Selected?.OnUnselect != null)
+        {
+            Selected.IsSelected = false;
+            await Selected.OnUnselect.InvokeAsync(cancellationToken);
+        }
+
+        newSelected.IsSelected = true;
+        await newSelected.OnSelect.InvokeAsync(cancellationToken);
+
         Selected = newSelected;
     }
 
-    public virtual bool SelectNext()
+    public virtual async Task<bool> SelectNextAsync(CancellationToken cancellationToken)
     {
-        return SelectDirectional(
+        return await SelectDirectionalAsync(
             (currentIndex, length) => currentIndex == length - 1 ? 0 : currentIndex + 1,
-            x => x.FirstOrDefault());
+            x => x.FirstOrDefault(),
+            cancellationToken);
     }
 
-    public virtual bool SelectPrevious()
+    public virtual async Task<bool> SelectPreviousAsync(CancellationToken cancellationToken)
     {
-        return SelectDirectional(
+        return await SelectDirectionalAsync(
             (currentIndex, length) => currentIndex == 0 ? length - 1 : currentIndex - 1,
-            x => x.LastOrDefault());
+            x => x.LastOrDefault(),
+            cancellationToken);
     }
 
-    private bool SelectDirectional(
+    private async Task<bool> SelectDirectionalAsync(
         Func<int, int, int> nextIndexFunc,
-        Func<IEnumerable<(int Index, ISelectable Item)>, (int Index, ISelectable Item)> initialSelectFunc)
+        Func<IEnumerable<(int Index, ISelectable Item)>, (int Index, ISelectable Item)> initialSelectFunc,
+        CancellationToken cancellationToken)
     {
         // Enumerable over all selectables, grouped with their index, ordered by [not null -> specified index -> implicit index].
         IEnumerable<(int Index, ISelectable Item)> selectables = this.GetNestedControls()
@@ -215,14 +230,14 @@ public class ConsoleForm : ConsoleView,
             int currentIndex = Array.FindIndex(selectablesArray, x => x.Item == Selected);
             int nextIndex = nextIndexFunc(currentIndex, selectablesArray.Length);
 
-            SelectControl(selectablesArray[nextIndex].Item);
+            await SelectControlAsync(selectablesArray[nextIndex].Item, cancellationToken);
 
             return true;
         }
         else if (initialSelectFunc(selectables).Item is { } initialSelectable)
         {
             // If there is no current selection, select the initial selectable.
-            SelectControl(initialSelectable);
+            await SelectControlAsync(initialSelectable, cancellationToken);
             return true;
         }
         return false;
