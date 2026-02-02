@@ -300,7 +300,10 @@ public class ConsoleForm : ConsoleView,
 
     public override void Render(IConsoleGrid grid)
     {
-        foreach ((IControl control, Rect rect) in GetChildControlAreas(grid.Width, grid.Height))
+        IOrderedEnumerable<(IControl, Rect)> controlRects = GetChildControlAreas(grid.Width, grid.Height)
+            .OrderBy(x => x.Item1 == DraggedControl); // Dragged control appears on top.
+
+        foreach ((IControl control, Rect rect) in controlRects)
         {
             IConsoleGrid controlSubgrid = grid.CreateSubgrid(rect.PosX, rect.PosY, rect.Width, rect.Height);
             control.Render(controlSubgrid);
