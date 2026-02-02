@@ -67,23 +67,29 @@ form.ChildControls.Add(
     });
 
 form.ChildControls.Add(new GroupBox
-{
-    PosX = 80,
-    PosY = 2,
-    Width = 20,
-    Height = 8,
-    Text = "GroupBox",
-    ChildControl = new Button
     {
-        Text = "Btn",
-        BorderColor = ConsoleColor.DarkRed,
-        BorderColorHighlight = ConsoleColor.Red,
-        OnClick = new(async cancellationToken =>
+        PosX = 80,
+        PosY = 2,
+        Width = 20,
+        Height = 8,
+        Text = "GroupBox",
+        ChildControl = new Button
         {
-            throw new Exception("This is a test");
-        })
-    }
-});
+            Text = "Btn",
+            BorderColor = ConsoleColor.DarkRed,
+            BorderColorHighlight = ConsoleColor.Red,
+            OnClick = new(async cancellationToken =>
+            {
+                throw new Exception("This is a test");
+            })
+        }
+    });
+
+form.ChildControls.Add(new DragBox
+    {
+        PosX = 30,
+        PosY = 0,
+    });
 
 OpalManager manager = new OpalManager();
 await manager.StartAsync(form);
@@ -158,5 +164,44 @@ public class TestForm : ConsoleForm
     public override bool PreventCancellationRequest()
     {
         return false;
+    }
+}
+
+public class DragBox : IControl, IDragControl
+{
+    public int PosX { get; set; }
+
+    public int PosY { get; set; }
+
+    public ConsoleEventHandler<DragInput> OnDragStart { get; }
+
+    public ConsoleEventHandler<DragInput> OnDragMove { get; }
+
+    public ConsoleEventHandler<DragInput> OnDragStop { get; }
+
+    private bool _isDragged;
+
+    public DragBox()
+    {
+        OnDragMove += Move;
+        OnDragStart += _ => _isDragged = true;
+        OnDragStop += _ => _isDragged = false;
+    }
+
+    public Rect GetDesiredSize(int width, int height)
+    {
+        return new Rect(PosX, PosY, 9, 3);
+    }
+
+    public void Render(IConsoleGrid grid)
+    {
+        grid.DrawBox(0, 0, grid.Width, grid.Height, new ConsoleChar { ForegroundSimple = _isDragged ? ConsoleColor.Green : default });
+        grid.DrawString(1, 1, "Drag me");
+    }
+
+    private void Move(DragInput input)
+    {
+        PosX = input.X - input.DragStartX;
+        PosY = input.Y - input.DragStartY;
     }
 }

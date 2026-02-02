@@ -21,6 +21,11 @@ public class ConsoleForm : ConsoleView,
 
     public ISelectable? Selected { get; protected set; }
 
+    public IDragControl? DraggedControl { get; protected set; }
+
+    private int _dragStartRelativeX;
+    private int _dragStartRelativeY;
+
     public override void Initialize()
     {
         _controls.CollectionChanged += OnControlsChange;
@@ -65,6 +70,24 @@ public class ConsoleForm : ConsoleView,
 
     public virtual async Task HandleMouseButtonInputAsync(MouseButtonInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        // Detect drag stop.
+        if (DraggedControl != null && !mouseEvent.PressedButtons.HasFlag(MouseButtons.LeftButton))
+        {
+            DragInput dragInput = new DragInput(
+                mouseEvent.PressedButtons,
+                mouseEvent.Modifiers,
+                mouseEvent.X,
+                mouseEvent.Y,
+                _dragStartRelativeX,
+                _dragStartRelativeY);
+
+            await DraggedControl.OnDragStop.InvokeAsync(dragInput, cancellationToken);
+
+            DraggedControl = null;
+            _dragStartRelativeX = default;
+            _dragStartRelativeY = default;
+        }
+
         foreach ((IControl control, Rect rect) in this.GetNestedChildControlAreas(consoleState.Width, consoleState.Height))
         {
             if (!rect.IsCoordinateWithinRect(mouseEvent.X, mouseEvent.Y))
@@ -138,6 +161,38 @@ public class ConsoleForm : ConsoleView,
             if (isHovering && control is IMouseMoveInputHandler mouseMoveInputHandler)
             {
                 await mouseMoveInputHandler.HandleMouseMoveInputAsync(relativeEvent, consoleState, cancellationToken);
+            }
+
+            if (!relativeEvent.Handled && control is IDragControl dragControl)
+            {
+                if (DraggedControl != null && mouseEvent.PressedButtons.HasFlag(MouseButtons.LeftButton))
+                {
+                    DragInput dragInput = new DragInput(
+                        mouseEvent.PressedButtons,
+                        mouseEvent.Modifiers,
+                        mouseEvent.X,
+                        mouseEvent.Y,
+                        _dragStartRelativeX,
+                        _dragStartRelativeY);
+
+                    await dragControl.OnDragMove.InvokeAsync(dragInput, cancellationToken);
+                }
+                else if (isHovering && DraggedControl == null && mouseEvent.PressedButtons.HasFlag(MouseButtons.LeftButton))
+                {
+                    DraggedControl = dragControl;
+                    _dragStartRelativeX = relativeEvent.X;
+                    _dragStartRelativeY = relativeEvent.Y;
+
+                    DragInput dragInput = new DragInput(
+                        mouseEvent.PressedButtons,
+                        mouseEvent.Modifiers,
+                        mouseEvent.X,
+                        mouseEvent.Y,
+                        _dragStartRelativeX,
+                        _dragStartRelativeY);
+
+                    await DraggedControl.OnDragStart.InvokeAsync(dragInput, cancellationToken);
+                }
             }
 
             if (!relativeEvent.Handled && control is IMouseHoverControl mouseHoverControl)
