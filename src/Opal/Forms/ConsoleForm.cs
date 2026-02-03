@@ -86,6 +86,8 @@ public class ConsoleForm : ConsoleView,
             DraggedControl = null;
             _dragStartRelativeX = default;
             _dragStartRelativeY = default;
+
+            return;
         }
 
         foreach ((IControl control, Rect rect) in this.GetNestedChildControlAreas(consoleState.Width, consoleState.Height))
@@ -193,6 +195,7 @@ public class ConsoleForm : ConsoleView,
 
                     await DraggedControl.OnDragStart.InvokeAsync(dragInput, cancellationToken);
                 }
+                return;
             }
 
             if (!relativeEvent.Handled && control is IMouseHoverControl mouseHoverControl)
