@@ -44,7 +44,9 @@ public readonly struct ConsoleChar
         init
         {
             _foregroundSimple = (byte)value;
-            Metadata |= ConsoleCharMetadata.ForegroundSet;
+
+            // Set ForegroundSet, unset ForegroundRgb.
+            Metadata = (Metadata | ConsoleCharMetadata.ForegroundSet) & ~ConsoleCharMetadata.ForegroundRgb;
         }
     }
 
@@ -55,7 +57,9 @@ public readonly struct ConsoleChar
         init
         {
             _backgroundSimple = (byte)value;
-            Metadata |= ConsoleCharMetadata.BackgroundSet;
+
+            // Set BackgroundSet, unset BackgroundRgb.
+            Metadata = (Metadata | ConsoleCharMetadata.BackgroundSet) & ~ConsoleCharMetadata.BackgroundRgb;
         }
     }
 
@@ -72,6 +76,8 @@ public readonly struct ConsoleChar
             ForegroundRed = (byte)(value >> 16);
             ForegroundGreen = (byte)(value >> 8);
             ForegroundBlue = (byte)value;
+
+            // Set ForegroundSet and ForegroundRgb.
             Metadata |= ConsoleCharMetadata.ForegroundSet | ConsoleCharMetadata.ForegroundRgb;
         }
         get => (ForegroundRed << 16) + (ForegroundGreen << 8) + ForegroundBlue;
@@ -90,6 +96,8 @@ public readonly struct ConsoleChar
             BackgroundRed = (byte)(value >> 16);
             BackgroundGreen = (byte)(value >> 8);
             BackgroundBlue = (byte)value;
+
+            // Set BackgroundSet and BackgroundRgb.
             Metadata |= ConsoleCharMetadata.BackgroundSet | ConsoleCharMetadata.BackgroundRgb;
         }
         get => (BackgroundRed << 16) + (BackgroundGreen << 8) + BackgroundBlue;
@@ -99,7 +107,16 @@ public readonly struct ConsoleChar
     {
         init
         {
-            if (value.IsRgb)
+            if (value.Equals(default(Color)))
+            {
+                // Clear ForegroundSimple and ForegroundRgb.
+                ForegroundSimple = default;
+                ForegroundRgb = default;
+
+                // Unset ForegroundSet and ForegroundRgb.
+                Metadata &= ~(ConsoleCharMetadata.ForegroundSet | ConsoleCharMetadata.ForegroundRgb);
+            }
+            else if (value.IsRgb)
             {
                 ForegroundRgb = value.RgbValue;
             }
@@ -120,7 +137,16 @@ public readonly struct ConsoleChar
     {
         init
         {
-            if (value.IsRgb)
+            if (value.Equals(default(Color)))
+            {
+                // Clear BackgroundSimple and BackgroundRgb.
+                BackgroundSimple = default;
+                BackgroundRgb = default;
+
+                // Unset BackgroundSet and BackgroundRgb.
+                Metadata &= ~(ConsoleCharMetadata.BackgroundSet | ConsoleCharMetadata.BackgroundRgb);
+            }
+            else if (value.IsRgb)
             {
                 BackgroundRgb = value.RgbValue;
             }

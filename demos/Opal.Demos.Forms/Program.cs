@@ -195,7 +195,7 @@ public class DragBox : IControl, IDragControl
 
     public void Render(IConsoleGrid grid)
     {
-        grid.DrawBox(0, 0, grid.Width, grid.Height, new ConsoleChar { ForegroundSimple = _isDragged ? ConsoleColor.Green : default });
+        grid.DrawBox(0, 0, grid.Width, grid.Height, new ConsoleChar { ForegroundColor = _isDragged ? ConsoleColor.Green : default });
         grid.DrawString(1, 1, "Drag me");
     }
 
