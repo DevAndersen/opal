@@ -177,7 +177,8 @@ public class ConsoleForm : ConsoleView,
                         _dragStartRelativeX,
                         _dragStartRelativeY);
 
-                    await dragControl.OnDragMove.InvokeAsync(dragInput, cancellationToken);
+                    await DraggedControl.OnDragMove.InvokeAsync(dragInput, cancellationToken);
+                    return;
                 }
                 else if (isHovering && DraggedControl == null && mouseEvent.PressedButtons.HasFlag(MouseButtons.LeftButton))
                 {
@@ -194,8 +195,8 @@ public class ConsoleForm : ConsoleView,
                         _dragStartRelativeY);
 
                     await DraggedControl.OnDragStart.InvokeAsync(dragInput, cancellationToken);
+                    return;
                 }
-                return;
             }
 
             if (!relativeEvent.Handled && control is IMouseHoverControl mouseHoverControl)
