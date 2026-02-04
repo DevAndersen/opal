@@ -87,6 +87,7 @@ public class ConsoleForm : ConsoleView,
             _dragStartRelativeX = default;
             _dragStartRelativeY = default;
 
+            mouseEvent.Handled = true;
             return;
         }
 
