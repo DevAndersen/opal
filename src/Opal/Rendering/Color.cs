@@ -1,8 +1,11 @@
-﻿namespace Opal.Rendering;
+﻿using System.Diagnostics;
+
+namespace Opal.Rendering;
 
 /// <summary>
 /// Represents either a <see cref="ConsoleColor"/> or an RGB color.
 /// </summary>
+[DebuggerDisplay("{GetDebuggerDisplay()}")]
 public readonly struct Color
 {
     private const int _rgbFlagMask = int.MinValue;
@@ -49,4 +52,16 @@ public readonly struct Color
     public static implicit operator Color(ConsoleColor consoleColor) => new Color(consoleColor);
 
     public static implicit operator Color(int rgb) => new Color(rgb);
+
+    internal string GetDebuggerDisplay()
+    {
+        if (IsRgb)
+        {
+            return "0x" + Convert.ToString(RgbValue, 16);
+        }
+        else
+        {
+            return ConsoleColorValue.ToString();
+        }
+    }
 }

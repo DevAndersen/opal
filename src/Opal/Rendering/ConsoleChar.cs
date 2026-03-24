@@ -1,8 +1,11 @@
-﻿namespace Opal.Rendering;
+﻿using System.Diagnostics;
+
+namespace Opal.Rendering;
 
 /// <summary>
 /// Represents a complex console character, including optional colors, styling, and effects.
 /// </summary>
+[DebuggerDisplay("{GetDebuggerDisplay()}")]
 public readonly struct ConsoleChar
 {
     /// <summary>
@@ -400,5 +403,29 @@ public readonly struct ConsoleChar
     public bool ShouldRenderAsString()
     {
         return (Metadata & ConsoleCharMetadata.UseStringCache) == ConsoleCharMetadata.UseStringCache;
+    }
+
+    internal string GetDebuggerDisplay()
+    {
+        string? character = Metadata.HasFlag(ConsoleCharMetadata.UseStringCache)
+            ? Sequence
+            : Character.ToString();
+
+        string foreground = Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet)
+            ? ForegroundColor.GetDebuggerDisplay()
+            : "none";
+
+        string background = Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet)
+            ? BackgroundColor.GetDebuggerDisplay()
+            : "none";
+
+        string debug = $"{character} ({foreground}, {background})";
+
+        if (Modes != ConsoleCharModes.None)
+        {
+            debug += $" ({Modes})";
+        }
+
+        return debug;
     }
 }
