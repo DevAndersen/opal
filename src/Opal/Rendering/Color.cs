@@ -8,10 +8,24 @@ namespace Opal.Rendering;
 [DebuggerDisplay("{GetDebuggerDisplay()}")]
 public readonly struct Color
 {
+    /// <summary>
+    /// Bit mask for determining if the color represents a 4-bit console color, or a 24-bit RGB color.
+    /// </summary>
     private const int _rgbFlagMask = int.MinValue;
+
+    /// <summary>
+    /// Bit mask for the bits that are used to represent a 24-bit RGB color.
+    /// </summary>
     private const int _rgbMask = 0x_00_ff_ff_ff;
+
+    /// <summary>
+    /// Bit mask for the bits that are used to represent a 4-bit console color.
+    /// </summary>
     private const int _consoleColorMask = 0x_00_00_00_0f;
 
+    /// <summary>
+    /// The raw value of the color, including the RGB flag.
+    /// </summary>
     private readonly int _value;
 
     /// <summary>

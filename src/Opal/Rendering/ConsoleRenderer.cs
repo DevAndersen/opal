@@ -102,7 +102,7 @@ public class ConsoleRenderer
         {
             if (consoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundRgb))
             {
-                if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == false || consoleChar.ForegroundRgb != previousConsoleChar.ForegroundRgb)
+                if (!previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) || consoleChar.ForegroundRgb != previousConsoleChar.ForegroundRgb)
                 {
                     _stringBuilder
                         .AppendStart(ref _firstEdit)
@@ -115,7 +115,7 @@ public class ConsoleRenderer
                     .AppendForegroundSimple(consoleChar.ForegroundSimple);
             }
         }
-        else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet) == true)
+        else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.ForegroundSet))
         {
             _stringBuilder.AppendStart(ref _firstEdit)
                 .AppendResetForeground();
@@ -126,7 +126,7 @@ public class ConsoleRenderer
         {
             if (consoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundRgb))
             {
-                if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == false || consoleChar.BackgroundRgb != previousConsoleChar.BackgroundRgb)
+                if (!previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) || consoleChar.BackgroundRgb != previousConsoleChar.BackgroundRgb)
                 {
                     _stringBuilder
                         .AppendStart(ref _firstEdit)
@@ -139,7 +139,7 @@ public class ConsoleRenderer
                     .AppendBackgroundSimple(consoleChar.BackgroundSimple);
             }
         }
-        else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet) == true)
+        else if (previousConsoleChar.Metadata.HasFlag(ConsoleCharMetadata.BackgroundSet))
         {
             _stringBuilder.AppendStart(ref _firstEdit)
                 .AppendResetBackground();

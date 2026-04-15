@@ -55,7 +55,7 @@ public class OpalManager : IDisposable
     /// </summary>
     /// <remarks>
     /// This is primarily intended to handle exceptions throw from separate threads,
-    /// as these could otherwise cause an ungraceful stop, leaving the console in a non-vanilla state.
+    /// as these could otherwise cause an ungraceful stop, leaving the console in a modified state.
     /// </remarks>
     private ExceptionDispatchInfo? _stopExceptionDispatchInfo;
 
