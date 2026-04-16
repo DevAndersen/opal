@@ -37,11 +37,11 @@ public class ConsoleForm : ConsoleView,
         {
             if (keyEvent.Modifiers == ConsoleModifiers.Shift)
             {
-                await SelectPreviousAsync(cancellationToken);
+                await SelectPreviousAsync(consoleState, cancellationToken);
             }
             else
             {
-                await SelectNextAsync(cancellationToken);
+                await SelectNextAsync(consoleState, cancellationToken);
             }
             keyEvent.Handled = true;
             return;
@@ -58,7 +58,7 @@ public class ConsoleForm : ConsoleView,
             {
                 try
                 {
-                    await keyControl.OnKeyDown.InvokeAsync(keyEvent, cancellationToken);
+                    await keyControl.OnKeyDown.InvokeAsync(keyEvent, consoleState, cancellationToken);
                 }
                 catch (Exception e)
                 {
@@ -81,7 +81,7 @@ public class ConsoleForm : ConsoleView,
                 _dragStartRelativeX,
                 _dragStartRelativeY);
 
-            await DraggedControl.OnDragStop.InvokeAsync(dragInput, cancellationToken);
+            await DraggedControl.OnDragStop.InvokeAsync(dragInput, consoleState, cancellationToken);
 
             DraggedControl = null;
             _dragStartRelativeX = default;
@@ -112,7 +112,7 @@ public class ConsoleForm : ConsoleView,
 
             if (!relativeEvent.Handled && control is ISelectable selectable)
             {
-                await SelectControlAsync(selectable, cancellationToken);
+                await SelectControlAsync(selectable, consoleState, cancellationToken);
             }
 
             if (!relativeEvent.Handled && control is IMouseButtonControl mouseButtonControl)
@@ -123,11 +123,11 @@ public class ConsoleForm : ConsoleView,
                     {
                         if (relativeEvent.IsPressed)
                         {
-                            await mouseButtonControl.OnMouseDown.InvokeAsync(relativeEvent, cancellationToken);
+                            await mouseButtonControl.OnMouseDown.InvokeAsync(relativeEvent, consoleState, cancellationToken);
                         }
                         else
                         {
-                            await mouseButtonControl.OnMouseUp.InvokeAsync(relativeEvent, cancellationToken);
+                            await mouseButtonControl.OnMouseUp.InvokeAsync(relativeEvent, consoleState, cancellationToken);
                         }
                     }
                     catch (Exception e)
@@ -178,7 +178,7 @@ public class ConsoleForm : ConsoleView,
                         _dragStartRelativeX,
                         _dragStartRelativeY);
 
-                    await DraggedControl.OnDragMove.InvokeAsync(dragInput, cancellationToken);
+                    await DraggedControl.OnDragMove.InvokeAsync(dragInput, consoleState, cancellationToken);
                     return;
                 }
                 else if (isHovering && DraggedControl == null && mouseEvent.PressedButtons.HasFlag(MouseButtons.LeftButton))
@@ -195,7 +195,7 @@ public class ConsoleForm : ConsoleView,
                         _dragStartRelativeX,
                         _dragStartRelativeY);
 
-                    await DraggedControl.OnDragStart.InvokeAsync(dragInput, cancellationToken);
+                    await DraggedControl.OnDragStart.InvokeAsync(dragInput, consoleState, cancellationToken);
                     return;
                 }
             }
@@ -209,12 +209,12 @@ public class ConsoleForm : ConsoleView,
                         if (isHovering && !mouseHoverControl.IsHovered)
                         {
                             mouseHoverControl.IsHovered = true;
-                            await mouseHoverControl.OnMouseEnter.InvokeAsync(relativeEvent, cancellationToken);
+                            await mouseHoverControl.OnMouseEnter.InvokeAsync(relativeEvent, consoleState, cancellationToken);
                         }
                         else if (!isHovering && mouseHoverControl.IsHovered)
                         {
                             mouseHoverControl.IsHovered = false;
-                            await mouseHoverControl.OnMouseLeave.InvokeAsync(relativeEvent, cancellationToken);
+                            await mouseHoverControl.OnMouseLeave.InvokeAsync(relativeEvent, consoleState, cancellationToken);
                         }
                     }
                     catch (Exception e)
@@ -233,39 +233,42 @@ public class ConsoleForm : ConsoleView,
         }
     }
 
-    public async Task SelectControlAsync(ISelectable newSelected, CancellationToken cancellationToken)
+    public async Task SelectControlAsync(ISelectable newSelected, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         if (Selected?.OnUnselect != null)
         {
             Selected.IsSelected = false;
-            await Selected.OnUnselect.InvokeAsync(cancellationToken);
+            await Selected.OnUnselect.InvokeAsync(consoleState, cancellationToken);
         }
 
         newSelected.IsSelected = true;
-        await newSelected.OnSelect.InvokeAsync(cancellationToken);
+        await newSelected.OnSelect.InvokeAsync(consoleState, cancellationToken);
 
         Selected = newSelected;
     }
 
-    public virtual async Task<bool> SelectNextAsync(CancellationToken cancellationToken)
+    public virtual async Task<bool> SelectNextAsync(IConsoleState consoleState, CancellationToken cancellationToken)
     {
         return await SelectDirectionalAsync(
             (currentIndex, length) => currentIndex == length - 1 ? 0 : currentIndex + 1,
             x => x.FirstOrDefault(),
+            consoleState,
             cancellationToken);
     }
 
-    public virtual async Task<bool> SelectPreviousAsync(CancellationToken cancellationToken)
+    public virtual async Task<bool> SelectPreviousAsync(IConsoleState consoleState, CancellationToken cancellationToken)
     {
         return await SelectDirectionalAsync(
             (currentIndex, length) => currentIndex == 0 ? length - 1 : currentIndex - 1,
             x => x.LastOrDefault(),
+            consoleState,
             cancellationToken);
     }
 
     private async Task<bool> SelectDirectionalAsync(
         Func<int, int, int> nextIndexFunc,
         Func<IEnumerable<(int Index, ISelectable Item)>, (int Index, ISelectable Item)> initialSelectFunc,
+        IConsoleState consoleState,
         CancellationToken cancellationToken)
     {
         // Enumerable over all selectables, grouped with their index, ordered by [not null -> specified index -> implicit index].
@@ -290,14 +293,14 @@ public class ConsoleForm : ConsoleView,
             int currentIndex = Array.FindIndex(selectablesArray, x => x.Item == Selected);
             int nextIndex = nextIndexFunc(currentIndex, selectablesArray.Length);
 
-            await SelectControlAsync(selectablesArray[nextIndex].Item, cancellationToken);
+            await SelectControlAsync(selectablesArray[nextIndex].Item, consoleState, cancellationToken);
 
             return true;
         }
         else if (initialSelectFunc(selectables).Item is { } initialSelectable)
         {
             // If there is no current selection, select the initial selectable.
-            await SelectControlAsync(initialSelectable, cancellationToken);
+            await SelectControlAsync(initialSelectable, consoleState, cancellationToken);
             return true;
         }
         return false;

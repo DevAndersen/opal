@@ -58,7 +58,10 @@ public class MainForm : ConsoleForm
             PosX = 0,
             PosY = 2,
             Height = 3,
-            OnClick = new ConsoleEventHandler(() => { })
+            OnClick = new ConsoleEventHandler(consoleState =>
+            {
+                consoleState.GotoChild(_serviceProvider.GetRequiredService<PersistentCounterForm>());
+            })
         });
 
         ChildControls.Add(new Button
@@ -67,7 +70,10 @@ public class MainForm : ConsoleForm
             PosX = 0,
             PosY = 6,
             Height = 3,
-            OnClick = new ConsoleEventHandler(() => { })
+            OnClick = new ConsoleEventHandler(consoleState =>
+            {
+                consoleState.GotoChild(_serviceProvider.GetRequiredService<TemporaryCounterForm>());
+            })
         });
     }
 }
