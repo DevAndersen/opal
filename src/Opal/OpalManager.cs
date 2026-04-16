@@ -60,7 +60,7 @@ public class OpalManager : IDisposable
     private ExceptionDispatchInfo? _stopExceptionDispatchInfo;
 
     /// <summary>
-    /// Will be cancelled when <see cref="Stop(Exception)"/> is invoked, requesting a graceful stop.
+    /// Will be canceled when <see cref="Stop(Exception)"/> is invoked, requesting a graceful stop.
     /// </summary>
     private readonly CancellationTokenSource _stopExceptionCancellationTokenSource;
 

@@ -13,7 +13,7 @@ public abstract class BaseConsoleGrid : IConsoleGrid
 
     public int Height { get; protected set; }
 
-    public BaseConsoleGrid(int width, int height)
+    protected BaseConsoleGrid(int width, int height)
     {
         Width = width;
         Height = height;

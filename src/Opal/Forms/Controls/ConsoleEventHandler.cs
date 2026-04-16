@@ -56,7 +56,7 @@ public struct ConsoleEventHandler
     /// <param name="consoleState"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async readonly Task InvokeAsync(IConsoleState consoleState, CancellationToken cancellationToken)
+    public readonly async Task InvokeAsync(IConsoleState consoleState, CancellationToken cancellationToken)
     {
         _action?.Invoke(consoleState);
         _statelessAction?.Invoke();
@@ -225,7 +225,7 @@ public struct ConsoleEventHandler<T>
     /// <param name="consoleState"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    public async readonly Task InvokeAsync(T argument, IConsoleState consoleState, CancellationToken cancellationToken)
+    public readonly async Task InvokeAsync(T argument, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         _action?.Invoke(argument, consoleState);
         _statelessAction?.Invoke(argument);
@@ -357,7 +357,7 @@ public struct ConsoleEventHandler<T>
     /// if <paramref name="input.Predicate"/> is <c>true</c>.
     /// </summary>
     /// <remarks>
-    /// When invoked, the <typeparamref name="T"/> argument will not be passed to <paramref name="handler"/>.
+    /// When invoked, the <typeparamref name="T"/> argument will not be passed to <paramref name="input.Handle"/>.
     /// </remarks>
     /// <param name="input"></param>
     public static implicit operator ConsoleEventHandler<T>((ConsoleEventHandler<T> Handler, Predicate<T> Predicate) input)

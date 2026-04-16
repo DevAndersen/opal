@@ -129,7 +129,7 @@ public class ConsoleGrid : BaseConsoleGrid
 
     public override (int PosX, int PosY) GetAbsolutePosition()
     {
-        // This is the outer-most grid, so the position is always [0, 0].
+        // This is the outermost grid, so the position is always [0, 0].
         return (0, 0);
     }
 }

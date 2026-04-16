@@ -12,7 +12,7 @@ public abstract class CommonConsoleHandler<TInputHandler> : IConsoleHandler
     private int _widthOffset;
     private int _heightOffset;
 
-    protected const int consoleSizeThreadTimeout = 50;
+    protected const int ConsoleSizeThreadTimeout = 50;
 
     protected Thread ConsoleSizeThread { get; init; }
 
@@ -58,7 +58,7 @@ public abstract class CommonConsoleHandler<TInputHandler> : IConsoleHandler
     {
         while (Running)
         {
-            Thread.Sleep(consoleSizeThreadTimeout);
+            Thread.Sleep(ConsoleSizeThreadTimeout);
 
             (int newWidth, int newHeight) = GetClampedConsoleSize(Settings);
 

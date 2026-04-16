@@ -82,7 +82,7 @@ public class ConsoleRenderer
     /// <returns></returns>
     private bool CanCharsBeGroupedTogether(ConsoleGrid grid, int startPosition, int currentPosition)
     {
-        return currentPosition < grid.Buffer.Length // Is the position outside of the bounds of the grid?
+        return currentPosition < grid.Buffer.Length // Is the position outside the bounds of the grid?
             && grid.Buffer.Span[startPosition].HasSameStylingAs(grid.Buffer.Span[currentPosition]) // Do the chars have the same mode?
             && (currentPosition == startPosition || currentPosition % _consoleHandler.Width != 0); // Has the end of the line been reached?
     }

@@ -16,7 +16,7 @@ public readonly struct ConsoleChar
     /// </remarks>
     public char Character
     {
-        get => field;
+        get;
         init
         {
             field = value;
@@ -74,6 +74,7 @@ public readonly struct ConsoleChar
 
     public int ForegroundRgb
     {
+        get => (ForegroundRed << 16) + (ForegroundGreen << 8) + ForegroundBlue;
         init
         {
             ForegroundRed = (byte)(value >> 16);
@@ -83,7 +84,6 @@ public readonly struct ConsoleChar
             // Set ForegroundSet and ForegroundRgb.
             Metadata |= ConsoleCharMetadata.ForegroundSet | ConsoleCharMetadata.ForegroundRgb;
         }
-        get => (ForegroundRed << 16) + (ForegroundGreen << 8) + ForegroundBlue;
     }
 
     internal readonly byte BackgroundRed { get; private init; }
@@ -94,6 +94,7 @@ public readonly struct ConsoleChar
 
     public int BackgroundRgb
     {
+        get => (BackgroundRed << 16) + (BackgroundGreen << 8) + BackgroundBlue;
         init
         {
             BackgroundRed = (byte)(value >> 16);
@@ -103,11 +104,16 @@ public readonly struct ConsoleChar
             // Set BackgroundSet and BackgroundRgb.
             Metadata |= ConsoleCharMetadata.BackgroundSet | ConsoleCharMetadata.BackgroundRgb;
         }
-        get => (BackgroundRed << 16) + (BackgroundGreen << 8) + BackgroundBlue;
     }
 
     public Color ForegroundColor
     {
+        get
+        {
+            return Metadata.HasFlag(ConsoleCharMetadata.ForegroundRgb)
+                ? new Color(ForegroundRgb)
+                : new Color(ForegroundSimple);
+        }
         init
         {
             if (value.Equals(default(Color)))
@@ -128,16 +134,16 @@ public readonly struct ConsoleChar
                 ForegroundSimple = value.ConsoleColorValue;
             }
         }
-        get
-        {
-            return Metadata.HasFlag(ConsoleCharMetadata.ForegroundRgb)
-                ? new Color(ForegroundRgb)
-                : new Color(ForegroundSimple);
-        }
     }
 
     public Color BackgroundColor
     {
+        get
+        {
+            return Metadata.HasFlag(ConsoleCharMetadata.BackgroundRgb)
+                ? new Color(BackgroundRgb)
+                : new Color(BackgroundSimple);
+        }
         init
         {
             if (value.Equals(default(Color)))
@@ -157,12 +163,6 @@ public readonly struct ConsoleChar
             {
                 BackgroundSimple = value.ConsoleColorValue;
             }
-        }
-        get
-        {
-            return Metadata.HasFlag(ConsoleCharMetadata.BackgroundRgb)
-                ? new Color(BackgroundRgb)
-                : new Color(BackgroundSimple);
         }
     }
 
