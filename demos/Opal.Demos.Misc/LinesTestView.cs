@@ -15,7 +15,7 @@ public static class LinesTestDemo
 
 public class LinesTestView : ConsoleView
 {
-    private int _cycles = 0;
+    private int _cycles;
 
     //public override int Delay => 200;
 

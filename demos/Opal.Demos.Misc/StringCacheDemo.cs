@@ -4,7 +4,7 @@ using Opal.Views;
 
 namespace Opal.Demos.Misc;
 
-internal class StringCacheDemo
+internal static class StringCacheDemo
 {
     public static async Task RunAsync()
     {
@@ -15,7 +15,7 @@ internal class StringCacheDemo
 
 public class StringCacheView : ConsoleView, IKeyInputHandler
 {
-    private bool _hasRenderedOnce = false;
+    private bool _hasRenderedOnce;
 
     public override void Render(IConsoleGrid grid)
     {
@@ -47,7 +47,8 @@ public class StringCacheView : ConsoleView, IKeyInputHandler
         _hasRenderedOnce = true;
     }
 
-    public async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
+    public Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        return Task.CompletedTask;
     }
 }

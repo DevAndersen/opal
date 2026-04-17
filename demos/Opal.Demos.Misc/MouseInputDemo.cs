@@ -1,10 +1,11 @@
-﻿using Opal.Events;
+﻿using Opal.Drawing;
+using Opal.Events;
 using Opal.Rendering;
 using Opal.Views;
 
 namespace Opal.Demos.Misc;
 
-internal class MouseInputDemo
+internal static class MouseInputDemo
 {
     public static async Task RunAsync()
     {
@@ -17,8 +18,8 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseMoveInput
 {
     private readonly List<Particle> _particles = [];
 
-    private int _posX = 0;
-    private int _posY = 0;
+    private int _posX;
+    private int _posY;
 
     public override void Update(IConsoleState consoleState)
     {
@@ -41,18 +42,22 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseMoveInput
         }
     }
 
-    public async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
+    public Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         if (keyEvent.Key == ConsoleKey.Escape)
         {
             consoleState.ExitView();
         }
+
+        return Task.CompletedTask;
     }
 
-    public async Task HandleMouseMoveInputAsync(MouseMoveInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
+    public Task HandleMouseMoveInputAsync(MouseMoveInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         _posX = mouseEvent.X;
         _posY = mouseEvent.Y;
+
+        return Task.CompletedTask;
     }
 
     public override void Render(IConsoleGrid grid)
@@ -77,13 +82,13 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseMoveInput
 
     private class Particle
     {
-        public int Age { get; set; }
+        public int Age { get; private set; }
 
-        public int EarlyAge { get; set; }
+        public int EarlyAge { get; init; }
 
-        public int TransitionAge { get; set; }
+        public int TransitionAge { get; init; }
 
-        public int MaxAge { get; set; }
+        public int MaxAge { get; init; }
 
         public int X { get; set; }
 
@@ -106,18 +111,17 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseMoveInput
                     ? 0xffffcc - (0x001133 * Age)
                     : 0xff0000 + (0x001100 * Age);
 
-                return new ConsoleChar('█', color);
+                return new ConsoleChar(CharLib.Block.FullBlock, color);
             }
-            else
+
+            char character = (Age - TransitionAge) switch
             {
-                char character = (Age - TransitionAge) switch
-                {
-                    < 5 => '#',
-                    < 10 => ':',
-                    _ => '.'
-                };
-                return new ConsoleChar(character, int.Max(0, 0x888888 - (0x040404 * (Age - TransitionAge))));
-            }
+                < 5 => '#',
+                < 10 => ':',
+                _ => '.'
+            };
+
+            return new ConsoleChar(character, int.Max(0, 0x888888 - (0x040404 * (Age - TransitionAge))));
         }
     }
 }

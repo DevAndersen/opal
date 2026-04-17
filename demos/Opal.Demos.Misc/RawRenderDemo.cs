@@ -1,34 +1,29 @@
 ﻿using Opal.ConsoleHandlers;
 using Opal.Rendering;
-using System.Diagnostics;
 
 namespace Opal.Demos.Misc;
 
-internal class RawRenderDemo
+internal static class RawRenderDemo
 {
-    public static async Task RunAsync()
+    public static Task RunAsync()
     {
-        bool keepGoing = true;
         int loops = 0;
 
         using IConsoleHandler handler = IConsoleHandler.StartNewFullscreen();
         ConsoleRenderer renderer = new ConsoleRenderer(handler);
         ConsoleGrid grid = OpalManager.GetConsoleGrid(handler);
-        Stopwatch sw = Stopwatch.StartNew();
 
-        handler.OnConsoleSizeChanged += (s, e) =>
+        handler.OnConsoleSizeChanged += (_, _) =>
         {
             grid.SetSize(handler.Width, handler.Height);
         };
 
-        while (keepGoing)
+        while (true)
         {
             for (int y = 0; y < handler.Height; y++)
             {
                 for (int x = 0; x < handler.Width; x++)
                 {
-                    ConsoleChar character = grid[x, y];
-
                     if (loops == 0 || grid[x, y].Equals(default(ConsoleChar)))
                     {
                         grid[x, y] = new ConsoleChar
@@ -53,9 +48,5 @@ internal class RawRenderDemo
             renderer.Render(grid);
             loops++;
         }
-        sw.Stop();
-        Console.Title = $"Rendered {loops} frames in {sw.ElapsedMilliseconds} ms";
-
-        Console.ReadLine();
     }
 }

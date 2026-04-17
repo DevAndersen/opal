@@ -4,7 +4,7 @@ namespace Opal.Forms.Controls;
 
 public interface IMouseHoverControl
 {
-     bool IsHovered { get; set; }
+    bool IsHovered { get; set; }
 
     ConsoleEventHandler<MouseMoveInput> OnMouseEnter { get; }
 

@@ -3,7 +3,6 @@
 /// <summary>
 /// Represents a keyboard input.
 /// </summary>
-/// <param name="KeyInfo">The key info that the input represents.</param>
 public record KeyInput : IConsoleInput
 {
     public bool Handled { get; set; }

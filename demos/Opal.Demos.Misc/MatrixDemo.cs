@@ -15,7 +15,7 @@ internal static class MatrixDemo
 
 public class MatrixView : ConsoleView, IKeyInputHandler
 {
-    public int _age;
+    private int _age;
     private readonly List<MatrixParticle> _particles = [];
     private bool _throwExceptionAfterNextRender;
     private bool _throwExceptionAfterNextUpdate;
@@ -81,31 +81,34 @@ public class MatrixView : ConsoleView, IKeyInputHandler
         }
     }
 
-    public async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
+    public Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
-        if (keyEvent.Key == ConsoleKey.D1)
+        switch (keyEvent.Key)
         {
-            consoleState.Exit();
+            case ConsoleKey.D1:
+                consoleState.Exit();
+                break;
+
+            case ConsoleKey.D2:
+                throw new Exception($"Test of throwing an exception from {nameof(HandleKeyInputAsync)}");
+
+            case ConsoleKey.D3:
+                _throwExceptionAfterNextRender = true;
+                break;
+
+            case ConsoleKey.D4:
+                _throwExceptionAfterNextUpdate = true;
+                break;
         }
-        if (keyEvent.Key == ConsoleKey.D2)
-        {
-            throw new Exception($"Test of throwing an exception from {nameof(HandleKeyInputAsync)}");
-        }
-        else if (keyEvent.Key == ConsoleKey.D3)
-        {
-            _throwExceptionAfterNextRender = true;
-        }
-        else if (keyEvent.Key == ConsoleKey.D4)
-        {
-            _throwExceptionAfterNextUpdate = true;
-        }
+
+        return Task.CompletedTask;
     }
 
     private class MatrixParticle
     {
-        private static readonly string _validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-*/+=ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺ";
+        private const string _validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-*/+=ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺ";
 
-        public int MaxLength { get; }
+        private readonly int _maxLength;
 
         public int PosX { get; }
 
@@ -113,7 +116,7 @@ public class MatrixView : ConsoleView, IKeyInputHandler
 
         public MatrixParticle(int posX)
         {
-            MaxLength = Random.Shared.Next(16, 30);
+            _maxLength = Random.Shared.Next(16, 30);
             PosX = posX;
             PosY = 0;
         }
@@ -129,7 +132,7 @@ public class MatrixView : ConsoleView, IKeyInputHandler
             char c = _validChars[Random.Shared.Next(_validChars.Length)];
             _trail.AddFirst(c);
 
-            if (_trail.Count > MaxLength)
+            if (_trail.Count > _maxLength)
             {
                 _trail.RemoveLast();
             }

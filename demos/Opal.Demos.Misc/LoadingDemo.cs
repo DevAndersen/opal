@@ -3,7 +3,7 @@ using Opal.Views;
 
 namespace Opal.Demos.Misc;
 
-internal class LoadingDemo
+internal static class LoadingDemo
 {
     public static async Task RunAsync()
     {
@@ -29,7 +29,6 @@ public class LoadingView : ConsoleView
         if (DateTime.Now > _end)
         {
             consoleState.ExitView();
-            return;
         }
     }
 
@@ -39,7 +38,7 @@ public class LoadingView : ConsoleView
         {
             for (int y = 0; y < grid.Height; y++)
             {
-                grid[x, y] = new ConsoleChar('.');
+                grid[x: x, y] = new ConsoleChar('.');
             }
         }
 
@@ -47,7 +46,6 @@ public class LoadingView : ConsoleView
         for (int i = 0; i < s.Length; i++)
         {
             grid[i, 1] = new ConsoleChar(s[i]);
-
         }
     }
 }

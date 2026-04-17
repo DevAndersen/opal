@@ -4,7 +4,7 @@ using Opal.Views;
 
 namespace Opal.Demos.Misc;
 
-public static class ViewDemo
+internal static class ViewDemo
 {
     public static async Task RunAsync()
     {
@@ -15,7 +15,7 @@ public static class ViewDemo
 
 public class TimeView : ConsoleView
 {
-    private int _count = 0;
+    private int _count;
 
     //public override int Delay => 100;
 
@@ -25,7 +25,6 @@ public class TimeView : ConsoleView
         if (_count > 50)
         {
             consoleState.ExitView();
-            return;
         }
     }
 
@@ -48,7 +47,7 @@ public class WriteView : ConsoleView, IKeyInputHandler
 {
     private string _s = string.Empty;
 
-    public async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
+    public Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         if (keyEvent.Key == ConsoleKey.Enter)
         {
@@ -73,6 +72,8 @@ public class WriteView : ConsoleView, IKeyInputHandler
         {
             _s += keyEvent.KeyChar;
         }
+
+        return Task.CompletedTask;
     }
 
     public override void Render(IConsoleGrid grid)
@@ -99,7 +100,7 @@ public class ColorView : ConsoleView
     private readonly DateTime _startTime;
     private DateTime _lastTime;
     private int _frame;
-    private (int f, int b)[,] _colors = default!;
+    private (int f, int b)[,]? _colors;
 
     public ColorView()
     {
@@ -109,10 +110,7 @@ public class ColorView : ConsoleView
 
     public override void Update(IConsoleState consoleState)
     {
-        if (_frame == 0)
-        {
-            _colors = new (int, int)[consoleState.Width, consoleState.Height];
-        }
+        _colors ??= new (int, int)[consoleState.Width, consoleState.Height];
 
         for (int y = 0; y < consoleState.Height; y++)
         {
@@ -120,7 +118,7 @@ public class ColorView : ConsoleView
             {
                 if (_frame == 0)
                 {
-                    _colors[x, y] = new(Random.Shared.Next(), Random.Shared.Next());
+                    _colors[x, y] = (Random.Shared.Next(), Random.Shared.Next());
                 }
                 else
                 {
@@ -148,6 +146,11 @@ public class ColorView : ConsoleView
 
     public override void Render(IConsoleGrid grid)
     {
+        if (_colors == null)
+        {
+            return;
+        }
+
         for (int y = 0; y < grid.Height; y++)
         {
             for (int x = 0; x < grid.Width; x++)
