@@ -26,61 +26,61 @@ public record DrawStyle
 
     public static DrawStyle StandardDrawStyle { get; } = new DrawStyle
     {
-        Horizontal = (char)9472,
-        Vertical = (char)9474,
-        TopLeftCorner = (char)9484,
-        TopRightCorner = (char)9488,
-        BottomLeftCorner = (char)9492,
-        BottomRightCorner = (char)9496,
-        TUp = (char)9516,
-        TDown = (char)9524,
-        TLeft = (char)9500,
-        TRight = (char)9508,
-        Plus = (char)9532
+        Horizontal = CharLib.Box.LightHorizontal,
+        Vertical = CharLib.Box.LightVertical,
+        TopLeftCorner = CharLib.Box.LightDownAndRight,
+        TopRightCorner = CharLib.Box.LightDownAndLeft,
+        BottomLeftCorner = CharLib.Box.LightUpAndRight,
+        BottomRightCorner = CharLib.Box.LightUpAndLeft,
+        TUp = CharLib.Box.LightDownAndHorizontal,
+        TDown = CharLib.Box.LightUpAndHorizontal,
+        TLeft = CharLib.Box.LightVerticalAndRight,
+        TRight = CharLib.Box.LightVerticalAndLeft,
+        Plus = CharLib.Box.LightVerticalAndHorizontal
     };
 
     public static DrawStyle HeavyDrawStyle { get; } = new DrawStyle
     {
-        Horizontal = (char)9473,
-        Vertical = (char)9475,
-        TopLeftCorner = (char)9487,
-        TopRightCorner = (char)9491,
-        BottomLeftCorner = (char)9495,
-        BottomRightCorner = (char)9499,
-        TUp = (char)9523,
-        TDown = (char)9531,
-        TLeft = (char)9507,
-        TRight = (char)9515,
-        Plus = (char)9547
+        Horizontal = CharLib.Box.HeavyHorizontal,
+        Vertical = CharLib.Box.HeavyVertical,
+        TopLeftCorner = CharLib.Box.HeavyDownAndRight,
+        TopRightCorner = CharLib.Box.HeavyDownAndLeft,
+        BottomLeftCorner = CharLib.Box.HeavyUpAndRight,
+        BottomRightCorner = CharLib.Box.HeavyUpAndLeft,
+        TUp = CharLib.Box.HeavyDownAndHorizontal,
+        TDown = CharLib.Box.HeavyUpAndHorizontal,
+        TLeft = CharLib.Box.HeavyVerticalAndRight,
+        TRight = CharLib.Box.HeavyVerticalAndLeft,
+        Plus = CharLib.Box.HeavyVerticalAndHorizontal
     };
 
     public static DrawStyle DoubleDrawStyle { get; } = new DrawStyle
     {
-        Horizontal = (char)9552,
-        Vertical = (char)9553,
-        TopLeftCorner = (char)9556,
-        TopRightCorner = (char)9559,
-        BottomLeftCorner = (char)9562,
-        BottomRightCorner = (char)9565,
-        TUp = (char)9574,
-        TDown = (char)9577,
-        TLeft = (char)9568,
-        TRight = (char)9571,
-        Plus = (char)9580
+        Horizontal = CharLib.Box.DoubleHorizontal,
+        Vertical = CharLib.Box.DoubleVertical,
+        TopLeftCorner = CharLib.Box.DoubleDownAndRight,
+        TopRightCorner = CharLib.Box.DoubleDownAndLeft,
+        BottomLeftCorner = CharLib.Box.DoubleUpAndRight,
+        BottomRightCorner = CharLib.Box.DoubleUpAndLeft,
+        TUp = CharLib.Box.DoubleDownAndHorizontal,
+        TDown = CharLib.Box.DoubleUpAndHorizontal,
+        TLeft = CharLib.Box.DoubleVerticalAndRight,
+        TRight = CharLib.Box.DoubleVerticalAndLeft,
+        Plus = CharLib.Box.DoubleVerticalAndHorizontal
     };
 
     public static DrawStyle RoundedDrawStyle { get; } = new DrawStyle
     {
-        Horizontal = (char)9472,
-        Vertical = (char)9474,
-        TopLeftCorner = (char)9581,
-        TopRightCorner = (char)9582,
-        BottomLeftCorner = (char)9584,
-        BottomRightCorner = (char)9583,
-        TUp = (char)9516,
-        TDown = (char)9524,
-        TLeft = (char)9500,
-        TRight = (char)9508,
-        Plus = (char)9532
+        Horizontal = CharLib.Box.LightHorizontal,
+        Vertical = CharLib.Box.LightVertical,
+        TopLeftCorner = CharLib.Box.LightArcDownAndRight,
+        TopRightCorner = CharLib.Box.LightArcDownAndLeft,
+        BottomLeftCorner = CharLib.Box.LightArcUpAndRight,
+        BottomRightCorner = CharLib.Box.LightArcUpAndLeft,
+        TUp = CharLib.Box.LightDownAndHorizontal,
+        TDown = CharLib.Box.LightUpAndHorizontal,
+        TLeft = CharLib.Box.LightVerticalAndRight,
+        TRight = CharLib.Box.LightVerticalAndLeft,
+        Plus = CharLib.Box.LightVerticalAndHorizontal
     };
 }
