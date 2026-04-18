@@ -16,7 +16,7 @@ public class TextBox : SelectableControl, IKeyInputHandler
 
     public string Text { get; set; } = string.Empty;
 
-    public async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
+    public Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
         if (keyEvent.Key == ConsoleKey.LeftArrow && _cursor > 0)
         {
@@ -69,6 +69,8 @@ public class TextBox : SelectableControl, IKeyInputHandler
         }
 
         keyEvent.Handled = true;
+
+        return Task.CompletedTask;
     }
 
     public override void Render(IConsoleGrid grid)

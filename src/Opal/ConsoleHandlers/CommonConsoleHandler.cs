@@ -4,7 +4,7 @@ using Opal.Events;
 namespace Opal.ConsoleHandlers;
 
 /// <summary>
-/// A implementation of the platform independent aspects of <see cref="IConsoleHandler"/>.
+/// An implementation of the platform independent aspects of <see cref="IConsoleHandler"/>.
 /// </summary>
 public abstract class CommonConsoleHandler<TInputHandler> : IConsoleHandler
     where TInputHandler : IInputHandler

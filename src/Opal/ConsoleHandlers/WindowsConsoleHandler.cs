@@ -105,7 +105,7 @@ public class WindowsConsoleHandler : CommonConsoleHandler<WindowsInputHandler>
     /// Print <c><paramref name="stringBuilder"/></c> to the console, without allocating a new <see cref="string"/> in order to avoid GC.
     /// </summary>
     /// <param name="stringBuilder"></param>
-    public unsafe override void Print(StringBuilder stringBuilder)
+    public override unsafe void Print(StringBuilder stringBuilder)
     {
         char* ptr = (char*)NativeMemory.Alloc((nuint)stringBuilder.Length, sizeof(char));
         try
