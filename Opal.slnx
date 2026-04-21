@@ -7,6 +7,9 @@
     <Project Path="demos/Opal.Demos.SlidePuzzle/Opal.Demos.SlidePuzzle.csproj" Id="1591f7ab-a1c8-4933-aca3-ae490d4122ec" />
   </Folder>
   <Folder Name="/Docs/">
+    <File Path="docs/Drawing.md" />
+    <File Path="docs/Forms.md" />
+    <File Path="docs/Views.md" />
     <File Path="docs\ConsoleChar.md" />
     <File Path="docs\ConsoleGrid.md" />
     <File Path="docs\Rendering.md" />

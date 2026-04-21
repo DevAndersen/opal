@@ -10,12 +10,12 @@ public abstract class AsyncConsoleView : IAsyncConsoleView
     {
         if (!_isInitialized)
         {
-            await Initialize();
+            await InitializeAsync();
             _isInitialized = true;
         }
     }
 
-    public virtual Task Initialize()
+    public virtual Task InitializeAsync()
     {
         return Task.CompletedTask;
     }
