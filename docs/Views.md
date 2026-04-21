@@ -32,3 +32,15 @@ Views can implement various interfaces, which lets them receive and handle user 
 - [`ICancellationRequestHandler`](../src/Opal/Views/ICancellationRequestHandler.cs): Intercept and optionally cancel user requests to exit Opal via `Ctrl+C`.
 
 Note: Input handling gets executed before the `Update` method is called.
+
+## View navigation
+
+The [`IConsoleState`](../src/Opal/Views/IConsoleState.cs) class provides methods for navigating back and forth between views.
+
+Opal keeps track of navigation between view by storing the navigation history to the view stack.
+
+- The `GotoChild` method navigates to a new view, and stores the current view to the view stack, so it can be accessed by existing the new view.
+- The `Goto` method navigates to a new view, but does not store the current view to the view stack, meaning the current view cannot be navigated to by simply exiting the new view.
+- The `ExitView` method exits the current view, and goes back to the previous view in the view stack. If there are no previous views, this exits Opal.
+- The `Exit` method fully exits Opal, regardless of where the current view is in the view stack.
+- The `Exit` method also has an overload which accepts an `Exception`. This will gracefully exit Opal (returning the console to its initial state), and then throw the exception (preserving the original StackTrace).
