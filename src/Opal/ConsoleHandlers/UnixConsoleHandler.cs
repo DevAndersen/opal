@@ -66,6 +66,11 @@ public class UnixConsoleHandler : CommonConsoleHandler<UnixInputHandler>
         Console.Write(str);
     }
 
+    /// <remarks>
+    /// <c>Console.Out.Write</c> is used because its implementation iterates over the chunks of the <c>StringBuilder</c>,  which avoids allocating a temporary string.
+    /// This is not the case for <c>Console.Out.Write</c>, which simply calls the <c>ToString</c> method on the passed object.
+    /// </remarks>
+    /// <param name="stringBuilder"></param>
     public override void Print(StringBuilder stringBuilder)
     {
         Console.Out.Write(stringBuilder);

@@ -104,6 +104,9 @@ public class WindowsConsoleHandler : CommonConsoleHandler<WindowsInputHandler>
     /// <summary>
     /// Print <c><paramref name="stringBuilder"/></c> to the console, without allocating a new <see cref="string"/> in order to avoid GC.
     /// </summary>
+    /// <remarks>
+    /// The Windows Console appears to yield better performance when using P/Invoke, compared to methods available in the .NET BCL.
+    /// </remarks>
     /// <param name="stringBuilder"></param>
     public override unsafe void Print(StringBuilder stringBuilder)
     {

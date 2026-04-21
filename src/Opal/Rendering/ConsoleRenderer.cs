@@ -39,6 +39,7 @@ public class ConsoleRenderer
             {
                 int end = 0;
 
+                // Determine how many contiguous characters use the same styling.
                 while (CanCharsBeGroupedTogether(grid, start, start + end))
                 {
                     end++;
