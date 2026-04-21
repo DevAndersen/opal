@@ -16,7 +16,7 @@ Rendering is called on a loop at a regular interval, or if the console's size is
 
 ## Updating
 
-The `Update` and `UpdateAsync` methods ...
+The `Update` and `UpdateAsync` methods provide logic to periodically update the view.
 
 The update methods are called with an [`IConsoleState`](../src/Opal/Views/IConsoleState.cs) parameter, which allows the view to request moving to a different view, or to exit Opal entirely.
 
