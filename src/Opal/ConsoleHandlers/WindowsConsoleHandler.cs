@@ -1,7 +1,7 @@
 ﻿using Opal.ConsoleHandlers.InputHandlers;
+using Opal.Events;
 using Opal.Native.Windows;
 using Opal.Rendering;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using static Opal.Native.Windows.Kernel32;
 
@@ -10,7 +10,7 @@ namespace Opal.ConsoleHandlers;
 /// <summary>
 /// A console handler for Windows systems.
 /// </summary>
-public class WindowsConsoleHandler : CommonConsoleHandler<WindowsInputHandler>
+public class WindowsConsoleHandler : CommonConsoleHandler
 {
     /// <summary>
     /// The console input handle.
@@ -32,7 +32,8 @@ public class WindowsConsoleHandler : CommonConsoleHandler<WindowsInputHandler>
     /// </summary>
     private ConsoleOutputModes _originalConsoleOutputModes;
 
-    [SetsRequiredMembers]
+    protected WindowsInputHandler InputHandler { get; }
+
     public WindowsConsoleHandler()
     {
         InputHandler = new WindowsInputHandler();
@@ -94,6 +95,11 @@ public class WindowsConsoleHandler : CommonConsoleHandler<WindowsInputHandler>
         SetConsoleOutputMode(_inputHandle, _originalConsoleOutputModes);
 
         Running = false;
+    }
+
+    public override IConsoleInput? GetInput()
+    {
+        return InputHandler.GetInput();
     }
 
     public override void Print(string str)

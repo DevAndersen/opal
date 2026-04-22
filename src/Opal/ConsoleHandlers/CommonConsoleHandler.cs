@@ -1,22 +1,18 @@
-﻿using Opal.ConsoleHandlers.InputHandlers;
-using Opal.Events;
+﻿using Opal.Events;
 
 namespace Opal.ConsoleHandlers;
 
 /// <summary>
 /// An implementation of the platform independent aspects of <see cref="IConsoleHandler"/>.
 /// </summary>
-public abstract class CommonConsoleHandler<TInputHandler> : IConsoleHandler
-    where TInputHandler : IInputHandler
+public abstract class CommonConsoleHandler : IConsoleHandler
 {
     private int _widthOffset;
     private int _heightOffset;
 
     protected const int ConsoleSizeThreadTimeout = 50;
 
-    protected Thread ConsoleSizeThread { get; init; }
-
-    public required TInputHandler InputHandler { get; init; }
+    protected Thread ConsoleSizeThread { get; }
 
     public OpalSettings? Settings { get; protected set; }
 
@@ -48,11 +44,11 @@ public abstract class CommonConsoleHandler<TInputHandler> : IConsoleHandler
 
     public abstract void Stop();
 
+    public abstract IConsoleInput? GetInput();
+
     public abstract void Print(string str);
 
     public abstract void Print(StringBuilder stringBuilder);
-
-    public virtual IConsoleInput? GetInput() => InputHandler.GetInput();
 
     protected virtual void ConsoleSizeThreadMethod()
     {

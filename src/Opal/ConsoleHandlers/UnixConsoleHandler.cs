@@ -1,15 +1,16 @@
 ﻿using Opal.ConsoleHandlers.InputHandlers;
+using Opal.Events;
 using Opal.Rendering;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Opal.ConsoleHandlers;
 
 /// <summary>
 /// A console handler for UNIX-like systems.
 /// </summary>
-public class UnixConsoleHandler : CommonConsoleHandler<UnixInputHandler>
+public class UnixConsoleHandler : CommonConsoleHandler
 {
-    [SetsRequiredMembers]
+    protected UnixInputHandler InputHandler { get; }
+
     public UnixConsoleHandler()
     {
         InputHandler = new UnixInputHandler(this);
@@ -59,6 +60,11 @@ public class UnixConsoleHandler : CommonConsoleHandler<UnixInputHandler>
         Print(SequenceProvider.Reset());
 
         Running = false;
+    }
+
+    public override IConsoleInput? GetInput()
+    {
+        return InputHandler.GetInput();
     }
 
     public override void Print(string str)
