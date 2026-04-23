@@ -1,4 +1,4 @@
-﻿namespace Opal.Views;
+﻿namespace Opal.Events;
 
 public interface ICancellationRequestHandler
 {
