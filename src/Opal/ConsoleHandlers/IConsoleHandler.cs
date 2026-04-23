@@ -62,10 +62,9 @@ public interface IConsoleHandler : IDisposable
     IConsoleInput? GetInput();
 
     /// <summary>
-    /// Returns a new instance of <c><see cref="IConsoleHandler"/></c> using <c><see cref="CreateDefaultHandlerForCurrentPlatform"/></c> and set to fullscreen mode, after executing its <c><see cref="Start()"/></c> method.
+    /// Returns a new instance of <c><see cref="IConsoleHandler"/></c> using <c><see cref="CreateDefaultHandlerForCurrentPlatform"/></c> and set to fullscreen mode, after executing its <c><see cref="Start"/></c> method.
     /// Intended for use in <c>using</c> blocks.
     /// </summary>
-    /// <param name="settings"></param>
     /// <returns>A new instance of <c><see cref="IConsoleHandler"/></c> for the current platform, where its <see cref="Start"/> method has been executed.</returns>
     static IConsoleHandler StartNewFullscreen()
     {
@@ -73,7 +72,7 @@ public interface IConsoleHandler : IDisposable
     }
 
     /// <summary>
-    /// Returns a new instance of <c><see cref="IConsoleHandler"/></c> using <c><see cref="CreateDefaultHandlerForCurrentPlatform"/></c>, after executing its <c><see cref="Start()"/></c> method.
+    /// Returns a new instance of <c><see cref="IConsoleHandler"/></c> using <c><see cref="CreateDefaultHandlerForCurrentPlatform"/></c>, after executing its <c><see cref="Start"/></c> method.
     /// Intended for use in <c>using</c> blocks.
     /// </summary>
     /// <param name="settings"></param>
@@ -81,20 +80,6 @@ public interface IConsoleHandler : IDisposable
     static IConsoleHandler StartNew(OpalSettings settings)
     {
         IConsoleHandler handler = CreateDefaultHandlerForCurrentPlatform();
-        handler.Start(settings);
-        return handler;
-    }
-
-    /// <summary>
-    /// Returns a new instance of <c><typeparamref name="TConsoleHandler"/></c>, after executing its <c><see cref="Start()"/></c> method.
-    /// Intended for use in <c>using</c> blocks.
-    /// </summary>
-    /// <typeparam name="TConsoleHandler"></typeparam>
-    /// <param name="settings"></param>
-    /// <returns>A new instance of <c><see cref="IConsoleHandler"/></c>, where its <see cref="Start"/> method has been executed.</returns>
-    static IConsoleHandler StartNew<TConsoleHandler>(OpalSettings settings) where TConsoleHandler : IConsoleHandler, new()
-    {
-        IConsoleHandler handler = new TConsoleHandler();
         handler.Start(settings);
         return handler;
     }
