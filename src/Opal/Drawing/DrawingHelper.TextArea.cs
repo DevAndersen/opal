@@ -4,48 +4,51 @@ namespace Opal.Drawing;
 
 public static partial class DrawingHelper
 {
-    public static void DrawTextArea(this IConsoleGrid grid, int posX, int posY, string text)
+    extension(IConsoleGrid grid)
     {
-        DrawTextArea(grid, posX, posY, text, default, 4);
-    }
-
-    public static void DrawTextArea(this IConsoleGrid grid, int posX, int posY, string text, ConsoleChar template)
-    {
-        DrawTextArea(grid, posX, posY, text, template, 4);
-    }
-
-    public static void DrawTextArea(this IConsoleGrid grid, int posX, int posY, string text, ConsoleChar template, int tabWidth)
-    {
-        string[] lines = text.Split(_newlineSequences, StringSplitOptions.None);
-
-        for (int lineIndex = 0; lineIndex < lines.Length; lineIndex++)
+        public void DrawTextArea(int posX, int posY, string text)
         {
-            string line = lines[lineIndex].Replace("\t", new string('\t', tabWidth));
+            grid.DrawTextArea(posX, posY, text, default, 4);
+        }
 
-            for (int charIndex = 0; charIndex < line.Length; charIndex++)
+        public void DrawTextArea(int posX, int posY, string text, ConsoleChar template)
+        {
+            grid.DrawTextArea(posX, posY, text, template, 4);
+        }
+
+        public void DrawTextArea(int posX, int posY, string text, ConsoleChar template, int tabWidth)
+        {
+            string[] lines = text.Split(_newlineSequences, StringSplitOptions.None);
+
+            for (int lineIndex = 0; lineIndex < lines.Length; lineIndex++)
             {
-                grid[posX + charIndex, posY + lineIndex] = template with { Character = GetSafeChar(line[charIndex]) };
+                string line = lines[lineIndex].Replace("\t", new string('\t', tabWidth));
+
+                for (int charIndex = 0; charIndex < line.Length; charIndex++)
+                {
+                    grid[posX + charIndex, posY + lineIndex] = template with { Character = GetSafeChar(line[charIndex]) };
+                }
             }
         }
-    }
 
-    public static void DrawTextArea(this IConsoleGrid grid, int posX, int posY, int width, int height, int viewOffsetX, int viewOffsetY, string text, ConsoleChar template)
-    {
-        string[] lines = text.Split(_newlineSequences, StringSplitOptions.None);
-
-        for (int y = 0; y < height; y++)
+        public void DrawTextArea(int posX, int posY, int width, int height, int viewOffsetX, int viewOffsetY, string text, ConsoleChar template)
         {
-            int yOffset = y + viewOffsetY;
-            if (yOffset >= 0 && yOffset < lines.Length)
-            {
-                string line = lines[y + viewOffsetY];
+            string[] lines = text.Split(_newlineSequences, StringSplitOptions.None);
 
-                for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
+            {
+                int yOffset = y + viewOffsetY;
+                if (yOffset >= 0 && yOffset < lines.Length)
                 {
-                    int xOffset = x + viewOffsetX;
-                    if (xOffset >= 0 && xOffset < line.Length)
+                    string line = lines[y + viewOffsetY];
+
+                    for (int x = 0; x < width; x++)
                     {
-                        grid[posX + x, posY + y] = template with { Character = line[xOffset] };
+                        int xOffset = x + viewOffsetX;
+                        if (xOffset >= 0 && xOffset < line.Length)
+                        {
+                            grid[posX + x, posY + y] = template with { Character = line[xOffset] };
+                        }
                     }
                 }
             }

@@ -4,48 +4,51 @@ namespace Opal.Drawing;
 
 public static partial class DrawingHelper
 {
-    public static void DrawBox(this IConsoleGrid grid, int posX, int posY, int width, int height)
+    extension(IConsoleGrid grid)
     {
-        DrawBox(grid, posX, posY, width, height, DrawStyle.StandardDrawStyle, default);
-    }
-
-    public static void DrawBox(this IConsoleGrid grid, int posX, int posY, int width, int height, DrawStyle style)
-    {
-        DrawBox(grid, posX, posY, width, height, style, default);
-    }
-
-    public static void DrawBox(this IConsoleGrid grid, int posX, int posY, int width, int height, ConsoleChar template)
-    {
-        DrawBox(grid, posX, posY, width, height, DrawStyle.StandardDrawStyle, template);
-    }
-
-    public static void DrawBox(this IConsoleGrid grid, int posX, int posY, int width, int height, DrawStyle style, ConsoleChar template)
-    {
-        grid[posX, posY] = template with { Character = style.TopLeftCorner };
-        grid[posX + width - 1, posY] = template with { Character = style.TopRightCorner };
-        grid[posX, posY + height - 1] = template with { Character = style.BottomLeftCorner };
-        grid[posX + width - 1, posY + height - 1] = template with { Character = style.BottomRightCorner };
-
-        for (int x = 1; x < width - 1; x++)
+        public void DrawBox(int posX, int posY, int width, int height)
         {
-            grid[posX + x, posY] = template with { Character = style.Horizontal };
-            grid[posX + x, posY + height - 1] = template with { Character = style.Horizontal };
+            grid.DrawBox(posX, posY, width, height, DrawStyle.StandardDrawStyle, default);
         }
 
-        for (int y = 1; y < height - 1; y++)
+        public void DrawBox(int posX, int posY, int width, int height, DrawStyle style)
         {
-            grid[posX, posY + y] = template with { Character = style.Vertical };
-            grid[posX + width - 1, posY + y] = template with { Character = style.Vertical };
+            grid.DrawBox(posX, posY, width, height, style, default);
         }
-    }
 
-    public static void DrawFill(this IConsoleGrid grid, int posX, int posY, int width, int height, ConsoleChar template)
-    {
-        for (int x = 0; x < width; x++)
+        public void DrawBox(int posX, int posY, int width, int height, ConsoleChar template)
         {
-            for (int y = 0; y < height; y++)
+            grid.DrawBox(posX, posY, width, height, DrawStyle.StandardDrawStyle, template);
+        }
+
+        public void DrawBox(int posX, int posY, int width, int height, DrawStyle style, ConsoleChar template)
+        {
+            grid[posX, posY] = template with { Character = style.TopLeftCorner };
+            grid[posX + width - 1, posY] = template with { Character = style.TopRightCorner };
+            grid[posX, posY + height - 1] = template with { Character = style.BottomLeftCorner };
+            grid[posX + width - 1, posY + height - 1] = template with { Character = style.BottomRightCorner };
+
+            for (int x = 1; x < width - 1; x++)
             {
-                grid[posX + x, posY + y] = template;
+                grid[posX + x, posY] = template with { Character = style.Horizontal };
+                grid[posX + x, posY + height - 1] = template with { Character = style.Horizontal };
+            }
+
+            for (int y = 1; y < height - 1; y++)
+            {
+                grid[posX, posY + y] = template with { Character = style.Vertical };
+                grid[posX + width - 1, posY + y] = template with { Character = style.Vertical };
+            }
+        }
+
+        public void DrawFill(int posX, int posY, int width, int height, ConsoleChar template)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    grid[posX + x, posY + y] = template;
+                }
             }
         }
     }
