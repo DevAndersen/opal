@@ -135,12 +135,19 @@ public class OpalManager : IDisposable
         _stopExceptionDispatchInfo?.Throw();
     }
 
-    public void Stop(Exception e)
+    /// <summary>
+    /// Requests Opal to gracefully stop, and then rethrow <paramref name="exception"/>.
+    /// </summary>
+    /// <param name="exception"></param>
+    public void Stop(Exception exception)
     {
-        _stopExceptionDispatchInfo = ExceptionDispatchInfo.Capture(e);
+        _stopExceptionDispatchInfo = ExceptionDispatchInfo.Capture(exception);
         _stopExceptionCancellationTokenSource.Cancel();
     }
 
+    /// <summary>
+    /// Stops Opal, returning the console to its initial state.
+    /// </summary>
     public void Stop()
     {
         while (_viewStack.TryPop(out IBaseConsoleView? view))

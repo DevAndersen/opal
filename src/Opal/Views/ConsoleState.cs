@@ -16,6 +16,9 @@ internal class ConsoleState : IConsoleState
              || HasExitViewBeenRequested
              || HasExitBeenRequested;
 
+    /// <summary>
+    /// The action that will be called to gracefully exit Opal.
+    /// </summary>
     internal required Action<Exception> CrashAction { get; init; }
 
     internal void Reset(int height, int width)
@@ -46,8 +49,8 @@ internal class ConsoleState : IConsoleState
         HasExitBeenRequested = true;
     }
 
-    public void Exit(Exception e)
+    public void Exit(Exception exception)
     {
-        CrashAction(e);
+        CrashAction(exception);
     }
 }
