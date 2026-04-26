@@ -312,21 +312,23 @@ public class OpalManager : IDisposable
 
     private void RenderView(IBaseConsoleView? view)
     {
-        if (view != null)
+        if (view == null)
         {
-            if (_grid?.TryCopyTo(_previousGrid) != true)
-            {
-                _previousGrid = _grid?.MakeClone();
-            }
+            return;
+        }
 
-            _grid = GetConsoleGrid(_handler, _grid);
-            view.Render(_grid);
+        if (_grid?.TryCopyTo(_previousGrid) != true)
+        {
+            _previousGrid = _grid?.MakeClone();
+        }
 
-            // Only print the grid if the current grid is different from the previously printed grid.
-            if (_previousGrid?.IsDifferentFrom(_grid) != false)
-            {
-                RenderGrid(_renderer, _grid);
-            }
+        _grid = GetConsoleGrid(_handler, _grid);
+        view.Render(_grid);
+
+        // Only print the grid if the current grid is different from the previously printed grid.
+        if (_previousGrid?.IsDifferentFrom(_grid) != false)
+        {
+            RenderGrid(_renderer, _grid);
         }
     }
 
@@ -349,10 +351,12 @@ public class OpalManager : IDisposable
     {
         _grid = GetConsoleGrid(_handler, _grid);
         _grid.SetSize(args.NewWidth, args.NewHeight);
+
         if (_viewStack.TryPeek(out IBaseConsoleView? currentView))
         {
             currentView.Render(_grid);
         }
+
         RenderGrid(_renderer, _grid);
     }
 

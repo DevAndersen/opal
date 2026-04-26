@@ -7,9 +7,9 @@ public class OpalSettings
 {
     public bool UseAlternateBuffer { get; }
 
-    public int WidthOffset { get; set; }
+    public int WidthOffset { get; }
 
-    public int HeightOffset { get; set; }
+    public int HeightOffset { get; }
 
     public int? MinWidth { get; }
 

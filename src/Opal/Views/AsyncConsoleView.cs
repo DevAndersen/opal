@@ -15,7 +15,7 @@ public abstract class AsyncConsoleView : IAsyncConsoleView
         }
     }
 
-    public virtual Task InitializeAsync()
+    protected virtual Task InitializeAsync()
     {
         return Task.CompletedTask;
     }

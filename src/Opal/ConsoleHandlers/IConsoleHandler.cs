@@ -28,8 +28,16 @@ public interface IConsoleHandler : IDisposable
     /// <returns></returns>
     int Height { get; }
 
+    /// <summary>
+    /// The horizontal offset of Opal's working area in the console buffer.
+    /// This is used when not running in fullscreen mode.
+    /// </summary>
     int BufferWidthOffset { get; }
 
+    /// <summary>
+    /// The vertical offset of Opal's working area in the console buffer.
+    /// This is used when not running in fullscreen mode.
+    /// </summary>
     int BufferHeightOffset { get; }
 
     /// <summary>

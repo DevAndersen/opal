@@ -17,7 +17,7 @@ public abstract class ConsoleView : IConsoleView
         return Task.CompletedTask;
     }
 
-    public virtual void Initialize()
+    protected virtual void Initialize()
     {
     }
 

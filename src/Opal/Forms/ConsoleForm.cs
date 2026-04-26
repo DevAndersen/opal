@@ -26,7 +26,7 @@ public class ConsoleForm : ConsoleView,
     private int _dragStartRelativeX;
     private int _dragStartRelativeY;
 
-    public override void Initialize()
+    protected override void Initialize()
     {
         _controls.CollectionChanged += OnControlsChange;
     }

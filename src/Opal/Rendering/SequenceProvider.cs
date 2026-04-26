@@ -12,10 +12,8 @@ public static class SequenceProvider
             firstEdit = false;
             return sb.AppendEscapeBracket();
         }
-        else
-        {
-            return sb.Append(DelimiterCharacter);
-        }
+
+        return sb.Append(DelimiterCharacter);
     }
 
     public static string Reset()
