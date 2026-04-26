@@ -27,7 +27,7 @@ public class ConsoleRenderer
                 .Clear()
                 .AppendEscapeBracket()
                 .AppendReset()
-                .AppendSGREnding()
+                .AppendSgrEnding()
                 .AppendEscapeBracket()
                 .AppendSetCursorPosition(_consoleHandler.BufferWidthOffset, _consoleHandler.BufferHeightOffset)
                 .Append('H');
@@ -68,7 +68,7 @@ public class ConsoleRenderer
             _stringBuilder
                 .AppendEscapeBracket()
                 .AppendReset()
-                .AppendSGREnding();
+                .AppendSgrEnding();
 
             _consoleHandler.Print(_stringBuilder);
         }
@@ -159,7 +159,7 @@ public class ConsoleRenderer
 
         if (!_firstEdit)
         {
-            _stringBuilder.AppendSGREnding();
+            _stringBuilder.AppendSgrEnding();
         }
 
         foreach (ConsoleChar item in consoleChars)

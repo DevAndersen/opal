@@ -2,105 +2,108 @@
 
 public static class SequenceProvider
 {
-    public const char SGREnding = 'm';
+    public const char SgrEnding = 'm';
     public const char DelimiterCharacter = ';';
 
-    public static StringBuilder AppendStart(this StringBuilder sb, ref bool firstEdit)
-    {
-        if (firstEdit)
-        {
-            firstEdit = false;
-            return sb.AppendEscapeBracket();
-        }
-
-        return sb.Append(DelimiterCharacter);
-    }
-
     public static string Reset()
-        => $"\e[0m";
+        => "\e[0m";
 
     public static string EnableAlternateBuffer()
-        => $"\e[?1049h";
+        => "\e[?1049h";
 
     public static string DisableAlternateBuffer()
-        => $"\e[?1049l";
+        => "\e[?1049l";
 
     public static string EnableMouseReporting()
-        => $"\e[?1003h\e[?1006h";
+        => "\e[?1003h\e[?1006h";
 
     public static string DisableMouseReporting()
-        => $"\e[?1003l\e[?1006l";
+        => "\e[?1003l\e[?1006l";
 
-    public static StringBuilder AppendEscapeBracket(this StringBuilder sb)
-        => sb
-            .Append("\e[");
+    extension(StringBuilder sb)
+    {
+        public StringBuilder AppendStart(ref bool firstEdit)
+        {
+            if (firstEdit)
+            {
+                firstEdit = false;
+                return sb.AppendEscapeBracket();
+            }
 
-    public static StringBuilder AppendSGREnding(this StringBuilder sb)
-        => sb.Append(SGREnding);
+            return sb.Append(DelimiterCharacter);
+        }
 
-    public static StringBuilder AppendReset(this StringBuilder sb)
-        => sb.Append('0');
+        public StringBuilder AppendEscapeBracket()
+            => sb
+                .Append("\e[");
 
-    public static StringBuilder AppendItalic(this StringBuilder sb, bool state)
-        => state
-            ? sb.Append('3')
-            : sb.Append("23");
+        public StringBuilder AppendSgrEnding()
+            => sb.Append(SgrEnding);
 
-    public static StringBuilder AppendUnderscore(this StringBuilder sb, bool state)
-        => state
-            ? sb.Append('4')
-            : sb.Append("24");
+        public StringBuilder AppendReset()
+            => sb.Append('0');
 
-    public static StringBuilder AppendDoubleUnderscore(this StringBuilder sb, bool state)
-        => state
-            ? sb.Append("21")
-            : sb.Append("24");
+        public StringBuilder AppendItalic(bool state)
+            => state
+                ? sb.Append('3')
+                : sb.Append("23");
 
-    public static StringBuilder AppendStrike(this StringBuilder sb, bool state)
-        => state
-            ? sb.Append('9')
-            : sb.Append("29");
+        public StringBuilder AppendUnderscore(bool state)
+            => state
+                ? sb.Append('4')
+                : sb.Append("24");
 
-    public static StringBuilder AppendBlinking(this StringBuilder sb, bool state)
-        => state
-            ? sb.Append('5')
-            : sb.Append("25");
+        public StringBuilder AppendDoubleUnderscore(bool state)
+            => state
+                ? sb.Append("21")
+                : sb.Append("24");
 
-    public static StringBuilder AppendForegroundRgb(this StringBuilder sb, byte r, byte g, byte b)
-        => sb
-            .Append("38;2;")
-            .Append(r)
-            .Append(DelimiterCharacter)
-            .Append(g)
-            .Append(DelimiterCharacter)
-            .Append(b);
+        public StringBuilder AppendStrike(bool state)
+            => state
+                ? sb.Append('9')
+                : sb.Append("29");
 
-    public static StringBuilder AppendBackgroundRgb(this StringBuilder sb, byte r, byte g, byte b)
-        => sb
-            .Append("48;2;")
-            .Append(r)
-            .Append(DelimiterCharacter)
-            .Append(g)
-            .Append(DelimiterCharacter)
-            .Append(b);
+        public StringBuilder AppendBlinking(bool state)
+            => state
+                ? sb.Append('5')
+                : sb.Append("25");
 
-    public static StringBuilder AppendForegroundSimple(this StringBuilder sb, ConsoleColor color)
-        => sb.Append(GetColorCodeFromConsoleColor(color));
+        public StringBuilder AppendForegroundRgb(byte r, byte g, byte b)
+            => sb
+                .Append("38;2;")
+                .Append(r)
+                .Append(DelimiterCharacter)
+                .Append(g)
+                .Append(DelimiterCharacter)
+                .Append(b);
 
-    public static StringBuilder AppendBackgroundSimple(this StringBuilder sb, ConsoleColor color)
-        => sb.Append(GetColorCodeFromConsoleColor(color) + 10);
+        public StringBuilder AppendBackgroundRgb(byte r, byte g, byte b)
+            => sb
+                .Append("48;2;")
+                .Append(r)
+                .Append(DelimiterCharacter)
+                .Append(g)
+                .Append(DelimiterCharacter)
+                .Append(b);
 
-    public static StringBuilder AppendResetForeground(this StringBuilder sb)
-        => sb.Append(39);
+        public StringBuilder AppendForegroundSimple(ConsoleColor color)
+            => sb.Append(GetColorCodeFromConsoleColor(color));
 
-    public static StringBuilder AppendResetBackground(this StringBuilder sb)
-        => sb.Append(49);
+        public StringBuilder AppendBackgroundSimple(ConsoleColor color)
+            => sb.Append(GetColorCodeFromConsoleColor(color) + 10);
 
-    public static StringBuilder AppendSetCursorPosition(this StringBuilder sb, int x, int y)
-        => sb
-            .Append(y + 1)
-            .Append(DelimiterCharacter)
-            .Append(x + 1);
+        public StringBuilder AppendResetForeground()
+            => sb.Append(39);
+
+        public StringBuilder AppendResetBackground()
+            => sb.Append(49);
+
+        public StringBuilder AppendSetCursorPosition(int x, int y)
+            => sb
+                .Append(y + 1)
+                .Append(DelimiterCharacter)
+                .Append(x + 1);
+    }
 
     private static int GetColorCodeFromConsoleColor(ConsoleColor color) => color switch
     {
