@@ -62,7 +62,7 @@ public class UnixConsoleHandler : CommonConsoleHandler
         Running = false;
     }
 
-    public override IConsoleInput? GetInput()
+    public override IEnumerable<IConsoleInput> GetInput()
     {
         return InputHandler.GetInput();
     }

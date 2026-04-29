@@ -12,7 +12,7 @@ public class WindowsInputHandler : IInputHandler
     private nint _inputHandle;
     private MouseButtons _previousPressedButtons;
 
-    public IConsoleInput? GetInput()
+    public IEnumerable<IConsoleInput> GetInput()
     {
         PeekConsoleInput(_inputHandle, out INPUT_RECORD peekedRecord, 1, out _);
         if (peekedRecord.EventType == EventType.MOUSE_EVENT)
@@ -25,12 +25,12 @@ public class WindowsInputHandler : IInputHandler
 
             if (isMoveEvent)
             {
-                return new MouseMoveInput(
+                return [new MouseMoveInput(
                     _previousPressedButtons,
                     modifiers,
                     mouseEvent.dwMousePosition.X,
                     mouseEvent.dwMousePosition.Y - Console.WindowTop
-                );
+                )];
             }
             else
             {
@@ -61,27 +61,27 @@ public class WindowsInputHandler : IInputHandler
                     }
                 }
 
-                return new MouseButtonInput(
+                return [new MouseButtonInput(
                     button,
                     isPressed,
                     allPressedButtons,
                     modifiers,
                     mouseEvent.dwMousePosition.X,
                     mouseEvent.dwMousePosition.Y - Console.WindowTop
-                );
+                )];
             }
         }
         else if (peekedRecord.EventType == EventType.KEY_EVENT && Console.KeyAvailable)
         {
-            return new KeyInput(
+            return [new KeyInput(
                 Console.ReadKey(true)
-            );
+            )];
         }
         else if (!peekedRecord.Equals(default) && GetNumberOfConsoleInputEvents(_inputHandle, out uint numberOfEvents) && numberOfEvents > 0)
         {
             ReadConsoleInput(_inputHandle, out _, 1, out _);
         }
-        return null;
+        return [];
     }
 
     public void Initialize(nint inputHandle)

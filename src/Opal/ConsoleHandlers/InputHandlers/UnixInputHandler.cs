@@ -15,45 +15,61 @@ public class UnixInputHandler : IInputHandler
     private const char _releaseSequenceEnding = 'm';
     private const string _inputSequencePrefix = "[<";
 
+    /// <summary>
+    /// Lock object to prevent multiple concurrent attempts at reading console input.
+    /// </summary>
+    /// <remarks>
+    /// This is a <see cref="object"/> instead of a <see cref="Lock"/> due to limitations with the latter relating to yield boundaries.
+    /// </remarks>
+    private readonly object _lockObject = new object();
+
+    /// <summary>
+    /// Buffer for storing read input when reading input mouse input sequences.
+    /// </summary>
+    /// <remarks>
+    /// This buffer only needs to be big enough to store the mouse coordinates and the sequence prefix and suffix.
+    /// 32 characters should be more than enough.
+    /// </remarks>
+    private readonly char[] _buffer = new char[32];
+
     public UnixInputHandler(IConsoleHandler consoleHandler)
     {
         _consoleHandler = consoleHandler;
     }
 
-    public IConsoleInput? GetInput()
+    public IEnumerable<IConsoleInput> GetInput()
     {
-        if (!Console.KeyAvailable)
+        lock (_lockObject)
         {
-            return null;
-        }
-
-        ConsoleKeyInfo input = Console.ReadKey(true);
-        if (input.KeyChar != '\e')
-        {
-            return new KeyInput(input);
-        }
-        else
-        {
-            const byte bufferSize = 32;
-            byte offset = 0;
-            Span<char> buffer = stackalloc char[bufferSize];
-
-            while (Console.KeyAvailable && offset < bufferSize)
+            while (Console.KeyAvailable)
             {
-                ConsoleKeyInfo read = Console.ReadKey(true);
-                buffer[offset++] = read.KeyChar;
-                if (read.KeyChar is _pressSequenceEnding or _releaseSequenceEnding)
+                ConsoleKeyInfo input = Console.ReadKey(true);
+
+                if (input.KeyChar != '\e')
                 {
-                    break;
+                    yield return new KeyInput(input);
+                }
+                else
+                {
+                    byte offset = 0;
+
+                    while (Console.KeyAvailable && offset < _buffer.Length)
+                    {
+                        ConsoleKeyInfo read = Console.ReadKey(true);
+                        _buffer[offset++] = read.KeyChar;
+                        if (read.KeyChar is _pressSequenceEnding or _releaseSequenceEnding)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (_buffer.StartsWith(_inputSequencePrefix))
+                    {
+                        yield return ReadSequence(_buffer.AsSpan()[2..offset]);
+                    }
                 }
             }
-
-            if (buffer.StartsWith(_inputSequencePrefix))
-            {
-                return ReadSequence(buffer[2..offset]);
-            }
         }
-        return null;
     }
 
     public void StartInputListening()
@@ -66,7 +82,7 @@ public class UnixInputHandler : IInputHandler
         _consoleHandler.Print(SequenceProvider.DisableMouseReporting());
     }
 
-    private IConsoleInput ReadSequence(ReadOnlySpan<char> buffer)
+    private static IConsoleInput ReadSequence(ReadOnlySpan<char> buffer)
     {
         Span<int> segments = stackalloc int[3];
         int offset = 0;
@@ -83,6 +99,7 @@ public class UnixInputHandler : IInputHandler
             buffer = buffer[(offset + 1)..];
             offset = 0;
         }
+
         return CreateMouseInput((XTermMouseInput)segments[0], segments[1], segments[2], release);
     }
 
@@ -116,10 +133,12 @@ public class UnixInputHandler : IInputHandler
         {
             modifiers |= ConsoleModifiers.Control;
         }
+
         if (mouseEvent.HasFlag(XTermMouseInput.Shift))
         {
             modifiers |= ConsoleModifiers.Shift;
         }
+
         if (mouseEvent.HasFlag(XTermMouseInput.Alt))
         {
             modifiers |= ConsoleModifiers.Alt;

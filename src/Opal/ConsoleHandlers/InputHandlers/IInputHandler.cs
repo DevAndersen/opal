@@ -8,10 +8,10 @@ namespace Opal.ConsoleHandlers.InputHandlers;
 public interface IInputHandler
 {
     /// <summary>
-    /// Returns a user input. If the returned value is <c>null</c>, it represents a lack of new user input.
+    /// Returns available user input.
     /// </summary>
     /// <returns></returns>
-    IConsoleInput? GetInput();
+    IEnumerable<IConsoleInput> GetInput();
 
     /// <summary>
     /// Modifies the console state in order to set it up to listen for user input.

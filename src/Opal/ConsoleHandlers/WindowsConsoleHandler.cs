@@ -97,7 +97,7 @@ public class WindowsConsoleHandler : CommonConsoleHandler
         Running = false;
     }
 
-    public override IConsoleInput? GetInput()
+    public override IEnumerable<IConsoleInput> GetInput()
     {
         return InputHandler.GetInput();
     }

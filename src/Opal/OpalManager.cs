@@ -260,9 +260,14 @@ public class OpalManager : IDisposable
             IBaseConsoleView? currentView = GetCurrentView();
             if (currentView is IKeyInputHandler or IMouseButtonInputHandler or IMouseMoveInputHandler)
             {
-                IConsoleInput? input = _handler.GetInput();
-                if (input != null)
+                IEnumerable<IConsoleInput> inputs = _handler.GetInput();
+                foreach (IConsoleInput input in inputs)
                 {
+                    if (!IsRunning)
+                    {
+                        break;
+                    }
+
                     _inputQueue.Enqueue(input);
                 }
             }

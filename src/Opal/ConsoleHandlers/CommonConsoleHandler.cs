@@ -44,7 +44,7 @@ public abstract class CommonConsoleHandler : IConsoleHandler
 
     public abstract void Stop();
 
-    public abstract IConsoleInput? GetInput();
+    public abstract IEnumerable<IConsoleInput> GetInput();
 
     public abstract void Print(string str);
 

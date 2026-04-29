@@ -64,10 +64,10 @@ public interface IConsoleHandler : IDisposable
     void Print(StringBuilder stringBuilder);
 
     /// <summary>
-    /// Returns a user input. If the returned value is <c>null</c>, it represents a lack of new user input.
+    /// Returns available user input.
     /// </summary>
     /// <returns></returns>
-    IConsoleInput? GetInput();
+    IEnumerable<IConsoleInput> GetInput();
 
     /// <summary>
     /// Returns a new instance of <c><see cref="IConsoleHandler"/></c> using <c><see cref="CreateDefaultHandlerForCurrentPlatform"/></c> and set to fullscreen mode, after executing its <c><see cref="Start"/></c> method.
