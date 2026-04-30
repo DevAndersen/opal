@@ -19,7 +19,7 @@ internal static partial class Kernel32
     private const string _getNumberOfConsoleInputEvents = "GetNumberOfConsoleInputEvents";
 
     /// <summary>
-    /// Gets a handler for the standard console device <c><paramref name="nStdHandle"/></c>.
+    /// Gets a handle for the standard console device <c><paramref name="nStdHandle"/></c>.
     /// </summary>
     /// <remarks>
     /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/getstdhandle"/>
@@ -167,7 +167,7 @@ internal static partial class Kernel32
         out uint lpNumberOfEventsRead);
 
     /// <summary>
-    /// Peak an input from the console input stream, without removing the input from the stream.
+    /// Peek an input from the console input stream, without removing the input from the stream.
     /// </summary>
     /// <remarks>
     /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/peekconsoleinput"/>
@@ -186,7 +186,7 @@ internal static partial class Kernel32
         out uint lpNumberOfEventsRead);
 
     /// <summary>
-    /// Peak an input from the console input stream, without removing the input from the stream.
+    /// Peek an input from the console input stream, without removing the input from the stream.
     /// </summary>
     /// <remarks>
     /// Documentation: <see href="https://learn.microsoft.com/en-us/windows/console/peekconsoleinput"/>
