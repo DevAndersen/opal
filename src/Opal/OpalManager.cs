@@ -180,7 +180,7 @@ public class OpalManager : IDisposable
 
             // Todo: Should the input queue be cleared when changing view?
 
-            // Handle input
+            // Handle input.
             while (_inputQueue.TryDequeue(out IConsoleInput? input) && !state.HaltViewExecution)
             {
                 if (input is KeyInput keyInput && currentView is IKeyInputHandler keyHandler && keyHandler.AcceptsKeyInput())
@@ -346,12 +346,6 @@ public class OpalManager : IDisposable
         _viewStack.Push(view);
     }
 
-    internal void ExitCurrentView()
-    {
-        _viewStack.Pop();
-        RenderView(GetCurrentView());
-    }
-
     private void HandleConsoleSizeChanged(object? sender, ConsoleSizeChangedEventArgs args)
     {
         _grid = GetConsoleGrid(_handler, _grid);
@@ -376,16 +370,13 @@ public class OpalManager : IDisposable
         {
             grid = new ConsoleGrid(handler.Width, handler.Height);
         }
+        else if (grid.Width != handler.Width || grid.Height != handler.Height)
+        {
+            grid.SetSize(handler.Width, handler.Height);
+        }
         else
         {
-            if (grid.Width != handler.Width || grid.Height != handler.Height)
-            {
-                grid.SetSize(handler.Width, handler.Height);
-            }
-            else
-            {
-                grid.Buffer.Span.Clear();
-            }
+            grid.Buffer.Span.Clear();
         }
         return grid;
     }
