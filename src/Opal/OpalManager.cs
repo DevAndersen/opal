@@ -32,7 +32,7 @@ public class OpalManager : IDisposable
     /// <summary>
     /// The thread responsible for listening to user input and enqueue these input to <see cref="_inputQueue"/>.
     /// </summary>
-    private readonly Thread _inputThread;
+    private Thread? _inputThread;
 
     /// <summary>
     /// The base settings that for Opal.
@@ -81,7 +81,6 @@ public class OpalManager : IDisposable
         _renderer = new ConsoleRenderer(consoleHandler);
         _viewStack = new Stack<IBaseConsoleView>();
         _inputQueue = new ConcurrentQueue<IConsoleInput>();
-        _inputThread = new Thread(InputHandlerThreadMethod);
         _settings = settings;
         _stopExceptionCancellationTokenSource = new CancellationTokenSource();
     }
@@ -115,6 +114,7 @@ public class OpalManager : IDisposable
         Console.CancelKeyPress += CancellationAction;
 
         IsRunning = true;
+        _inputThread = new Thread(InputHandlerThreadMethod);
         _inputThread.Start();
 
         try
@@ -133,6 +133,10 @@ public class OpalManager : IDisposable
 
         // If a stop exception was captured, throw it.
         _stopExceptionDispatchInfo?.Throw();
+
+        // Set the current and previous grid to null, ensuring that the view gets rendered when reusing the same OpalManager.
+        _grid = null;
+        _previousGrid = null;
     }
 
     /// <summary>

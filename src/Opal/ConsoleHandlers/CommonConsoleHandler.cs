@@ -12,7 +12,7 @@ public abstract class CommonConsoleHandler : IConsoleHandler
 
     protected const int ConsoleSizeThreadTimeout = 50;
 
-    protected Thread ConsoleSizeThread { get; }
+    protected Thread? ConsoleSizeThread { get; private set; }
 
     public OpalSettings? Settings { get; protected set; }
 
@@ -28,13 +28,19 @@ public abstract class CommonConsoleHandler : IConsoleHandler
 
     public int BufferHeightOffset => _heightOffset + Settings?.HeightOffset ?? 0;
 
-    protected CommonConsoleHandler()
-    {
-        ConsoleSizeThread = new Thread(ConsoleSizeThreadMethod);
-    }
-
     public virtual void Start(OpalSettings settings)
     {
+        if (Running)
+        {
+            throw new InvalidOperationException();
+        }
+
+        ConsoleSizeThread = new Thread(ConsoleSizeThreadMethod);
+        ConsoleSizeThread.Start();
+
+        Running = true;
+        Settings = settings;
+
         if (!settings.UseAlternateBuffer)
         {
             _widthOffset = Console.CursorLeft;

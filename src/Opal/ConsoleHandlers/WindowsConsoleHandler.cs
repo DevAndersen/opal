@@ -42,18 +42,6 @@ public class WindowsConsoleHandler : CommonConsoleHandler
     public override void Start(OpalSettings settings)
     {
         base.Start(settings);
-        if (Running)
-        {
-            throw new InvalidOperationException();
-        }
-
-        Running = true;
-        Settings = settings;
-
-        if (!ConsoleSizeThread.IsAlive)
-        {
-            ConsoleSizeThread.Start();
-        }
 
         (Width, Height) = GetClampedConsoleSize(settings);
 
