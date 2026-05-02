@@ -9,89 +9,106 @@ namespace Opal.ConsoleHandlers.InputHandlers;
 /// </summary>
 public class WindowsInputHandler : IInputHandler
 {
+    /// <summary>
+    /// The handle of the console input device.
+    /// </summary>
     private nint _inputHandle;
+
+    /// <summary>
+    /// The button states of the previous mouse button event.
+    /// Used to keep track of which buttons were pressed, to determine if future mouse events press or release buttons.
+    /// </summary>
     private MouseButtons _previousPressedButtons;
-
-    public IEnumerable<IConsoleInput> GetInput()
-    {
-        PeekConsoleInput(_inputHandle, out INPUT_RECORD peekedRecord, 1, out _);
-        if (peekedRecord.EventType == EventType.MOUSE_EVENT)
-        {
-            ReadConsoleInput(_inputHandle, out INPUT_RECORD record, 1, out _);
-            MOUSE_EVENT_RECORD mouseEvent = record.MouseEvent;
-
-            bool isMoveEvent = mouseEvent.dwEventFlags == MouseEventFlag.MOUSE_MOVED;
-            ConsoleModifiers modifiers = ConvertModifiers(mouseEvent.dwControlKeyState);
-
-            if (isMoveEvent)
-            {
-                return [new MouseMoveInput(
-                    _previousPressedButtons,
-                    modifiers,
-                    mouseEvent.dwMousePosition.X,
-                    mouseEvent.dwMousePosition.Y - Console.WindowTop
-                )];
-            }
-            else
-            {
-                MouseButtons button = MouseButtons.None;
-                MouseButtons allPressedButtons = ConvertButton(mouseEvent.dwButtonState);
-                bool isPressed = true;
-                if (mouseEvent.dwEventFlags == MouseEventFlag.MOUSE_WHEELED)
-                {
-                    button = mouseEvent.dwButtonState > 0
-                        ? MouseButtons.ScrollUp
-                        : MouseButtons.ScrollDown;
-                }
-                else
-                {
-                    MouseButtons pressedButtons = (_previousPressedButtons & allPressedButtons) ^ allPressedButtons;
-                    MouseButtons releasedButtons = (_previousPressedButtons & allPressedButtons) ^ _previousPressedButtons;
-
-                    _previousPressedButtons = allPressedButtons;
-
-                    if (pressedButtons == MouseButtons.None)
-                    {
-                        isPressed = false;
-                        button = releasedButtons;
-                    }
-                    else
-                    {
-                        button = pressedButtons;
-                    }
-                }
-
-                return [new MouseButtonInput(
-                    button,
-                    isPressed,
-                    allPressedButtons,
-                    modifiers,
-                    mouseEvent.dwMousePosition.X,
-                    mouseEvent.dwMousePosition.Y - Console.WindowTop
-                )];
-            }
-        }
-        else if (peekedRecord.EventType == EventType.KEY_EVENT && Console.KeyAvailable)
-        {
-            return [new KeyInput(
-                Console.ReadKey(true)
-            )];
-        }
-        else if (!peekedRecord.Equals(default) && GetNumberOfConsoleInputEvents(_inputHandle, out uint numberOfEvents) && numberOfEvents > 0)
-        {
-            ReadConsoleInput(_inputHandle, out _, 1, out _);
-        }
-        return [];
-    }
 
     public void Initialize(nint inputHandle)
     {
         _inputHandle = inputHandle;
     }
 
+    public IEnumerable<IConsoleInput> GetInput()
+    {
+        PeekConsoleInput(_inputHandle, out INPUT_RECORD peekedRecord, 1, out _);
+
+        // Handle mouse input.
+        if (peekedRecord.EventType == EventType.MOUSE_EVENT)
+        {
+            return [HandleMouseInput()];
+        }
+
+        // Handle key input.
+        if (peekedRecord.EventType == EventType.KEY_EVENT && Console.KeyAvailable)
+        {
+            return [new KeyInput(Console.ReadKey(true))];
+        }
+
+        // Read and discard other types of input.
+        if (!peekedRecord.Equals(default) && GetNumberOfConsoleInputEvents(_inputHandle, out uint numberOfEvents) && numberOfEvents > 0)
+        {
+            ReadConsoleInput(_inputHandle, out _, 1, out _);
+        }
+
+        return [];
+    }
+
+    private IConsoleInput HandleMouseInput()
+    {
+        ReadConsoleInput(_inputHandle, out INPUT_RECORD record, 1, out _);
+        MOUSE_EVENT_RECORD mouseEvent = record.MouseEvent;
+
+        bool isMoveEvent = mouseEvent.dwEventFlags == MouseEventFlag.MOUSE_MOVED;
+        ConsoleModifiers modifiers = ConvertModifiers(mouseEvent.dwControlKeyState);
+
+        if (isMoveEvent)
+        {
+            return new MouseMoveInput(
+                _previousPressedButtons,
+                modifiers,
+                mouseEvent.dwMousePosition.X,
+                mouseEvent.dwMousePosition.Y - Console.WindowTop
+            );
+        }
+
+        MouseButtons button;
+        MouseButtons allPressedButtons = ConvertButton(mouseEvent.dwButtonState);
+        bool isPressed = true;
+
+        if (mouseEvent.dwEventFlags == MouseEventFlag.MOUSE_WHEELED)
+        {
+            button = mouseEvent.dwButtonState > 0
+                ? MouseButtons.ScrollUp
+                : MouseButtons.ScrollDown;
+        }
+        else
+        {
+            MouseButtons pressedButtons = (_previousPressedButtons & allPressedButtons) ^ allPressedButtons;
+            MouseButtons releasedButtons = (_previousPressedButtons & allPressedButtons) ^ _previousPressedButtons;
+
+            _previousPressedButtons = allPressedButtons;
+
+            if (pressedButtons == MouseButtons.None)
+            {
+                isPressed = false;
+                button = releasedButtons;
+            }
+            else
+            {
+                button = pressedButtons;
+            }
+        }
+
+        return new MouseButtonInput(
+            button,
+            isPressed,
+            allPressedButtons,
+            modifiers,
+            mouseEvent.dwMousePosition.X,
+            mouseEvent.dwMousePosition.Y - Console.WindowTop
+        );
+    }
+
     public void StartInputListening()
     {
-        ConsoleInputModes mode = ConsoleInputModes.ENABLE_MOUSE_INPUT | ConsoleInputModes.ENABLE_INSERT_MODE | ConsoleInputModes.ENABLE_PROCESSED_INPUT;
+        const ConsoleInputModes mode = ConsoleInputModes.ENABLE_MOUSE_INPUT | ConsoleInputModes.ENABLE_INSERT_MODE | ConsoleInputModes.ENABLE_PROCESSED_INPUT;
         SetConsoleInputMode(_inputHandle, mode);
     }
 
@@ -122,21 +139,21 @@ public class WindowsInputHandler : IInputHandler
         return result;
     }
 
-    private static MouseButtons ConvertButton(MouseButtonStates nput)
+    private static MouseButtons ConvertButton(MouseButtonStates input)
     {
         MouseButtons result = MouseButtons.None;
 
-        if (nput.HasFlag(MouseButtonStates.FROM_LEFT_1ST_BUTTON_PRESSED))
+        if (input.HasFlag(MouseButtonStates.FROM_LEFT_1ST_BUTTON_PRESSED))
         {
             result |= MouseButtons.LeftButton;
         }
 
-        if (nput.HasFlag(MouseButtonStates.FROM_LEFT_2ND_BUTTON_PRESSED))
+        if (input.HasFlag(MouseButtonStates.FROM_LEFT_2ND_BUTTON_PRESSED))
         {
             result |= MouseButtons.MiddleButton;
         }
 
-        if (nput.HasFlag(MouseButtonStates.RIGHTMOST_BUTTON_PRESSED))
+        if (input.HasFlag(MouseButtonStates.RIGHTMOST_BUTTON_PRESSED))
         {
             result |= MouseButtons.RightButton;
         }
