@@ -12,14 +12,4 @@ public interface IInputHandler
     /// </summary>
     /// <returns></returns>
     IEnumerable<IConsoleInput> GetInput();
-
-    /// <summary>
-    /// Modifies the console state in order to set it up to listen for user input.
-    /// </summary>
-    void StartInputListening();
-
-    /// <summary>
-    /// Undoes the modifications to the console state that <see cref="StartInputListening"/> applied.
-    /// </summary>
-    void StopInputListening();
 }

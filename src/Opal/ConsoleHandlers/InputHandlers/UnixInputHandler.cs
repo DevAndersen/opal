@@ -1,6 +1,5 @@
 ﻿using Opal.Events;
 using Opal.Native.Unix;
-using Opal.Rendering;
 
 namespace Opal.ConsoleHandlers.InputHandlers;
 
@@ -9,8 +8,6 @@ namespace Opal.ConsoleHandlers.InputHandlers;
 /// </summary>
 public class UnixInputHandler : IInputHandler
 {
-    private readonly IConsoleHandler _consoleHandler;
-
     private const char _pressSequenceEnding = 'M';
     private const char _releaseSequenceEnding = 'm';
     private const string _inputSequencePrefix = "[<";
@@ -31,11 +28,6 @@ public class UnixInputHandler : IInputHandler
     /// 32 characters should be more than enough.
     /// </remarks>
     private readonly char[] _buffer = new char[32];
-
-    public UnixInputHandler(IConsoleHandler consoleHandler)
-    {
-        _consoleHandler = consoleHandler;
-    }
 
     public IEnumerable<IConsoleInput> GetInput()
     {
@@ -70,16 +62,6 @@ public class UnixInputHandler : IInputHandler
                 }
             }
         }
-    }
-
-    public void StartInputListening()
-    {
-        _consoleHandler.Print(SequenceProvider.EnableMouseReporting());
-    }
-
-    public void StopInputListening()
-    {
-        _consoleHandler.Print(SequenceProvider.DisableMouseReporting());
     }
 
     private static IConsoleInput ReadSequence(ReadOnlySpan<char> buffer)

@@ -106,17 +106,6 @@ public class WindowsInputHandler : IInputHandler
         );
     }
 
-    public void StartInputListening()
-    {
-        const ConsoleInputModes mode = ConsoleInputModes.ENABLE_MOUSE_INPUT | ConsoleInputModes.ENABLE_INSERT_MODE | ConsoleInputModes.ENABLE_PROCESSED_INPUT;
-        SetConsoleInputMode(_inputHandle, mode);
-    }
-
-    public void StopInputListening()
-    {
-        // Todo: Restore previous console mode, so it works as normal after Opal is stopped.
-    }
-
     private static ConsoleModifiers ConvertModifiers(ControlKeyStates input)
     {
         ConsoleModifiers result = default;

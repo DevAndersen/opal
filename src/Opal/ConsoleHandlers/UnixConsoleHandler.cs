@@ -13,7 +13,7 @@ public class UnixConsoleHandler : CommonConsoleHandler
 
     public UnixConsoleHandler()
     {
-        InputHandler = new UnixInputHandler(this);
+        InputHandler = new UnixInputHandler();
     }
 
     public override void Start(OpalSettings settings)
@@ -28,12 +28,12 @@ public class UnixConsoleHandler : CommonConsoleHandler
         }
 
         Console.CursorVisible = false;
-        InputHandler.StartInputListening();
+        Print(SequenceProvider.EnableMouseReporting());
     }
 
     public override void Stop()
     {
-        InputHandler.StopInputListening();
+        Print(SequenceProvider.DisableMouseReporting());
         Console.CursorVisible = true;
 
         if (Settings?.UseAlternateBuffer == true)

@@ -54,6 +54,9 @@ public class WindowsConsoleHandler : CommonConsoleHandler
         ConsoleOutputModes modifiedConsoleOutputModes = _originalConsoleOutputModes | ConsoleOutputModes.ENABLE_VIRTUAL_TERMINAL_PROCESSING;
         SetConsoleOutputMode(_outputHandle, modifiedConsoleOutputModes);
 
+        ConsoleInputModes mode = ConsoleInputModes.ENABLE_MOUSE_INPUT | ConsoleInputModes.ENABLE_INSERT_MODE | ConsoleInputModes.ENABLE_PROCESSED_INPUT;
+        SetConsoleInputMode(_inputHandle, mode);
+
         if (settings.UseAlternateBuffer)
         {
             Print(SequenceProvider.EnableAlternateBuffer());
@@ -61,12 +64,10 @@ public class WindowsConsoleHandler : CommonConsoleHandler
 
         Console.CursorVisible = false;
         InputHandler.Initialize(_inputHandle);
-        InputHandler.StartInputListening();
     }
 
     public override void Stop()
     {
-        InputHandler.StopInputListening();
         Console.CursorVisible = true;
 
         if (Settings?.UseAlternateBuffer == true)
