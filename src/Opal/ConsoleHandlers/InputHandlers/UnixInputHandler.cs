@@ -55,7 +55,13 @@ public class UnixInputHandler : IInputHandler
                         }
                     }
 
-                    if (_buffer.StartsWith(_inputSequencePrefix))
+                    if (offset == 0)
+                    {
+                        // If the offset is zero, that means the read input was from a user pressing the escape key,
+                        // and not part of an escape sequence.
+                        yield return new KeyInput(input);
+                    }
+                    else if (_buffer.StartsWith(_inputSequencePrefix))
                     {
                         yield return ReadSequence(_buffer.AsSpan()[2..offset]);
                     }
