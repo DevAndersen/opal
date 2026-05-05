@@ -182,8 +182,6 @@ public class OpalManager : IDisposable
             // Initialize the current view.
             await currentView.InitializeViewAsync();
 
-            // Todo: Should the input queue be cleared when changing view?
-
             // Handle input.
             while (_inputQueue.TryDequeue(out IConsoleInput? input) && !state.HaltViewExecution)
             {
@@ -241,12 +239,15 @@ public class OpalManager : IDisposable
                 {
                     IsRunning = false;
                 }
+
                 if (state.HasExitViewBeenRequested)
                 {
+                    _inputQueue.Clear();
                     ExitView(_viewStack.Pop());
                 }
                 else if (state.NextViewState is { } nextViewState)
                 {
+                    _inputQueue.Clear();
                     SetView(nextViewState.View, nextViewState.RemoveCurrentViewFromViewStack);
                 }
             }
@@ -341,7 +342,7 @@ public class OpalManager : IDisposable
         }
     }
 
-    internal void SetView(IBaseConsoleView view, bool removeCurrentViewFromViewStack)
+    private void SetView(IBaseConsoleView view, bool removeCurrentViewFromViewStack)
     {
         if (removeCurrentViewFromViewStack)
         {
