@@ -4,13 +4,22 @@ namespace Opal.Forms;
 
 public static class FormsExtensions
 {
+    // Single-parent extension methods.
     extension(IControlSingleParent singleParent)
     {
+        /// <summary>
+        /// Enumerates over all nested controls.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<IControl> GetNestedControls()
         {
             return GetNestedControls(singleParent.ChildControl);
         }
 
+        /// <summary>
+        /// Enumerates over all nested controls and areas.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<(IControl, Rect)> GetNestedChildControlAreas(int width, int height)
         {
             (IControl, Rect)? controlRect = singleParent.GetChildControlArea(width, height);
@@ -24,13 +33,22 @@ public static class FormsExtensions
         }
     }
 
+    // Multi-parent extension methods.
     extension(IControlMultiParent multiParent)
     {
+        /// <summary>
+        /// Enumerates over all nested controls.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<IControl> GetNestedControls()
         {
             return GetNestedControls(multiParent.ChildControls);
         }
 
+        /// <summary>
+        /// Enumerates over all nested controls and areas.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<(IControl, Rect)> GetNestedChildControlAreas(int width, int height)
         {
             return GetNestedChildControlAreas(multiParent.GetChildControlAreas(width, height));
