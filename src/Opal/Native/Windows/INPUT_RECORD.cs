@@ -18,14 +18,20 @@ internal readonly record struct INPUT_RECORD
     public readonly EventType EventType;
 
     /// <summary>
-    /// The key event expression of the union. Should only be used if <c><see cref="EventType"/></c> is <c><see cref="EventType.KEY_EVENT"/></c>.
+    /// The key event expression of the union.
     /// </summary>
+    /// <remarks>
+    /// Should only be used if <c><see cref="EventType"/></c> is <c><see cref="EventType.KEY_EVENT"/></c>.
+    /// </remarks>
     [FieldOffset(4)]
     public readonly KEY_EVENT_RECORD KeyEvent;
 
     /// <summary>
-    /// The mouse event expression of the union. Should only be used if <c><see cref="EventType"/></c> is <c><see cref="EventType.MOUSE_EVENT"/></c>.
+    /// The mouse event expression of the union.
     /// </summary>
+    /// <remarks>
+    /// Should only be used if <c><see cref="EventType"/></c> is <c><see cref="EventType.MOUSE_EVENT"/></c>.
+    /// </remarks>
     [FieldOffset(4)]
     public readonly MOUSE_EVENT_RECORD MouseEvent;
 }
