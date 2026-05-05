@@ -20,6 +20,11 @@ public class WindowsInputHandler : IInputHandler
     /// </summary>
     private MouseButtons _previousPressedButtons;
 
+    /// <summary>
+    /// Buffer for storing peeked input.
+    /// </summary>
+    private readonly INPUT_RECORD[] _buffer = new INPUT_RECORD[8];
+
     public void Initialize(nint inputHandle)
     {
         _inputHandle = inputHandle;
@@ -27,32 +32,30 @@ public class WindowsInputHandler : IInputHandler
 
     public IEnumerable<IConsoleInput> GetInput()
     {
-        PeekConsoleInput(_inputHandle, out INPUT_RECORD peekedRecord, 1, out _);
+        PeekConsoleInputArray(_inputHandle, _buffer, (uint)_buffer.Length, out uint eventsRead);
 
-        // Handle mouse input.
-        if (peekedRecord.EventType == EventType.MOUSE_EVENT)
+        for (int i = 0; i < eventsRead; i++)
         {
-            return [HandleMouseInput()];
-        }
+            INPUT_RECORD record = _buffer[i];
 
-        // Handle key input.
-        if (peekedRecord.EventType == EventType.KEY_EVENT && Console.KeyAvailable)
-        {
-            return [new KeyInput(Console.ReadKey(true))];
+            if (record.EventType == EventType.MOUSE_EVENT) // Handle mouse input.
+            {
+                yield return HandleMouseInput(record);
+                ReadAndDiscardInput();
+            }
+            else if (record.EventType == EventType.KEY_EVENT && record.KeyEvent.bKeyDown == 1) // Handle key press input.
+            {
+                yield return new KeyInput(Console.ReadKey(true));
+            }
+            else // Read and discard other kinds of input.
+            {
+                ReadAndDiscardInput();
+            }
         }
-
-        // Read and discard other types of input.
-        if (!peekedRecord.Equals(default) && GetNumberOfConsoleInputEvents(_inputHandle, out uint numberOfEvents) && numberOfEvents > 0)
-        {
-            ReadConsoleInput(_inputHandle, out _, 1, out _);
-        }
-
-        return [];
     }
 
-    private IConsoleInput HandleMouseInput()
+    private IConsoleInput HandleMouseInput(INPUT_RECORD record)
     {
-        ReadConsoleInput(_inputHandle, out INPUT_RECORD record, 1, out _);
         MOUSE_EVENT_RECORD mouseEvent = record.MouseEvent;
 
         bool isMoveEvent = mouseEvent.dwEventFlags == MouseEventFlag.MOUSE_MOVED;
@@ -104,6 +107,11 @@ public class WindowsInputHandler : IInputHandler
             mouseEvent.dwMousePosition.X,
             mouseEvent.dwMousePosition.Y - Console.WindowTop
         );
+    }
+
+    private void ReadAndDiscardInput()
+    {
+        ReadConsoleInput(_inputHandle, out _, 1, out _);
     }
 
     private static ConsoleModifiers ConvertModifiers(ControlKeyStates input)
