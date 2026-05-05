@@ -9,87 +9,96 @@ using Opal.Views;
 TestForm form = new TestForm();
 
 form.ChildControls.Add(
-    new Button
-    {
-        PosX = 5,
-        PosY = 3,
-        Height = 3,
-        Width = 10,
-        Text = "Button 1"
-    });
+new Button
+{
+    PosX = 5,
+    PosY = 3,
+    Height = 3,
+    Width = 10,
+    Text = "Button 1"
+});
 
 form.ChildControls.Add(
-    new Button
-    {
-        PosX = 5,
-        PosY = 6,
-        Height = 3,
-        Width = 10,
-        Text = "Button 2"
-    });
+new Button
+{
+    PosX = 5,
+    PosY = 6,
+    Height = 3,
+    Width = 10,
+    Text = "Button 2"
+});
 
 form.ChildControls.Add(
-    new Button
-    {
-        PosX = 5,
-        PosY = 9,
-        Height = 3,
-        Width = 10,
-        Text = "Button 3",
-        Index = 0
-    });
+new Button
+{
+    PosX = 5,
+    PosY = 9,
+    Height = 3,
+    Width = 10,
+    Text = "Button 3",
+    Index = 0
+});
 
 form.ChildControls.Add(
-    new Button
-    {
-        PosX = 5,
-        PosY = 12,
-        Height = 3,
-        Width = 10,
-        Text = "Button 4",
-    });
+new Button
+{
+    PosX = 5,
+    PosY = 12,
+    Height = 3,
+    Width = 10,
+    Text = "Button 4",
+});
 
 form.ChildControls.Add(
-    new TextBox
-    {
-        PosX = 5,
-        PosY = 15,
-        Height = 3,
-        Width = 10
-    });
+new TextBox
+{
+    PosX = 5,
+    PosY = 15,
+    Height = 3,
+    Width = 10
+});
 
 form.ChildControls.Add(
-    new Label
-    {
-        PosX = 2,
-        PosY = 1,
-        Text = "This is a label"
-    });
+new Label
+{
+    PosX = 2,
+    PosY = 1,
+    Text = "This is a label"
+});
 
 form.ChildControls.Add(new GroupBox
+{
+    PosX = 80,
+    PosY = 2,
+    Width = 20,
+    Height = 8,
+    Text = "GroupBox",
+    ChildControl = new Button
     {
-        PosX = 80,
-        PosY = 2,
-        Width = 20,
-        Height = 8,
-        Text = "GroupBox",
-        ChildControl = new Button
+        Text = "Btn",
+        BorderColor = ConsoleColor.DarkRed,
+        BorderColorHighlight = ConsoleColor.Red,
+        OnClick = new(async cancellationToken =>
         {
-            Text = "Btn",
-            BorderColor = ConsoleColor.DarkRed,
-            BorderColorHighlight = ConsoleColor.Red,
-            OnClick = new(async cancellationToken =>
-            {
-                throw new Exception("This is a test");
-            })
-        }
-    });
+            throw new Exception("This is a test");
+        })
+    }
+});
 
 form.ChildControls.Add(new DragBox
-    {
-        PosX = 30,
-        PosY = 0,
-    });
+{
+    PosX = 30,
+    PosY = 0,
+});
+
+form.ChildControls.Add(new ProgressBar
+{
+    PosX = 1,
+    PosY = 20,
+    Height = 3,
+    Width = 20,
+    Value = 50
+});
 
 OpalManager manager = new OpalManager();
 await manager.StartAsync(form);
