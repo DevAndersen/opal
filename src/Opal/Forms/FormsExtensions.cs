@@ -17,6 +17,15 @@ public static class FormsExtensions
         }
 
         /// <summary>
+        /// Enumerates over all nested <typeparamref name="TControl"/>s.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TControl> GetNestedControls<TControl>()
+        {
+            return singleParent.GetNestedControls().OfType<TControl>();
+        }
+
+        /// <summary>
         /// Enumerates over all nested controls and areas.
         /// </summary>
         /// <returns></returns>
@@ -30,6 +39,15 @@ public static class FormsExtensions
             }
 
             return GetNestedChildControlAreas(controlRect.Value);
+        }
+
+        /// <summary>
+        /// Enumerates over all nested <typeparamref name="TControl"/>s and areas.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<(TControl, Rect)> GetNestedChildControlAreas<TControl>(int width, int height)
+        {
+            return singleParent.GetNestedChildControlAreas(width, height).OfType<(TControl, Rect)>();
         }
     }
 
@@ -46,12 +64,30 @@ public static class FormsExtensions
         }
 
         /// <summary>
+        /// Enumerates over all nested <typeparamref name="TControl"/>s.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<TControl> GetNestedControls<TControl>()
+        {
+            return multiParent.GetNestedControls().OfType<TControl>();
+        }
+
+        /// <summary>
         /// Enumerates over all nested controls and areas.
         /// </summary>
         /// <returns></returns>
         public IEnumerable<(IControl, Rect)> GetNestedChildControlAreas(int width, int height)
         {
             return GetNestedChildControlAreas(multiParent.GetChildControlAreas(width, height));
+        }
+
+        /// <summary>
+        /// Enumerates over all nested <typeparamref name="TControl"/>s and areas.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<(TControl, Rect)> GetNestedChildControlAreas<TControl>(int width, int height)
+        {
+            return multiParent.GetNestedChildControlAreas(width, height).OfType<(TControl, Rect)>();
         }
     }
 
@@ -66,6 +102,7 @@ public static class FormsExtensions
 
             yield return control;
 
+            // Iterate over the children of single parent controls.
             if (control is IControlSingleParent nestedSingleParent)
             {
                 foreach (IControl nestedChild in nestedSingleParent.GetNestedControls())
@@ -77,6 +114,7 @@ public static class FormsExtensions
                 }
             }
 
+            // Iterate over the children of multi parent controls.
             if (control is IControlMultiParent nestedMultiParent)
             {
                 foreach (IControl nestedChild in nestedMultiParent.GetNestedControls())
@@ -101,6 +139,7 @@ public static class FormsExtensions
 
             yield return (control, rect);
 
+            // Iterate over the children of single parent controls.
             if (control is IControlSingleParent nestedSingleParent)
             {
                 foreach ((IControl nestedControl, Rect nestedRect) in nestedSingleParent.GetNestedChildControlAreas(rect.Width, rect.Height))
@@ -116,6 +155,7 @@ public static class FormsExtensions
                 }
             }
 
+            // Iterate over the children of multi parent controls.
             if (control is IControlMultiParent nestedMultiParent)
             {
                 foreach ((IControl nestedControl, Rect nestedRect) in nestedMultiParent.GetNestedChildControlAreas(rect.Width, rect.Height))
