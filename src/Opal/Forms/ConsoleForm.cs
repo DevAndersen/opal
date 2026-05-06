@@ -115,19 +115,19 @@ public class ConsoleForm : ConsoleView,
                 await SelectControlAsync(selectable, consoleState, cancellationToken);
             }
 
-            if (!relativeEvent.Handled && control is IMouseButtonControl mouseButtonControl)
+            if (!relativeEvent.Handled && control is IMouseButtonDownControl or IMouseButtonUpControl)
             {
                 _ = Task.Run(async () =>
                 {
                     try
                     {
-                        if (relativeEvent.IsPressed)
+                        if (relativeEvent.IsPressed && control is IMouseButtonDownControl mouseButtonDownControl)
                         {
-                            await mouseButtonControl.OnMouseDown.InvokeAsync(relativeEvent, consoleState, cancellationToken);
+                            await mouseButtonDownControl.OnMouseDown.InvokeAsync(relativeEvent, consoleState, cancellationToken);
                         }
-                        else
+                        else if (!relativeEvent.IsPressed && control is IMouseButtonUpControl mouseButtonUpControl)
                         {
-                            await mouseButtonControl.OnMouseUp.InvokeAsync(relativeEvent, consoleState, cancellationToken);
+                            await mouseButtonUpControl.OnMouseUp.InvokeAsync(relativeEvent, consoleState, cancellationToken);
                         }
                     }
                     catch (Exception e)

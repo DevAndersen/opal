@@ -4,11 +4,9 @@ using Opal.Rendering;
 
 namespace Opal.Forms.Controls;
 
-public class Checkbox : SelectableControl, IMouseButtonControl, IKeyControl
+public class Checkbox : SelectableControl, IMouseButtonUpControl, IKeyControl
 {
     public bool Value { get; set; }
-
-    public ConsoleEventHandler<MouseButtonInput> OnMouseDown => new(_ => { });
 
     public ConsoleEventHandler<MouseButtonInput> OnMouseUp => new(_ => ChangeValue());
 

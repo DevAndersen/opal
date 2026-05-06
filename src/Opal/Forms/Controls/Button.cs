@@ -4,15 +4,13 @@ using Opal.Rendering;
 
 namespace Opal.Forms.Controls;
 
-public class Button : SelectableControl, IMouseButtonControl, IKeyControl, IMouseHoverControl
+public class Button : SelectableControl, IMouseButtonUpControl, IKeyControl, IMouseHoverControl
 {
     public int? Width { get; set; }
 
     public int? Height { get; set; }
 
     public string? Text { get; set; }
-
-    public ConsoleEventHandler<MouseButtonInput> OnMouseDown => OnClick;
 
     public ConsoleEventHandler<MouseButtonInput> OnMouseUp => OnClick;
 
