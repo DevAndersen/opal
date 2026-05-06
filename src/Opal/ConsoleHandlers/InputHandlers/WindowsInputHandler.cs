@@ -38,18 +38,23 @@ public class WindowsInputHandler : IInputHandler
         {
             INPUT_RECORD record = _buffer[i];
 
-            if (record.EventType == EventType.MOUSE_EVENT) // Handle mouse input.
+            switch (record.EventType)
             {
-                yield return HandleMouseInput(record);
-                ReadAndDiscardInput();
-            }
-            else if (record.EventType == EventType.KEY_EVENT && record.KeyEvent.bKeyDown == 1) // Handle key press input.
-            {
-                yield return new KeyInput(Console.ReadKey(true));
-            }
-            else // Read and discard other kinds of input.
-            {
-                ReadAndDiscardInput();
+                // Handle mouse input.
+                case EventType.MOUSE_EVENT:
+                    yield return HandleMouseInput(record);
+                    ReadAndDiscardInput();
+                    break;
+
+                // Handle key press input.
+                case EventType.KEY_EVENT when record.KeyEvent.bKeyDown == 1 && Console.KeyAvailable:
+                    yield return new KeyInput(Console.ReadKey(true));
+                    break;
+
+                // Read and discard other kinds of input.
+                default:
+                    ReadAndDiscardInput();
+                    break;
             }
         }
     }
