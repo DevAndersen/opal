@@ -252,8 +252,6 @@ public class OpalManager : IDisposable
                 }
             }
         }
-
-        Stop();
     }
 
     public void InputHandlerThreadMethod()
