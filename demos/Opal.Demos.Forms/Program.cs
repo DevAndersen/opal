@@ -100,6 +100,13 @@ form.ChildControls.Add(new ProgressBar
     Value = 50
 });
 
+form.ChildControls.Add(new Checkbox
+{
+    PosX = 1,
+    PosY = 25,
+    Value = true
+});
+
 OpalManager manager = new OpalManager();
 await manager.StartAsync(form);
 
