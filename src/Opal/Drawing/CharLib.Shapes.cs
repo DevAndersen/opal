@@ -28,6 +28,21 @@ public static partial class CharLib
         public const char BlackDiamondCentred = '⯁';
 
         /// <summary>
+        /// Ballot box (Hex <c>2610</c>, Dec <c>9744</c>).
+        /// </summary>
+        public const char BallotBox = '☐';
+
+        /// <summary>
+        /// Ballot box with check (Hex <c>2611</c>, Dec <c>9745</c>).
+        /// </summary>
+        public const char BallotBoxWithCheck = '☑';
+
+        /// <summary>
+        /// Ballot box with x (Hex <c>2612</c>, Dec <c>9746</c>).
+        /// </summary>
+        public const char BallotBoxWithX = '☒';
+
+        /// <summary>
         /// Ballot box with light x (Hex <c>2BBD</c>, Dec <c>11197</c>).
         /// </summary>
         public const char BallotBoxWithLightX = '⮽';
