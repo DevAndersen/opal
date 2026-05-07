@@ -13,6 +13,7 @@
     <File Path="docs\ConsoleChar.md" />
     <File Path="docs\ConsoleGrid.md" />
     <File Path="docs\Rendering.md" />
+    <File Path="docs\Requirements.md" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
