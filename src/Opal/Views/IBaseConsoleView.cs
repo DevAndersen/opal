@@ -2,5 +2,5 @@
 
 public interface IBaseConsoleView : IRenderable
 {
-    Task InitializeViewAsync();
+    Task InitializeViewAsync(CancellationToken cancellationToken = default);
 }

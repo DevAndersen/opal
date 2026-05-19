@@ -6,7 +6,7 @@ public abstract class ConsoleView : IConsoleView
 {
     private bool _isInitialized;
 
-    public Task InitializeViewAsync()
+    public Task InitializeViewAsync(CancellationToken cancellationToken = default)
     {
         if (!_isInitialized)
         {

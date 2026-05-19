@@ -6,16 +6,16 @@ public abstract class AsyncConsoleView : IAsyncConsoleView
 {
     private bool _isInitialized;
 
-    public async Task InitializeViewAsync()
+    public async Task InitializeViewAsync(CancellationToken cancellationToken = default)
     {
         if (!_isInitialized)
         {
-            await InitializeAsync();
+            await InitializeAsync(cancellationToken);
             _isInitialized = true;
         }
     }
 
-    protected virtual Task InitializeAsync()
+    protected virtual Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         return Task.CompletedTask;
     }

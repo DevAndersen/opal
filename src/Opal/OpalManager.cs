@@ -180,7 +180,7 @@ public class OpalManager : IDisposable
             state.Reset(_handler.Height, _handler.Width);
 
             // Initialize the current view.
-            await currentView.InitializeViewAsync();
+            await currentView.InitializeViewAsync(cancellationToken);
 
             // Handle input.
             while (_inputQueue.TryDequeue(out IConsoleInput? input) && !state.HaltViewExecution)
