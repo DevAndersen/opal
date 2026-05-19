@@ -30,14 +30,19 @@ public class OpalManager : IDisposable
     private readonly ConcurrentQueue<IConsoleInput> _inputQueue;
 
     /// <summary>
-    /// The thread responsible for listening to user input and enqueue these input to <see cref="_inputQueue"/>.
-    /// </summary>
-    private Thread? _inputThread;
-
-    /// <summary>
     /// The base settings that for Opal.
     /// </summary>
     private readonly OpalSettings _settings;
+
+    /// <summary>
+    /// Will be canceled when <see cref="Stop(Exception)"/> is invoked, requesting a graceful stop.
+    /// </summary>
+    private readonly CancellationTokenSource _stopExceptionCancellationTokenSource;
+
+    /// <summary>
+    /// The thread responsible for listening to user input and enqueue these input to <see cref="_inputQueue"/>.
+    /// </summary>
+    private Thread? _inputThread;
 
     /// <summary>
     /// The current console grid, containing the data that will be printed to the console.
@@ -58,11 +63,6 @@ public class OpalManager : IDisposable
     /// as these could otherwise cause an ungraceful stop, leaving the console in a modified state.
     /// </remarks>
     private ExceptionDispatchInfo? _stopExceptionDispatchInfo;
-
-    /// <summary>
-    /// Will be canceled when <see cref="Stop(Exception)"/> is invoked, requesting a graceful stop.
-    /// </summary>
-    private readonly CancellationTokenSource _stopExceptionCancellationTokenSource;
 
     /// <summary>
     /// Stores the previous key input.
@@ -254,7 +254,7 @@ public class OpalManager : IDisposable
         }
     }
 
-    public void InputHandlerThreadMethod()
+    private void InputHandlerThreadMethod()
     {
         while (IsRunning)
         {

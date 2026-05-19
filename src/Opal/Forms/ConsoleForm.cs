@@ -17,14 +17,14 @@ public class ConsoleForm : ConsoleView,
 {
     private readonly ObservableCollection<IControl> _controls = [];
 
+    private int _dragStartRelativeX;
+    private int _dragStartRelativeY;
+
     public IList<IControl> ChildControls => _controls;
 
     public ISelectable? Selected { get; protected set; }
 
     public IDragControl? DraggedControl { get; protected set; }
-
-    private int _dragStartRelativeX;
-    private int _dragStartRelativeY;
 
     protected override void Initialize()
     {

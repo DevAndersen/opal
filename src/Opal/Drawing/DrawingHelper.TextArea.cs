@@ -22,7 +22,7 @@ public static partial class DrawingHelper
 
             for (int lineIndex = 0; lineIndex < lines.Length; lineIndex++)
             {
-                string line = lines[lineIndex].Replace("\t", new string('\t', tabWidth));
+                string line = lines[lineIndex].Replace("\t", new string(' ', tabWidth));
 
                 for (int charIndex = 0; charIndex < line.Length; charIndex++)
                 {
