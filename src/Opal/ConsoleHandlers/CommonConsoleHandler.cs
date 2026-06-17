@@ -30,6 +30,8 @@ public abstract class CommonConsoleHandler : IConsoleHandler
 
     public virtual void Start(OpalSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(settings);
+
         if (Running)
         {
             throw new InvalidOperationException();

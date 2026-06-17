@@ -77,6 +77,9 @@ public class OpalManager : IDisposable
 
     public OpalManager(IConsoleHandler consoleHandler, OpalSettings settings)
     {
+        ArgumentNullException.ThrowIfNull(consoleHandler);
+        ArgumentNullException.ThrowIfNull(settings);
+
         _handler = consoleHandler;
         _renderer = new ConsoleRenderer(consoleHandler);
         _viewStack = new Stack<IBaseConsoleView>();
@@ -99,6 +102,8 @@ public class OpalManager : IDisposable
 
     public async Task StartAsync(IBaseConsoleView view, CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(view);
+
         if (IsRunning)
         {
             throw new InvalidOperationException("Opal is already running.");
@@ -145,6 +150,8 @@ public class OpalManager : IDisposable
     /// <param name="exception"></param>
     public void Stop(Exception exception)
     {
+        ArgumentNullException.ThrowIfNull(exception);
+
         _stopExceptionDispatchInfo = ExceptionDispatchInfo.Capture(exception);
         _stopExceptionCancellationTokenSource.Cancel();
     }
@@ -364,11 +371,16 @@ public class OpalManager : IDisposable
 
     public static void RenderGrid(ConsoleRenderer renderer, ConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(renderer);
+        ArgumentNullException.ThrowIfNull(grid);
+
         renderer.Render(grid);
     }
 
     public static ConsoleGrid GetConsoleGrid(IConsoleHandler handler, ConsoleGrid? grid = null)
     {
+        ArgumentNullException.ThrowIfNull(handler);
+
         if (grid == null)
         {
             grid = new ConsoleGrid(handler.Width, handler.Height);
