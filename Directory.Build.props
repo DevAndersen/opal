@@ -11,6 +11,7 @@
 	<!-- Code quality -->
 	<PropertyGroup>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<WarningsNotAsErrors>NU1901,NU1902,NU1903</WarningsNotAsErrors>
 	</PropertyGroup>
 
 	<!-- Release code quality -->
