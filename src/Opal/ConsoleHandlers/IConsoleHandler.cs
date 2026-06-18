@@ -1,4 +1,5 @@
 ﻿using Opal.Events;
+using Opal.Rendering;
 
 namespace Opal.ConsoleHandlers;
 
@@ -68,6 +69,8 @@ public interface IConsoleHandler : IDisposable
     /// </summary>
     /// <returns></returns>
     IEnumerable<IConsoleInput> GetInput();
+
+    ConsoleGrid GetCleanConsoleGrid(ConsoleGrid? grid = null);
 
     /// <summary>
     /// Returns a new instance of <c><see cref="IConsoleHandler"/></c> using <c><see cref="CreateDefaultHandlerForCurrentPlatform"/></c> and set to fullscreen mode, after executing its <c><see cref="Start"/></c> method.

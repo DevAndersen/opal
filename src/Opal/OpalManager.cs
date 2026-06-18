@@ -316,7 +316,7 @@ public class OpalManager : IDisposable
         }
     }
 
-    public IBaseConsoleView? GetCurrentView()
+    private IBaseConsoleView? GetCurrentView()
     {
         return _viewStack.TryPeek(out IBaseConsoleView? view) ? view : null;
     }
@@ -341,7 +341,7 @@ public class OpalManager : IDisposable
             _previousGrid = _grid?.MakeClone();
         }
 
-        _grid = GetConsoleGrid(_handler, _grid);
+        _grid = _handler.GetCleanConsoleGrid(_grid);
         view.Render(_grid);
 
         // Only print the grid if the current grid is different from the previously printed grid.
@@ -362,7 +362,7 @@ public class OpalManager : IDisposable
 
     private void HandleConsoleSizeChanged(object? sender, ConsoleSizeChangedEventArgs args)
     {
-        _grid = GetConsoleGrid(_handler, _grid);
+        _grid = _handler.GetCleanConsoleGrid(_grid);
         _grid.SetSize(args.NewWidth, args.NewHeight);
 
         if (_viewStack.TryPeek(out IBaseConsoleView? currentView))
@@ -373,31 +373,9 @@ public class OpalManager : IDisposable
         RenderGrid(_renderer, _grid);
     }
 
-    public static void RenderGrid(ConsoleRenderer renderer, ConsoleGrid grid)
+    private static void RenderGrid(ConsoleRenderer renderer, ConsoleGrid grid)
     {
-        ArgumentNullException.ThrowIfNull(renderer);
-        ArgumentNullException.ThrowIfNull(grid);
-
         renderer.Render(grid);
-    }
-
-    public static ConsoleGrid GetConsoleGrid(IConsoleHandler handler, ConsoleGrid? grid = null)
-    {
-        ArgumentNullException.ThrowIfNull(handler);
-
-        if (grid == null)
-        {
-            grid = new ConsoleGrid(handler.Width, handler.Height);
-        }
-        else if (grid.Width != handler.Width || grid.Height != handler.Height)
-        {
-            grid.SetSize(handler.Width, handler.Height);
-        }
-        else
-        {
-            grid.Buffer.Span.Clear();
-        }
-        return grid;
     }
 
     public void Dispose()

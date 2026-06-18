@@ -1,4 +1,5 @@
 ﻿using Opal.Events;
+using Opal.Rendering;
 
 namespace Opal.ConsoleHandlers;
 
@@ -53,6 +54,23 @@ public abstract class CommonConsoleHandler : IConsoleHandler
     public abstract void Stop();
 
     public abstract IEnumerable<IConsoleInput> GetInput();
+
+    public ConsoleGrid GetCleanConsoleGrid(ConsoleGrid? grid = null)
+    {
+        if (grid == null)
+        {
+            grid = new ConsoleGrid(Width, Height);
+        }
+        else if (grid.Width != Width || grid.Height != Height)
+        {
+            grid.SetSize(Width, Height);
+        }
+        else
+        {
+            grid.Buffer.Span.Clear();
+        }
+        return grid;
+    }
 
     public abstract void Print(string str);
 

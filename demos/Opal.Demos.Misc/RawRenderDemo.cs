@@ -11,7 +11,7 @@ internal static class RawRenderDemo
 
         using IConsoleHandler handler = IConsoleHandler.StartNewFullscreen();
         ConsoleRenderer renderer = new ConsoleRenderer(handler);
-        ConsoleGrid grid = OpalManager.GetConsoleGrid(handler);
+        ConsoleGrid grid = handler.GetCleanConsoleGrid();
 
         handler.OnConsoleSizeChanged += (_, _) =>
         {
