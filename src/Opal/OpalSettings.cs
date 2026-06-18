@@ -19,7 +19,17 @@ public class OpalSettings
 
     public int? MaxHeight { get; }
 
-    public OpalSettings(bool useAlternateBuffer, int widthOffset, int heightOffset, int? minWidth, int? minHeight, int? maxWidth, int? maxHeight)
+    public bool HandleInput { get; }
+
+    public OpalSettings(
+        bool useAlternateBuffer,
+        int widthOffset,
+        int heightOffset,
+        int? minWidth,
+        int? minHeight,
+        int? maxWidth,
+        int? maxHeight,
+        bool handleInput = true)
     {
         UseAlternateBuffer = useAlternateBuffer;
 
@@ -31,15 +41,16 @@ public class OpalSettings
 
         MaxWidth = maxWidth;
         MaxHeight = maxHeight;
+        HandleInput = handleInput;
     }
 
     /// <summary>
     /// Create a standardized setting for fullscreen mode.
     /// </summary>
     /// <returns></returns>
-    public static OpalSettings CreateFullscreen()
+    public static OpalSettings CreateFullscreen(bool handleInput = true)
     {
-        return new OpalSettings(true, 0, 0, null, null, null, null);
+        return new OpalSettings(true, 0, 0, null, null, null, null, handleInput);
     }
 
     /// <summary>
@@ -48,9 +59,9 @@ public class OpalSettings
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <returns></returns>
-    public static OpalSettings CreateFixedInline(int width, int height)
+    public static OpalSettings CreateFixedInline(int width, int height, bool handleInput = true)
     {
-        return new OpalSettings(false, 0, 0, width, height, width, height);
+        return new OpalSettings(false, 0, 0, width, height, width, height, handleInput);
     }
 
     /// <summary>
@@ -61,9 +72,9 @@ public class OpalSettings
     /// <param name="widthOffset"></param>
     /// <param name="heightOffset"></param>
     /// <returns></returns>
-    public static OpalSettings CreateFixedInline(int width, int height, int widthOffset, int heightOffset)
+    public static OpalSettings CreateFixedInline(int width, int height, int widthOffset, int heightOffset, bool handleInput = true)
     {
-        return new OpalSettings(false, widthOffset, heightOffset, width, height, width, height);
+        return new OpalSettings(false, widthOffset, heightOffset, width, height, width, height, handleInput);
     }
 
     /// <summary>
@@ -74,8 +85,8 @@ public class OpalSettings
     /// <param name="maxWidth"></param>
     /// <param name="maxHeight"></param>
     /// <returns></returns>
-    public static OpalSettings CreateFlexibleInline(int? minWidth, int? minHeight, int? maxWidth, int? maxHeight)
+    public static OpalSettings CreateFlexibleInline(int? minWidth, int? minHeight, int? maxWidth, int? maxHeight, bool handleInput = true)
     {
-        return new OpalSettings(false, 0, 0, minWidth, minHeight, maxWidth, maxHeight);
+        return new OpalSettings(false, 0, 0, minWidth, minHeight, maxWidth, maxHeight, handleInput);
     }
 }

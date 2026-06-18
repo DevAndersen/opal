@@ -119,8 +119,12 @@ public class OpalManager : IDisposable
         Console.CancelKeyPress += CancellationAction;
 
         IsRunning = true;
-        _inputThread = new Thread(InputHandlerThreadMethod);
-        _inputThread.Start();
+
+        if (_settings.HandleInput)
+        {
+            _inputThread = new Thread(InputHandlerThreadMethod);
+            _inputThread.Start();
+        }
 
         try
         {
