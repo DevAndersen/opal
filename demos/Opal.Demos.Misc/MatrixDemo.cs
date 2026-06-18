@@ -44,13 +44,18 @@ public class MatrixView : ConsoleView, IKeyInputHandler
 
         if (Random.Shared.Next(2) == 0)
         {
-            _particles.Add(new MatrixParticle(Random.Shared.Next(consoleState.Width)));
+            AddParticle(null, consoleState);
         }
 
         if (_throwExceptionAfterNextRender)
         {
             throw new Exception($"Test of throwing an exception from {nameof(Update)}");
         }
+    }
+
+    private void AddParticle(char? character, IConsoleState consoleState)
+    {
+        _particles.Add(new MatrixParticle(Random.Shared.Next(consoleState.Width), character));
     }
 
     public override void Render(IConsoleGrid grid)
@@ -99,6 +104,14 @@ public class MatrixView : ConsoleView, IKeyInputHandler
             case ConsoleKey.D4:
                 _throwExceptionAfterNextUpdate = true;
                 break;
+
+            case ConsoleKey.Spacebar:
+                AddParticle(null, consoleState);
+                break;
+
+            case ConsoleKey when char.IsLetterOrDigit(keyEvent.KeyChar):
+                AddParticle(keyEvent.KeyChar, consoleState);
+                break;
         }
 
         return Task.CompletedTask;
@@ -109,14 +122,16 @@ public class MatrixView : ConsoleView, IKeyInputHandler
         private const string _validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-*/+=ｦｧｨｩｪｫｬｭｮｯｰｱｲｳｴｵｶｷｸｹｺ";
 
         private readonly int _maxLength;
+        private readonly char? _character;
 
         public int PosX { get; }
 
         public int PosY { get; private set; }
 
-        public MatrixParticle(int posX)
+        public MatrixParticle(int posX, char? character)
         {
             _maxLength = Random.Shared.Next(16, 30);
+            _character = character;
             PosX = posX;
             PosY = 0;
         }
@@ -129,7 +144,10 @@ public class MatrixView : ConsoleView, IKeyInputHandler
         {
             PosY++;
 
-            char c = _validChars[Random.Shared.Next(_validChars.Length)];
+            char c = _character == null
+                ? _validChars[Random.Shared.Next(_validChars.Length)]
+                : _character.Value;
+
             _trail.AddFirst(c);
 
             if (_trail.Count > _maxLength)
