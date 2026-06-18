@@ -7,7 +7,7 @@ namespace Opal.Rendering;
 /// </summary>
 public class ConsoleGrid : BaseConsoleGrid
 {
-    private readonly Lock _lockObject;
+    public Lock Lock { get; }
 
     internal Memory<ConsoleChar> Buffer { get; private set; }
 
@@ -15,7 +15,7 @@ public class ConsoleGrid : BaseConsoleGrid
     {
         get
         {
-            lock (_lockObject)
+            lock (Lock)
             {
                 return IsCoordinateWithinGrid(x, y)
                     ? Buffer.Span[x + y * Width]
@@ -24,7 +24,7 @@ public class ConsoleGrid : BaseConsoleGrid
         }
         set
         {
-            lock (_lockObject)
+            lock (Lock)
             {
                 if (IsCoordinateWithinGrid(x, y))
                 {
@@ -36,7 +36,7 @@ public class ConsoleGrid : BaseConsoleGrid
 
     public ConsoleGrid(int width, int height) : base(width, height)
     {
-        _lockObject = new Lock();
+        Lock = new Lock();
         SetSize(width, height, true);
     }
 
@@ -58,7 +58,7 @@ public class ConsoleGrid : BaseConsoleGrid
     /// <returns>Returns <c>true</c> if the console grid was cleared, otherwise returns <c>false</c>.</returns>
     public bool SetSize(int width, int height, bool force = false)
     {
-        lock (_lockObject)
+        lock (Lock)
         {
             if (force || Width != width || Height != height)
             {
@@ -77,7 +77,7 @@ public class ConsoleGrid : BaseConsoleGrid
     /// <returns></returns>
     public ConsoleGrid MakeClone()
     {
-        lock (_lockObject)
+        lock (Lock)
         {
             ConsoleGrid clone = new ConsoleGrid(Width, Height);
             Buffer.CopyTo(clone.Buffer);
@@ -96,7 +96,7 @@ public class ConsoleGrid : BaseConsoleGrid
             return false;
         }
 
-        lock (_lockObject)
+        lock (Lock)
         {
             if (Width != grid.Width || Height != grid.Height)
             {

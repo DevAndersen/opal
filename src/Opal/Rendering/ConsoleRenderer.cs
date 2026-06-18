@@ -8,7 +8,6 @@ public class ConsoleRenderer
 
     private readonly IConsoleHandler _consoleHandler;
     private readonly StringBuilder _stringBuilder;
-    private readonly Lock _lockObject;
     private int _charsToSkip;
     private bool _firstEdit;
 
@@ -16,12 +15,11 @@ public class ConsoleRenderer
     {
         _consoleHandler = consoleHandler;
         _stringBuilder = new StringBuilder();
-        _lockObject = new Lock();
     }
 
     public void Render(ConsoleGrid grid)
     {
-        lock (_lockObject)
+        lock (grid.Lock)
         {
             _stringBuilder
                 .Clear()
