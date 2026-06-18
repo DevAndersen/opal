@@ -70,6 +70,13 @@ public interface IConsoleHandler : IDisposable
     /// <returns></returns>
     IEnumerable<IConsoleInput> GetInput();
 
+    /// <summary>
+    /// Returns a clean <see cref="ConsoleGrid"/>,
+    /// either using (and if necessary resizing) <paramref name="grid"/>,
+    /// or returning a new grid if <paramref name="grid"/> is <c>null</c>.
+    /// </summary>
+    /// <param name="grid"></param>
+    /// <returns></returns>
     ConsoleGrid GetCleanConsoleGrid(ConsoleGrid? grid = null);
 
     /// <summary>
