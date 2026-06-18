@@ -1,4 +1,5 @@
 ﻿using Opal.ConsoleHandlers;
+using Opal.Drawing;
 using Opal.Rendering;
 
 namespace Opal.Demos.Misc;
@@ -28,7 +29,7 @@ internal static class RawRenderDemo
                     {
                         grid[x, y] = new ConsoleChar
                         {
-                            Character = (char)0x2580,
+                            Character = CharLib.Block.UpperHalfBlock,
                             ForegroundRgb = Random.Shared.Next(),
                             BackgroundRgb = Random.Shared.Next()
                         };
@@ -37,7 +38,7 @@ internal static class RawRenderDemo
                     {
                         grid[x, y] = grid[x, y] with
                         {
-                            Character = (char)0x2580,
+                            Character = CharLib.Block.UpperHalfBlock,
                             ForegroundRgb = grid[x, y].ForegroundRgb + 1,
                             BackgroundRgb = grid[x, y].BackgroundRgb + 1
                         };

@@ -1,4 +1,5 @@
-﻿using Opal.Events;
+﻿using Opal.Drawing;
+using Opal.Events;
 using Opal.Rendering;
 using Opal.Views;
 
@@ -157,7 +158,7 @@ public class ColorView : ConsoleView
             {
                 grid[x, y] = new ConsoleChar
                 {
-                    Character = (char)0x2580,
+                    Character = CharLib.Block.UpperHalfBlock,
                     ForegroundRgb = _colors[x, y].f,
                     BackgroundRgb = _colors[x, y].b
                 };
