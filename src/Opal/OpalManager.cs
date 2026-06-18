@@ -30,7 +30,7 @@ public class OpalManager : IDisposable
     private readonly ConcurrentQueue<IConsoleInput> _inputQueue;
 
     /// <summary>
-    /// The base settings that for Opal.
+    /// The base settings for Opal.
     /// </summary>
     private readonly OpalSettings _settings;
 
