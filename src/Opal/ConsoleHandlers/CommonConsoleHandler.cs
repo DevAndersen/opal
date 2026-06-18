@@ -35,7 +35,7 @@ public abstract class CommonConsoleHandler : IConsoleHandler
 
         if (Running)
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("Opal is already running");
         }
 
         ConsoleSizeThread = new Thread(ConsoleSizeThreadMethod);
