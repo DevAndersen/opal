@@ -9,6 +9,7 @@
   <Folder Name="/Docs/">
     <File Path="docs/Drawing.md" />
     <File Path="docs/Forms.md" />
+    <File Path="docs/README.md" />
     <File Path="docs/Views.md" />
     <File Path="docs\ConsoleChar.md" />
     <File Path="docs\ConsoleGrid.md" />
