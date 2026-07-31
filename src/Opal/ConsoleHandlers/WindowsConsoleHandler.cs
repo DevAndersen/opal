@@ -81,7 +81,7 @@ public class WindowsConsoleHandler : CommonConsoleHandler
 
         Print(SequenceProvider.Reset());
         SetConsoleInputMode(_inputHandle, _originalConsoleInputModes);
-        SetConsoleOutputMode(_inputHandle, _originalConsoleOutputModes);
+        SetConsoleOutputMode(_outputHandle, _originalConsoleOutputModes);
 
         Running = false;
     }
