@@ -1,4 +1,7 @@
 ﻿using Opal.ConsoleHandlers;
+#if DEBUG
+using System.Diagnostics;
+#endif
 
 namespace Opal.Rendering;
 
@@ -11,6 +14,20 @@ public class ConsoleRenderer
     private int _charsToSkip;
     private bool _firstEdit;
 
+#if DEBUG
+    private long _totalCharsRendered = 0;
+    private int _renderCount = 0;
+    private readonly Stopwatch _stopWatch = new Stopwatch();
+    private TimeSpan _totalRenderTime = new TimeSpan();
+
+    /// <summary>
+    /// The average number of frames per second.
+    /// </summary>
+    public double AverageFps => _renderCount / _totalRenderTime.TotalSeconds;
+
+    public double AverageCps => _totalCharsRendered / _totalRenderTime.TotalSeconds / AverageFps;
+#endif
+
     public ConsoleRenderer(IConsoleHandler consoleHandler)
     {
         _consoleHandler = consoleHandler;
@@ -19,6 +36,9 @@ public class ConsoleRenderer
 
     public void Render(ConsoleGrid grid)
     {
+#if DEBUG
+        _stopWatch.Restart();
+#endif
         lock (grid.Lock)
         {
             _stringBuilder
@@ -70,6 +90,12 @@ public class ConsoleRenderer
 
             _consoleHandler.Print(_stringBuilder);
         }
+
+#if DEBUG
+        _totalRenderTime = _totalRenderTime.Add(_stopWatch.Elapsed);
+        _renderCount++;
+        _totalCharsRendered += _stringBuilder.Length;
+#endif
     }
 
     /// <summary>
