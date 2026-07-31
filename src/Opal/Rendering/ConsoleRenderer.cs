@@ -52,18 +52,19 @@ public class ConsoleRenderer
 
             ConsoleChar previousConsoleChar = default;
             int start = 0;
+            ReadOnlySpan<ConsoleChar> span = grid.Buffer.Span;
 
-            while (start < grid.Buffer.Length)
+            while (start < span.Length)
             {
                 int end = 0;
 
                 // Determine how many contiguous characters use the same styling.
-                while (CanCharsBeGroupedTogether(grid, start, start + end))
+                while (CanCharsBeGroupedTogether(span, start, start + end))
                 {
                     end++;
                 }
 
-                ReadOnlySpan<ConsoleChar> slice = grid.Buffer.Span.Slice(start, end);
+                ReadOnlySpan<ConsoleChar> slice = span.Slice(start, end);
                 if (slice.Length > 0)
                 {
                     AppendNew(slice, previousConsoleChar);
@@ -80,7 +81,7 @@ public class ConsoleRenderer
                 }
 
                 start += end;
-                previousConsoleChar = grid.Buffer.Span[start - 1];
+                previousConsoleChar = span[start - 1];
             }
 
             _stringBuilder
@@ -101,14 +102,14 @@ public class ConsoleRenderer
     /// <summary>
     /// Asserts if the <c><see cref="ConsoleChar"/></c>s at <c><paramref name="startPosition"/></c> and <c><paramref name="currentPosition"/></c> should be grouped together.
     /// </summary>
-    /// <param name="grid"></param>
+    /// <param name="span"></param>
     /// <param name="startPosition">The index of the start character.</param>
     /// <param name="currentPosition">The index of the current character.</param>
     /// <returns></returns>
-    private bool CanCharsBeGroupedTogether(ConsoleGrid grid, int startPosition, int currentPosition)
+    private bool CanCharsBeGroupedTogether(ReadOnlySpan<ConsoleChar> span, int startPosition, int currentPosition)
     {
-        return currentPosition < grid.Buffer.Length // Is the position outside the bounds of the grid?
-            && grid.Buffer.Span[startPosition].HasSameStylingAs(grid.Buffer.Span[currentPosition]) // Do the chars have the same mode?
+        return currentPosition < span.Length // Is the position outside the bounds of the grid?
+            && span[startPosition].HasSameStylingAs(span[currentPosition]) // Do the chars have the same mode?
             && (currentPosition == startPosition || currentPosition % _consoleHandler.Width != 0); // Has the end of the line been reached?
     }
 
