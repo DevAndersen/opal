@@ -22,7 +22,7 @@ Opal is designed to be simple to use. In just a few lines of code, you can have 
 
 ### High performance
 
-- Opal is designed to run efficiently, with minimal CPU and memory usage, and without unnecessary heap allocations.
+- Fast console rendering, with a very small CPU overhead, and without unnecessary heap allocations.
 
 ### Compatibility
 
