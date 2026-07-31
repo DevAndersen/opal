@@ -29,7 +29,7 @@ Views can implement various interfaces, which lets them receive and handle user 
 - [`IKeyInputHandler`](../src/Opal/Events/IKeyInputHandler.cs): Keyboard input.
 - [`IMouseButtonInputHandler`](../src/Opal/Events/IMouseButtonInputHandler.cs): Mouse button input.
 - [`IMouseMoveInputHandler`](../src/Opal/Events/IMouseMoveInputHandler.cs): Mouse movement input.
-- [`ICancellationRequestHandler`](../src/Opal/Views/ICancellationRequestHandler.cs): Intercept and optionally cancel user requests to exit Opal via `Ctrl+C`.
+- [`ICancellationRequestHandler`](../src/Opal/Events/ICancellationRequestHandler.cs): Intercept and optionally cancel user requests to exit Opal via `Ctrl+C`.
 
 Note: Input handling gets executed before the `Update` method is called.
 
