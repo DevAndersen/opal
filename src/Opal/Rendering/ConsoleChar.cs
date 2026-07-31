@@ -6,7 +6,7 @@ namespace Opal.Rendering;
 /// Represents a complex console character, including optional colors, styling, and effects.
 /// </summary>
 [DebuggerDisplay("{GetDebuggerDisplay()}")]
-public readonly struct ConsoleChar
+public readonly struct ConsoleChar : IEquatable<ConsoleChar>
 {
     /// <summary>
     /// The UTF-16 character that the console character should print as.
@@ -50,6 +50,11 @@ public readonly struct ConsoleChar
 
             // Set ForegroundSet, unset ForegroundRgb.
             Metadata = (Metadata | ConsoleCharMetadata.ForegroundSet) & ~ConsoleCharMetadata.ForegroundRgb;
+
+            // Ensure that the RGB foreground color bytes are cleared.
+            ForegroundRed = 0;
+            ForegroundGreen = 0;
+            ForegroundBlue = 0;
         }
     }
 
@@ -63,6 +68,11 @@ public readonly struct ConsoleChar
 
             // Set BackgroundSet, unset BackgroundRgb.
             Metadata = (Metadata | ConsoleCharMetadata.BackgroundSet) & ~ConsoleCharMetadata.BackgroundRgb;
+
+            // Ensure that the RGB background color bytes are cleared.
+            BackgroundRed = 0;
+            BackgroundGreen = 0;
+            BackgroundBlue = 0;
         }
     }
 
@@ -83,6 +93,9 @@ public readonly struct ConsoleChar
 
             // Set ForegroundSet and ForegroundRgb.
             Metadata |= ConsoleCharMetadata.ForegroundSet | ConsoleCharMetadata.ForegroundRgb;
+
+            // Ensure that the simple foreground color is cleared.
+            _foregroundSimple = 0;
         }
     }
 
@@ -103,6 +116,9 @@ public readonly struct ConsoleChar
 
             // Set BackgroundSet and BackgroundRgb.
             Metadata |= ConsoleCharMetadata.BackgroundSet | ConsoleCharMetadata.BackgroundRgb;
+
+            // Ensure that the simple background color is cleared.
+            _backgroundSimple = 0;
         }
     }
 
@@ -116,7 +132,7 @@ public readonly struct ConsoleChar
         }
         init
         {
-            if (value.Equals(default(Color)))
+            if (value.Equals(default))
             {
                 // Clear ForegroundSimple and ForegroundRgb.
                 ForegroundSimple = default;
@@ -146,7 +162,7 @@ public readonly struct ConsoleChar
         }
         init
         {
-            if (value.Equals(default(Color)))
+            if (value.Equals(default))
             {
                 // Clear BackgroundSimple and BackgroundRgb.
                 BackgroundSimple = default;
@@ -403,6 +419,33 @@ public readonly struct ConsoleChar
     public bool ShouldRenderAsString()
     {
         return (Metadata & ConsoleCharMetadata.UseStringCache) == ConsoleCharMetadata.UseStringCache;
+    }
+
+    public bool Equals(ConsoleChar other)
+    {
+        return Character == other.Character
+            && HasSameStylingAs(other);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is ConsoleChar consoleChar
+            && Equals(consoleChar);
+    }
+
+    public static bool operator ==(ConsoleChar left, ConsoleChar right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(ConsoleChar left, ConsoleChar right)
+    {
+        return !left.Equals(right);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Character, ForegroundColor, BackgroundColor, Modes, Metadata);
     }
 
     internal string GetDebuggerDisplay()

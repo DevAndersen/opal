@@ -25,7 +25,7 @@ internal static class RawRenderDemo
             {
                 for (int x = 0; x < handler.Width; x++)
                 {
-                    if (loops == 0 || grid[x, y].Equals(default(ConsoleChar)))
+                    if (loops == 0 || grid[x, y].Equals(default))
                     {
                         grid[x, y] = new ConsoleChar
                         {

@@ -6,7 +6,7 @@ namespace Opal.Rendering;
 /// Represents either a <see cref="ConsoleColor"/> or an RGB color.
 /// </summary>
 [DebuggerDisplay("{GetDebuggerDisplay()}")]
-public readonly struct Color
+public readonly struct Color : IEquatable<Color>
 {
     /// <summary>
     /// Bit mask for determining if the color represents a 4-bit console color, or a 24-bit RGB color.
@@ -66,6 +66,32 @@ public readonly struct Color
     public static implicit operator Color(ConsoleColor consoleColor) => new Color(consoleColor);
 
     public static implicit operator Color(int rgb) => new Color(rgb);
+
+    public bool Equals(Color other)
+    {
+        return _value == other._value;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Color color
+            && Equals(color);
+    }
+
+    public static bool operator ==(Color left, Color right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Color left, Color right)
+    {
+        return !left.Equals(right);
+    }
+
+    public override int GetHashCode()
+    {
+        return _value;
+    }
 
     internal string GetDebuggerDisplay()
     {
