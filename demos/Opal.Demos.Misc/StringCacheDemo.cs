@@ -19,6 +19,8 @@ public class StringCacheView : ConsoleView, IKeyInputHandler
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         for (int x = 0; x < grid.Width; x++)
         {
             for (int y = 0; y < grid.Height; y++)
@@ -40,6 +42,8 @@ public class StringCacheView : ConsoleView, IKeyInputHandler
 
     public override void Update(IConsoleState state)
     {
+        ArgumentNullException.ThrowIfNull(state);
+
         if (_hasRenderedOnce)
         {
             state.ExitView();

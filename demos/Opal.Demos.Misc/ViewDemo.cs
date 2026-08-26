@@ -22,6 +22,8 @@ public class TimeView : ConsoleView
 
     public override void Update(IConsoleState state)
     {
+        ArgumentNullException.ThrowIfNull(state);
+
         _count++;
         if (_count > 50)
         {
@@ -31,6 +33,8 @@ public class TimeView : ConsoleView
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         string s = $" The time is {DateTime.Now} ";
         for (int i = 0; i < s.Length; i++)
         {
@@ -50,6 +54,9 @@ public class WriteView : ConsoleView, IKeyInputHandler
 
     public Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(keyEvent);
+        ArgumentNullException.ThrowIfNull(consoleState);
+
         if (keyEvent.Key == ConsoleKey.Enter)
         {
             consoleState.GotoChild(new TimeView());
@@ -79,6 +86,8 @@ public class WriteView : ConsoleView, IKeyInputHandler
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         for (int i = 0; i < _s.Length; i++)
         {
             char item = _s[i];
@@ -111,6 +120,8 @@ public class ColorView : ConsoleView
 
     public override void Update(IConsoleState state)
     {
+        ArgumentNullException.ThrowIfNull(state);
+
         _colors ??= new (int, int)[state.Width, state.Height];
 
         for (int y = 0; y < state.Height; y++)
@@ -147,6 +158,8 @@ public class ColorView : ConsoleView
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         if (_colors == null)
         {
             return;

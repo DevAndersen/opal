@@ -34,6 +34,8 @@ public class Button : SelectableControl, IMouseButtonUpControl, IKeyControl, IMo
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         grid.DrawBox(0, 0, Width ?? grid.Width, Height ?? grid.Height, DrawStyle.RoundedDrawStyle, new ConsoleChar
         {
             ForegroundColor = IsSelected || IsHovered ? BorderColorHighlight : BorderColor

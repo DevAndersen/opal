@@ -24,6 +24,8 @@ public class GroupBox : IControl, IControlSingleParent
 
     public void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         int width = Width ?? grid.Width;
         int height = Height ?? grid.Height;
 

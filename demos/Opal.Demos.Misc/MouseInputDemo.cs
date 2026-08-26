@@ -44,6 +44,9 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseMoveInput
 
     public Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(keyEvent);
+        ArgumentNullException.ThrowIfNull(consoleState);
+
         if (keyEvent.Key == ConsoleKey.Escape)
         {
             consoleState.ExitView();
@@ -54,6 +57,8 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseMoveInput
 
     public Task HandleMouseMoveInputAsync(MouseMoveInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(mouseEvent);
+
         _posX = mouseEvent.X;
         _posY = mouseEvent.Y;
 
@@ -62,6 +67,8 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseMoveInput
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         foreach (Particle particle in _particles.OrderByDescending(x => x.Age > x.TransitionAge))
         {
             grid[particle.X, particle.Y] = particle.GetVisuals();

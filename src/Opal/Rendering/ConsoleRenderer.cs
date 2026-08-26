@@ -36,6 +36,8 @@ public class ConsoleRenderer
 
     public void Render(ConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
 #if DEBUG
         _stopWatch.Restart();
 #endif

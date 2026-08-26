@@ -93,6 +93,8 @@ public class WindowsConsoleHandler : CommonConsoleHandler
 
     public override void Print(string str)
     {
+        ArgumentNullException.ThrowIfNull(str);
+
         WriteConsole(_outputHandle, str, str.Length, out _);
     }
 
@@ -105,6 +107,8 @@ public class WindowsConsoleHandler : CommonConsoleHandler
     /// <param name="stringBuilder"></param>
     public override unsafe void Print(StringBuilder stringBuilder)
     {
+        ArgumentNullException.ThrowIfNull(stringBuilder);
+
         char* ptr = (char*)NativeMemory.Alloc((nuint)stringBuilder.Length, sizeof(char));
         try
         {

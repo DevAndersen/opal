@@ -21,6 +21,9 @@ public class DrawingView : ConsoleView, IKeyInputHandler
 
     public Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(keyEvent);
+        ArgumentNullException.ThrowIfNull(consoleState);
+
         switch (keyEvent.Key)
         {
             case ConsoleKey.RightArrow when _x < 10:
@@ -45,6 +48,8 @@ public class DrawingView : ConsoleView, IKeyInputHandler
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         grid.DrawString(2, 2, $"X: {_x}");
         grid.DrawString(2, 4, $"Y: {_y}");
 

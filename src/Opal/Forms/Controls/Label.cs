@@ -23,6 +23,8 @@ public class Label : IControl
 
     public virtual void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         grid.DrawString(0, 0, Text);
     }
 }

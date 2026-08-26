@@ -46,6 +46,8 @@ public class ConsoleGrid : BaseConsoleGrid
     /// <param name="handler"></param>
     public void SetSize(IConsoleHandler handler)
     {
+        ArgumentNullException.ThrowIfNull(handler);
+
         SetSize(handler.Width, handler.Height);
     }
 
@@ -122,6 +124,8 @@ public class ConsoleGrid : BaseConsoleGrid
     /// <returns></returns>
     public bool IsDifferentFrom(ConsoleGrid other)
     {
+        ArgumentNullException.ThrowIfNull(other);
+
         return Width != other.Width
             || Height != other.Height
             || !Buffer.Span.SequenceEqual(other.Buffer.Span);

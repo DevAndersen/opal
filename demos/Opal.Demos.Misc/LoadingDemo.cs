@@ -24,6 +24,8 @@ public class LoadingView : ConsoleView
 
     public override void Update(IConsoleState state)
     {
+        ArgumentNullException.ThrowIfNull(state);
+
         _count++;
 
         if (DateTime.Now > _end)
@@ -34,6 +36,8 @@ public class LoadingView : ConsoleView
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         for (int x = 0; x < grid.Width; x++)
         {
             for (int y = 0; y < grid.Height; y++)

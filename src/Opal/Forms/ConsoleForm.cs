@@ -33,6 +33,8 @@ public class ConsoleForm : ConsoleView,
 
     public virtual async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(keyEvent);
+
         if (keyEvent.Key == ConsoleKey.Tab)
         {
             if (keyEvent.Modifiers == ConsoleModifiers.Shift)
@@ -70,6 +72,9 @@ public class ConsoleForm : ConsoleView,
 
     public virtual async Task HandleMouseButtonInputAsync(MouseButtonInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(mouseEvent);
+        ArgumentNullException.ThrowIfNull(consoleState);
+
         // Detect drag stop.
         if (DraggedControl != null && !mouseEvent.PressedButtons.HasFlag(MouseButtons.LeftButton))
         {
@@ -93,6 +98,7 @@ public class ConsoleForm : ConsoleView,
 
         foreach ((IControl control, Rect rect) in this.GetNestedChildControlAreas(consoleState.Width, consoleState.Height))
         {
+
             if (!rect.IsCoordinateWithinRect(mouseEvent.X, mouseEvent.Y))
             {
                 continue;
@@ -150,6 +156,9 @@ public class ConsoleForm : ConsoleView,
 
     public virtual async Task HandleMouseMoveInputAsync(MouseMoveInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(mouseEvent);
+        ArgumentNullException.ThrowIfNull(consoleState);
+
         foreach ((IControl control, Rect rect) in this.GetNestedChildControlAreas(consoleState.Width, consoleState.Height))
         {
             bool isHovering = rect.IsCoordinateWithinRect(mouseEvent.X, mouseEvent.Y);
@@ -235,6 +244,8 @@ public class ConsoleForm : ConsoleView,
 
     public async Task SelectControlAsync(ISelectable newSelected, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(newSelected);
+
         if (Selected?.OnUnselect != null)
         {
             Selected.IsSelected = false;
@@ -308,6 +319,8 @@ public class ConsoleForm : ConsoleView,
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         IOrderedEnumerable<(IControl, Rect)> controlRects = GetChildControlAreas(grid.Width, grid.Height)
             .OrderBy(x => x.Item1 == DraggedControl); // Dragged control appears on top.
 

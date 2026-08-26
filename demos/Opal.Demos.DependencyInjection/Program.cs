@@ -86,6 +86,8 @@ public abstract class CounterForm : ConsoleForm
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         base.Render(grid);
         grid.DrawString(2, 2, Title);
         grid.DrawString(2, 3, $"Counter: {_counter}");
@@ -93,6 +95,9 @@ public abstract class CounterForm : ConsoleForm
 
     public override async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(keyEvent);
+        ArgumentNullException.ThrowIfNull(consoleState);
+
         await base.HandleKeyInputAsync(keyEvent, consoleState, cancellationToken);
 
         if (keyEvent.Key == ConsoleKey.UpArrow)

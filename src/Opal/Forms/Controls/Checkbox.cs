@@ -24,6 +24,8 @@ public class Checkbox : SelectableControl, IMouseButtonUpControl, IKeyControl
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         grid[0, 0] = new ConsoleChar(Value ? CharLib.Shapes.BallotBoxWithLightX : CharLib.Shapes.BallotBox);
     }
 }

@@ -11,7 +11,7 @@
 	<!-- Code quality -->
 	<PropertyGroup>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<WarningsAsErrors>CA1725,CA2000</WarningsAsErrors>
+		<WarningsAsErrors>CA1062,CA1725,CA2000</WarningsAsErrors>
 		<WarningsNotAsErrors>NU1901,NU1902,NU1903</WarningsNotAsErrors>
 	</PropertyGroup>
 

@@ -55,6 +55,10 @@ public static partial class DrawingHelper
             DrawStyle style,
             ConsoleChar template = default)
         {
+            ArgumentNullException.ThrowIfNull(columnWidths);
+            ArgumentNullException.ThrowIfNull(rowHeights);
+            ArgumentNullException.ThrowIfNull(style);
+
             int totalWidth = columnWidths.Sum() + columnWidths.Length + 1;
             int totalHeight = rowHeights.Sum() + rowHeights.Length + 1;
 

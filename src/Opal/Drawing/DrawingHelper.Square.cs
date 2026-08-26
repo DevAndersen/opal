@@ -23,6 +23,8 @@ public static partial class DrawingHelper
 
         public void DrawBox(int posX, int posY, int width, int height, DrawStyle style, ConsoleChar template)
         {
+            ArgumentNullException.ThrowIfNull(style);
+
             grid[posX, posY] = template with { Character = style.TopLeftCorner };
             grid[posX + width - 1, posY] = template with { Character = style.TopRightCorner };
             grid[posX, posY + height - 1] = template with { Character = style.BottomLeftCorner };

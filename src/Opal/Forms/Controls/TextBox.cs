@@ -18,6 +18,8 @@ public class TextBox : SelectableControl, IKeyInputHandler
 
     public Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(keyEvent);
+
         if (keyEvent.Key == ConsoleKey.LeftArrow && _cursor > 0)
         {
             _cursor--;
@@ -75,6 +77,8 @@ public class TextBox : SelectableControl, IKeyInputHandler
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         // Draw the box.
         grid.DrawBox(0, 0, Width, Height, DrawStyle.StandardDrawStyle, new ConsoleChar
         {

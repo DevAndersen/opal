@@ -52,6 +52,8 @@ public static partial class DrawingHelper
 
         public void DrawWrappingString(int posX, int posY, int width, int height, string text, ConsoleChar template)
         {
+            ArgumentNullException.ThrowIfNull(text);
+
             for (int i = 0; i < text.Length; i++)
             {
                 int xOffset = i % width;

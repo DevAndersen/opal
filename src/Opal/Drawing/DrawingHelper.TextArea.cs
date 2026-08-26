@@ -18,6 +18,8 @@ public static partial class DrawingHelper
 
         public void DrawTextArea(int posX, int posY, string text, ConsoleChar template, int tabWidth)
         {
+            ArgumentNullException.ThrowIfNull(text);
+
             string[] lines = text.Split(_newlineSequences, StringSplitOptions.None);
 
             for (int lineIndex = 0; lineIndex < lines.Length; lineIndex++)
@@ -33,6 +35,8 @@ public static partial class DrawingHelper
 
         public void DrawTextArea(int posX, int posY, int width, int height, int viewOffsetX, int viewOffsetY, string text, ConsoleChar template)
         {
+            ArgumentNullException.ThrowIfNull(text);
+
             string[] lines = text.Split(_newlineSequences, StringSplitOptions.None);
 
             for (int y = 0; y < height; y++)

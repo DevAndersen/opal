@@ -26,6 +26,8 @@ public class ProgressBar : IControl
 
     public void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         // Border.
         grid.DrawBox(0, 0, Width, Height, DrawStyle.RoundedDrawStyle, new ConsoleChar { ForegroundSimple = ConsoleColor.DarkGray });
 

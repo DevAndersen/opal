@@ -116,6 +116,8 @@ public class TestForm : ConsoleForm
 
     public override async Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(keyEvent);
+
         await base.HandleKeyInputAsync(keyEvent, consoleState, cancellationToken);
         if (keyEvent.Handled)
         {
@@ -127,6 +129,8 @@ public class TestForm : ConsoleForm
 
     public override async Task HandleMouseButtonInputAsync(MouseButtonInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(mouseEvent);
+
         await base.HandleMouseButtonInputAsync(mouseEvent, consoleState, cancellationToken);
         if (mouseEvent.Handled)
         {
@@ -138,6 +142,8 @@ public class TestForm : ConsoleForm
 
     public override async Task HandleMouseMoveInputAsync(MouseMoveInput mouseEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(mouseEvent);
+
         await base.HandleMouseMoveInputAsync(mouseEvent, consoleState, cancellationToken);
         if (mouseEvent.Handled)
         {
@@ -158,6 +164,8 @@ public class TestForm : ConsoleForm
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         base.Render(grid);
         RenderTextAlignmentTest(grid);
 
@@ -211,6 +219,8 @@ public class DragBox : IControl, IDragControl
 
     public void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         grid.DrawBox(0, 0, grid.Width, grid.Height, new ConsoleChar { ForegroundColor = _isDragged ? ConsoleColor.Green : default });
         grid.DrawString(1, 1, "Drag me");
     }

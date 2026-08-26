@@ -22,6 +22,8 @@ public class MatrixView : ConsoleView, IKeyInputHandler
 
     public override void Update(IConsoleState state)
     {
+        ArgumentNullException.ThrowIfNull(state);
+
         _age++;
 
         if (_age % 3 != 0)
@@ -60,6 +62,8 @@ public class MatrixView : ConsoleView, IKeyInputHandler
 
     public override void Render(IConsoleGrid grid)
     {
+        ArgumentNullException.ThrowIfNull(grid);
+
         foreach (MatrixParticle particle in _particles)
         {
             for (int i = 0; i < particle.Trail.Count; i++)
@@ -88,6 +92,9 @@ public class MatrixView : ConsoleView, IKeyInputHandler
 
     public Task HandleKeyInputAsync(KeyInput keyEvent, IConsoleState consoleState, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(keyEvent);
+        ArgumentNullException.ThrowIfNull(consoleState);
+
         switch (keyEvent.Key)
         {
             case ConsoleKey.D1:

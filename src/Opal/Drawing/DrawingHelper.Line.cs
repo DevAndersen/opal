@@ -23,6 +23,8 @@ public static partial class DrawingHelper
 
         public void DrawHorizontalLine(int posX, int posY, int length, DrawStyle style, ConsoleChar template)
         {
+            ArgumentNullException.ThrowIfNull(style);
+
             for (int x = 0; x < length; x++)
             {
                 grid[posX + x, posY] = template with { Character = style.Horizontal };
@@ -46,6 +48,8 @@ public static partial class DrawingHelper
 
         public void DrawVerticalLine(int posX, int posY, int length, DrawStyle style, ConsoleChar template)
         {
+            ArgumentNullException.ThrowIfNull(style);
+
             for (int y = 0; y < length; y++)
             {
                 grid[posX, posY + y] = template with { Character = style.Vertical };
