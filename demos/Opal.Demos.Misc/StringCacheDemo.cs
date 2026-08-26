@@ -8,7 +8,7 @@ internal static class StringCacheDemo
 {
     public static async Task RunAsync()
     {
-        OpalManager manager = new OpalManager();
+        using OpalManager manager = new OpalManager();
         await manager.StartAsync(new StringCacheView());
     }
 }
@@ -38,11 +38,11 @@ public class StringCacheView : ConsoleView, IKeyInputHandler
         grid[2, 3] = new ConsoleChar(red);
     }
 
-    public override void Update(IConsoleState consoleState)
+    public override void Update(IConsoleState state)
     {
         if (_hasRenderedOnce)
         {
-            consoleState.ExitView();
+            state.ExitView();
         }
         _hasRenderedOnce = true;
     }

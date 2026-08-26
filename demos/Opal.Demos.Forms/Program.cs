@@ -6,7 +6,7 @@ using Opal.Forms.Controls;
 using Opal.Rendering;
 using Opal.Views;
 
-TestForm form = new TestForm();
+using TestForm form = new TestForm();
 
 form.ChildControls.Add(
 new Button
@@ -107,7 +107,7 @@ form.ChildControls.Add(new Checkbox
     Value = true
 });
 
-OpalManager manager = new OpalManager();
+using OpalManager manager = new OpalManager();
 await manager.StartAsync(form);
 
 public class TestForm : ConsoleForm

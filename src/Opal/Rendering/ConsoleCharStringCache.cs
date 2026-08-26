@@ -43,7 +43,7 @@ public static class ConsoleCharStringCache
     {
         lock (_lockObject)
         {
-            int index = Array.FindIndex(_cache, x => x != null && x.Equals(sequence));
+            int index = Array.FindIndex(_cache, x => x != null && x.Equals(sequence, StringComparison.Ordinal));
             if (index >= 0)
             {
                 return (ushort)index;

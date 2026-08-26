@@ -9,7 +9,7 @@ internal static class MouseInputDemo
 {
     public static async Task RunAsync()
     {
-        OpalManager manager = new OpalManager();
+        using OpalManager manager = new OpalManager();
         await manager.StartAsync(new MouseInputDemoView());
     }
 }
@@ -21,7 +21,7 @@ public class MouseInputDemoView : ConsoleView, IKeyInputHandler, IMouseMoveInput
     private int _posX;
     private int _posY;
 
-    public override void Update(IConsoleState consoleState)
+    public override void Update(IConsoleState state)
     {
         for (int i = _particles.Count - 1; i >= 0; i--)
         {

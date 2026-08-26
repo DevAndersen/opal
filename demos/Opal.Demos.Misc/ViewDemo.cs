@@ -9,7 +9,7 @@ internal static class ViewDemo
 {
     public static async Task RunAsync()
     {
-        OpalManager manager = new OpalManager();
+        using OpalManager manager = new OpalManager();
         await manager.StartAsync(new WriteView());
     }
 }
@@ -20,12 +20,12 @@ public class TimeView : ConsoleView
 
     //public override int Delay => 100;
 
-    public override void Update(IConsoleState consoleState)
+    public override void Update(IConsoleState state)
     {
         _count++;
         if (_count > 50)
         {
-            consoleState.ExitView();
+            state.ExitView();
         }
     }
 
@@ -109,13 +109,13 @@ public class ColorView : ConsoleView
     }
 
 
-    public override void Update(IConsoleState consoleState)
+    public override void Update(IConsoleState state)
     {
-        _colors ??= new (int, int)[consoleState.Width, consoleState.Height];
+        _colors ??= new (int, int)[state.Width, state.Height];
 
-        for (int y = 0; y < consoleState.Height; y++)
+        for (int y = 0; y < state.Height; y++)
         {
-            for (int x = 0; x < consoleState.Width; x++)
+            for (int x = 0; x < state.Width; x++)
             {
                 if (_frame == 0)
                 {
@@ -137,7 +137,7 @@ public class ColorView : ConsoleView
 
         if ((DateTime.Now - _startTime) > TimeSpan.FromSeconds(15))
         {
-            consoleState.ExitView();
+            state.ExitView();
             return;
         }
 

@@ -7,7 +7,7 @@ public static class LinesTestDemo
 {
     public static async Task RunAsync()
     {
-        OpalManager manager = new OpalManager();
+        using OpalManager manager = new OpalManager();
         await manager.StartAsync(new LinesTestView());
         Console.WriteLine($"GC: {GC.CollectionCount(0)} | {GC.CollectionCount(1)} | {GC.CollectionCount(2)} | {GC.CollectionCount(3)}");
     }
@@ -19,11 +19,11 @@ public class LinesTestView : ConsoleView
 
     //public override int Delay => 200;
 
-    public override void Update(IConsoleState consoleState)
+    public override void Update(IConsoleState state)
     {
         if (_cycles > 10000)
         {
-            consoleState.ExitView();
+            state.ExitView();
             return;
         }
         _cycles++;

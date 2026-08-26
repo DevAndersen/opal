@@ -7,7 +7,7 @@ internal static class LoadingDemo
 {
     public static async Task RunAsync()
     {
-        OpalManager manager = new OpalManager(OpalSettings.CreateFixedInline(32, 16, 5, 5));
+        using OpalManager manager = new OpalManager(OpalSettings.CreateFixedInline(32, 16, 5, 5));
         await manager.StartAsync(new LoadingView());
     }
 }
@@ -22,13 +22,13 @@ public class LoadingView : ConsoleView
         _end = DateTime.Now.AddSeconds(3);
     }
 
-    public override void Update(IConsoleState consoleState)
+    public override void Update(IConsoleState state)
     {
         _count++;
 
         if (DateTime.Now > _end)
         {
-            consoleState.ExitView();
+            state.ExitView();
         }
     }
 

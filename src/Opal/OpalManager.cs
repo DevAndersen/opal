@@ -129,7 +129,7 @@ public class OpalManager : IDisposable
         try
         {
             // Linked cancellation token source, allowing multiple sources to request a graceful stop.
-            CancellationTokenSource runCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
+            using CancellationTokenSource runCancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
                 cancellationToken,
                 _stopExceptionCancellationTokenSource.Token);
 

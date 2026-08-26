@@ -80,7 +80,7 @@ public class MainForm : ConsoleForm
 
 public abstract class CounterForm : ConsoleForm
 {
-    private int _counter = 0;
+    private int _counter;
 
     public abstract string Title { get; }
 

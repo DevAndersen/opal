@@ -9,7 +9,7 @@ internal static class DrawingDemo
 {
     public static async Task RunAsync()
     {
-        OpalManager manager = new OpalManager();
+        using OpalManager manager = new OpalManager();
         await manager.StartAsync(new DrawingView());
     }
 }

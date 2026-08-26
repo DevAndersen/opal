@@ -8,7 +8,7 @@ internal static class MatrixDemo
 {
     public static async Task RunAsync()
     {
-        OpalManager manager = new OpalManager();
+        using OpalManager manager = new OpalManager();
         await manager.StartAsync(new MatrixView());
     }
 }
@@ -20,7 +20,7 @@ public class MatrixView : ConsoleView, IKeyInputHandler
     private bool _throwExceptionAfterNextRender;
     private bool _throwExceptionAfterNextUpdate;
 
-    public override void Update(IConsoleState consoleState)
+    public override void Update(IConsoleState state)
     {
         _age++;
 
@@ -32,7 +32,7 @@ public class MatrixView : ConsoleView, IKeyInputHandler
         for (int i = _particles.Count - 1; i >= 0; i--)
         {
             MatrixParticle particle = _particles[i];
-            if (particle.PosY - particle.Trail.Count >= consoleState.Height)
+            if (particle.PosY - particle.Trail.Count >= state.Height)
             {
                 _particles.RemoveAt(i);
             }
@@ -44,7 +44,7 @@ public class MatrixView : ConsoleView, IKeyInputHandler
 
         if (Random.Shared.Next(2) == 0)
         {
-            AddParticle(null, consoleState);
+            AddParticle(null, state);
         }
 
         if (_throwExceptionAfterNextRender)
