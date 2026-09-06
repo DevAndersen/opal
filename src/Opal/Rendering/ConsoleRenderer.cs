@@ -15,10 +15,10 @@ public class ConsoleRenderer
     private bool _firstEdit;
 
 #if DEBUG
-    private long _totalCharsRendered = 0;
-    private int _renderCount = 0;
+    private long _totalCharsRendered;
+    private int _renderCount;
     private readonly Stopwatch _stopWatch = new Stopwatch();
-    private TimeSpan _totalRenderTime = new TimeSpan();
+    private TimeSpan _totalRenderTime;
 
     /// <summary>
     /// The average number of frames per second.
